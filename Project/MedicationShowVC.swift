@@ -24,6 +24,9 @@ class MedicationShowVC: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        /// setting corner radius and shadow for showing the medication in the list screen
+        /// - Parameter viewName: parameter refering the UIView
         func customs(viewName:UIView){
             viewName.layer.cornerRadius = 10
             viewName.layer.shadowColor = UIColor.black.cgColor

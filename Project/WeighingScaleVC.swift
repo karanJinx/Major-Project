@@ -22,6 +22,7 @@ class WeighingScaleVC: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        weightLable.isHidden = true
         centralManager = CBCentralManager(delegate: self, queue: nil)
         
         weightLable.layer.cornerRadius = 20
@@ -84,6 +85,7 @@ extension WeighingScaleVC: CBCentralManagerDelegate{
                     let unstableDecimalReading = hexadecimalToDecimal(String(unstableHexReading))!
                     let exactUnstableReading = Double(unstableDecimalReading) / Double(10)
                     scanLable.text = "Scanning..."
+                    weightLable.isHidden = false
                     weightLable.text = "\(String(exactUnstableReading)) Kg"
                     
                 }
@@ -97,6 +99,7 @@ extension WeighingScaleVC: CBCentralManagerDelegate{
                     let finalWeight = Double(finalDecimalReading) / Double(10)
                     print("The exactWeight:\(finalWeight)")
                     
+                    weightLable.isHidden = false
                     weightLable.text = "\(String(finalWeight)) Kg"
                     scanLable.text = "Weight Calculated Successfully."
                     }

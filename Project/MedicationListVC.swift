@@ -69,7 +69,7 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
     
     var medication :[MedicationData] = []
 
-    var notificationIdentifier: String?
+   // var notificationIdentifier: String?
     
     func didUserEnterInformation() {
         ListMedication()
@@ -171,6 +171,8 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
                         let deleteDecoded = try JSONDecoder().decode(MedicationDeleteResponse.self, from: data)
                         print("The deleteDecoded :\(deleteDecoded)")
                         print("The delete Log Id : \(deleteDecoded.logId)")
+                        
+                        
                         // to see the medication Id
 //                        if let deletionData = deleteDecoded.data,let deletionList = deletionData.list{
 //                            for items in deletionList{
@@ -231,6 +233,7 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! Cell
         let medicationItem = medication[indexPath.row]
+        print("The medicationItem:\(medicationItem)")
         if let quantity = medicationItem.quantity{
             let quantityStr = String(quantity)
             cell.quantityLable.text = quantityStr

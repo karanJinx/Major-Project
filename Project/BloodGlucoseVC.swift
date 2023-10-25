@@ -10,6 +10,10 @@ import UIKit
 import CoreBluetooth
 
 class BloodGlucoseVC:UIViewController{
+    @IBOutlet var statusLable: UILabel!
+    @IBOutlet var finalReadingsLable: UILabel!
+    
+    
     var service1UUID = CBUUID(string: "0x0003CDD0-0000-1000-8000-00805F9B0131")
     var service1_Characteristic_1 = CBUUID(string: "0x0003CDD1-0000-1000-8000-00805F9B0131") // notify -> giving the byte when the central is disconnected from the peripheral
     var service1_Characteristic_2 = CBUUID(string: "0x0003CDD2-0000-1000-8000-00805F9B0131") // writeWithoutResponse
@@ -30,7 +34,16 @@ class BloodGlucoseVC:UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        finalReadingsLable.isHidden = true
+        finalReadingsLable.layer.cornerRadius = 20
+        finalReadingsLable.layer.masksToBounds = true
+        finalReadingsLable.layer.shadowColor = UIColor.gray.cgColor // Shadow color
+        finalReadingsLable.layer.shadowOffset = CGSize(width: 4, height: 5) // Shadow offset (adjust as needed)
+        finalReadingsLable.layer.shadowOpacity = 0.7 // Shadow opacity (adjust as needed)
+        finalReadingsLable.layer.shadowRadius = 4.0 // Shadow radius (adjust as needed)
         centralManager = CBCentralManager(delegate: self, queue: nil)
+        view.addSubview(finalReadingsLable)
+
     }
     
 }
@@ -74,6 +87,7 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        statusLable.text = "Connected Successfully"
         print("Connected")
         peripheral.discoverServices(nil)
     }
@@ -235,23 +249,33 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                     if values[5] == "12" && values[6] == "66" {
                         if values[9] == "11" {
                             print("Strip is inserted")
+                            statusLable.text = "Strip is inserted"
                         } else if values[9] == "22" {
+                            statusLable.text = "Ready for the test, keep blood in the strip"
                             print("Ready for the test, keep blood in the strip")
                         } else if values[9] == "33" {
+                            statusLable.text = "Please Wait"
                             print("Please Wait")
                         } else if values[9] == "44" {
-                            let index11 = values[10]
-                            let index12 = values[11]
-                            let resultInHex = index11 + index12
+                            let index10 = values[10]
+                            let index10HexValue = hexadecimalToDecimal(index10)
+                            let index11 = values[11]
+                            let index11Hexvalue = hexadecimalToDecimal(index11)
                             
-                            let resultInDecimal = hexadecimalToDecimal(resultInHex)
+                            let resultInDecimal = String(index10HexValue!) + String(index11Hexvalue!)
+                            print("The Final Reading:\(resultInDecimal)")
 //                            let resultInDecimal = UInt8(resultInHex,radix: 16)!
-                            print("Result\(resultInDecimal)")
+                            finalReadingsLable.isHidden = false
+                            statusLable.text = "Final Readings"
+                            statusLable.text = "\(resultInDecimal) mg/dL"
+
                         } else if values[9] == "55" {
+                            statusLable.text = "Invalid strip"
                             print("Invalid strip")
                         }
                     } else if values[5] == "d2" && values[6] == "66" {
                         if values[9] == "0b" {
+                            statusLable.text = "Bluetooth disconnected from the peripheral"
                             print("Bluetooth disconnected from the peripheral")
                         }
                     } else if values[5] == "44" && values[6] == "99"{

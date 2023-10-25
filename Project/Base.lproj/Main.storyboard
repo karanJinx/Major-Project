@@ -815,17 +815,39 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="No Records" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jSy-DT-aNe">
-                                <rect key="frame" x="138" y="413" width="116" height="27"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="22"/>
-                                <nil key="textColor"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connect Your Device" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jSy-DT-aNe">
+                                <rect key="frame" x="20" y="119" width="353" height="23"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="19"/>
+                                <color key="textColor" red="0.037515398110000001" green="0.53403115270000001" blue="0.97674125430000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="--" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8OE-UL-VHv">
+                                <rect key="frame" x="40" y="242" width="312" height="120"/>
+                                <color key="backgroundColor" red="0.037515398110000001" green="0.53403115270000001" blue="0.97674125430000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="312" id="ijG-fC-xjc"/>
+                                    <constraint firstAttribute="height" constant="120" id="xGr-0Z-nym"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="31"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="fTn-Ox-nH9"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="8OE-UL-VHv" firstAttribute="leading" secondItem="fTn-Ox-nH9" secondAttribute="leading" constant="40" id="1dH-vI-mrL"/>
+                            <constraint firstItem="fTn-Ox-nH9" firstAttribute="trailing" secondItem="8OE-UL-VHv" secondAttribute="trailing" constant="41" id="8Ue-kT-Mae"/>
+                            <constraint firstItem="8OE-UL-VHv" firstAttribute="top" secondItem="jSy-DT-aNe" secondAttribute="bottom" constant="100" id="Jr4-E7-jaQ"/>
+                            <constraint firstItem="fTn-Ox-nH9" firstAttribute="trailing" secondItem="jSy-DT-aNe" secondAttribute="trailing" constant="20" id="bpS-cW-Ux6"/>
+                            <constraint firstItem="jSy-DT-aNe" firstAttribute="leading" secondItem="fTn-Ox-nH9" secondAttribute="leading" constant="20" id="cPd-Xn-6kj"/>
+                            <constraint firstItem="jSy-DT-aNe" firstAttribute="top" secondItem="fTn-Ox-nH9" secondAttribute="top" constant="60" id="qYF-Ju-qMC"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="finalReadingsLable" destination="8OE-UL-VHv" id="fjn-5x-JRY"/>
+                        <outlet property="statusLable" destination="jSy-DT-aNe" id="xMG-dV-Izc"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JvR-Op-PkM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
