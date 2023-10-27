@@ -12,6 +12,6 @@
 #include <stdio.h>
 
 unsigned int s_Crc16Bit(unsigned char *p_uch_Data, unsigned int uin_CrcDataLen);
-
+unsigned char crc8_compute(unsigned char *pdata, unsigned data_size, unsigned char crc_in);
 
 #endif /* CRCUtils_h */

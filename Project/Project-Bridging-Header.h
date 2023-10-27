@@ -1,9 +1,10 @@
 //
 //  Use this file to import your target's public headers that you would like to expose to Swift.
 //
-#ifndef bloodGLucometer1-Bridging-Header
-#define bloodGLucometer1-Bridging-Header
+#ifndef Project-Bridging-Header
+#define Project-Bridging-Header
 
 #include "CRCUtils.h"
 
-#endif /* bloodGLucometer1-Bridging-Header */
+#endif /* Project-Bridging-Header */
+

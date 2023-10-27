@@ -68,3 +68,24 @@ unsigned int s_Crc16Bit(unsigned char *p_uch_Data, unsigned int uin_CrcDataLen)
 }
 
 
+//For Viatom BP
+unsigned char crc8_compute(unsigned char *pdata, unsigned data_size, unsigned char crc_in) {
+    uint8_t cnt;
+    uint8_t crc_poly = 0x07;
+    uint8_t data_tmp = 0;
+    
+    while (data_size--) {
+        data_tmp = *(pdata++);
+        crc_in ^= (data_tmp << 0);
+        for(cnt = 0; cnt < 8; cnt++) {
+            if(crc_in & 0x80) {
+                crc_in = (crc_in << 1) ^ crc_poly;
+                
+            } else {
+                crc_in = crc_in << 1;
+            }
+        }
+    }
+    return crc_in;
+    
+}
