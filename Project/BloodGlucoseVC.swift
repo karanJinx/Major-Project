@@ -188,7 +188,7 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
 
                     let mergedByteArray = header + commandBytes + crcBytes + footer
                     print("the mergedByteArray:\(mergedByteArray)")
-                    let mergedHexadecimal = [byteArrayToHexString([UInt8](mergedByteArray))]
+                    let mergedHexadecimal = Conversion.byteArrayToHexString1([UInt8](mergedByteArray))
                     print("The mergerHex:\(mergedHexadecimal)")
 
                     let command = Data(mergedByteArray)
@@ -207,36 +207,14 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
             }
         }
     }
-    func byteArrayToHexString(_ byteArray: [UInt8]) -> String {
-        return byteArray.map { String(format: "%02X", $0) }.joined(separator: " ")
-    }
-    func getPairsFromHexString(data: [UInt8]?) -> [String]? {
-        guard let data = data, !data.isEmpty else {
-            return nil
-        }
-        var pairs = [String]()
-        for byte in data {
-            var hex = String(byte, radix: 16)
-            if hex.count == 1 {
-                hex = "0" + hex
-            }
-            pairs.append(hex)
-        }
-        return pairs
-    }
-    func hexadecimalToDecimal(_ hexString: String) -> Int? {
-        var result: UInt64 = 0
-        let scanner = Scanner(string: hexString)
-        scanner.scanHexInt64(&result)
-        return Int(result)
-    }
+    
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         if let value = characteristic.value {
             //let byteArray = [UInt8](value)
             print("Data received")
             print(value as NSData)
-            let values = getPairsFromHexString(data: [UInt8](value))!
+            let values = Conversion.getPairsFromHexString(data: [UInt8](value))!
             print(values)
             if values.count >= 8 {
                 let startIndex = values.index(values.startIndex, offsetBy: 1)
@@ -258,16 +236,16 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                             print("Please Wait")
                         } else if values[9] == "44" {
                             let index10 = values[10]
-                            let index10HexValue = hexadecimalToDecimal(index10)
+                            let index10HexValue = Conversion.hexadecimalToDecimal(index10)
                             let index11 = values[11]
-                            let index11Hexvalue = hexadecimalToDecimal(index11)
+                            let index11Hexvalue = Conversion.hexadecimalToDecimal(index11)
                             
                             let resultInDecimal = String(index10HexValue!) + String(index11Hexvalue!)
                             print("The Final Reading:\(resultInDecimal)")
 //                            let resultInDecimal = UInt8(resultInHex,radix: 16)!
                             finalReadingsLable.isHidden = false
                             statusLable.text = "Final Readings"
-                            statusLable.text = "\(resultInDecimal) mg/dL"
+                            finalReadingsLable.text = "\(resultInDecimal) mg/dL"
 
                         } else if values[9] == "55" {
                             statusLable.text = "Invalid strip"

@@ -56,22 +56,14 @@ extension WeighingScaleVC: CBCentralManagerDelegate{
             print("something wrong with the central")
         }
     }
-    func byteArrayToHexString(_ byteArray: [UInt8]) -> String {
-        return byteArray.map { String(format: "%02X", $0) }.joined()
-    }
-    func hexadecimalToDecimal(_ hexString: String) -> Int? {
-        var result: UInt64 = 0
-        let scanner = Scanner(string: hexString)
-        scanner.scanHexInt64(&result)
-        return Int(result)
-    }
+    
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         //print(peripheral)
         //print(advertisementData)
         if peripheral.identifier == UUID(uuidString: "50BC6155-F71B-AC6A-5264-EC08D9391B9F"){
             //print("The manufacturer data:\(manufactureData)")
             if let manufactureData = advertisementData["kCBAdvDataManufacturerData"] as? Data{
-                let hexstring = byteArrayToHexString([UInt8](manufactureData))
+                let hexstring = Conversion.byteArrayToHexString([UInt8](manufactureData))
                 print(hexstring)
                 
                 
@@ -81,8 +73,8 @@ extension WeighingScaleVC: CBCentralManagerDelegate{
                 //AO => unstable weight
                 if hexstring.contains(WeightBLEReadingoptions.unstableReading.rawValue) {
                     
-                    let unstableHexReading = hexstring[startIndex..<endIndex]
-                    let unstableDecimalReading = hexadecimalToDecimal(String(unstableHexReading))!
+                    let unstableHexReading = String(hexstring[startIndex..<endIndex])
+                    let unstableDecimalReading = Conversion.hexadecimalToDecimal(String(unstableHexReading))!
                     let exactUnstableReading = Double(unstableDecimalReading) / Double(10)
                     scanLable.text = "Scanning..."
                     weightLable.isHidden = false
@@ -94,7 +86,7 @@ extension WeighingScaleVC: CBCentralManagerDelegate{
                     central.stopScan()
                     let finalHexReading = String(hexstring[startIndex..<endIndex])
                     print("The extracted Part :\(finalHexReading)")
-                    let finalDecimalReading = hexadecimalToDecimal(finalHexReading)!
+                    let finalDecimalReading = Conversion.hexadecimalToDecimal(finalHexReading)!
                     print("The decimal value :\(finalDecimalReading)")
                     let finalWeight = Double(finalDecimalReading) / Double(10)
                     print("The exactWeight:\(finalWeight)")
@@ -102,13 +94,8 @@ extension WeighingScaleVC: CBCentralManagerDelegate{
                     weightLable.isHidden = false
                     weightLable.text = "\(String(finalWeight)) Kg"
                     scanLable.text = "Weight Calculated Successfully."
-                    }
-                    
-                
-                
-                
+                }
             }
         }
     }
-    
 }

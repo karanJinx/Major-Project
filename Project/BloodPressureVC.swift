@@ -10,10 +10,13 @@ import UIKit
 import CoreBluetooth
 
 class BloodPressureVC: UIViewController{
-    @IBOutlet var systolicLable: UILabel!
-    @IBOutlet var diastolicLable: UILabel!
-    @IBOutlet var pulseLable: UILabel!
+    @IBOutlet var systolicReadingLable: UILabel!
+    @IBOutlet var diastolicReadingLable: UILabel!
+    @IBOutlet var pulseReadingLable: UILabel!
     @IBOutlet var scanningLable: UILabel!
+    @IBOutlet var systolicLable: UILabel!
+    @IBOutlet var pulseLable: UILabel!
+    
     
     var bloodPressureServiceUUID = CBUUID(string: "0xFFF0")
     var bloodPressureCharacteristicUUID1 = CBUUID(string: "0xFFF1") // Notify
@@ -29,6 +32,12 @@ class BloodPressureVC: UIViewController{
         super.viewDidLoad()
         
         centralManager = CBCentralManager(delegate: self, queue: nil)
+        
+        systolicLable.isHidden = true
+        pulseLable.isHidden = true
+        
+        systolicReadingLable.isHidden = true
+        pulseReadingLable.isHidden = true
     }
     
 }
@@ -122,54 +131,17 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
             
         }
     }
-    
-    
-    func byteToHexadecimal(data: [UInt8], addSpace: Bool) -> String? {
-        if data.isEmpty { return nil }
-        var hexString = ""
-        for byte in data {
-            let hex = String(format: "%02X", byte)
-            hexString += hex
-            if addSpace {
-                hexString += " "
-            }
-        }
-        return hexString.trimmingCharacters(in: .whitespaces)
-    }
-    
-    func hexadecimalToDecimal(_ hexString: String) -> Int? {
-        var result: UInt64 = 0
-        let scanner = Scanner(string: hexString)
-        scanner.scanHexInt64(&result)
-        return Int(result)
-    }
-    
-    func getPairsFromHexString(data: [UInt8]?) -> [String]? {
-        guard let data = data, !data.isEmpty else {
-            return nil
-        }
-        var pairs = [String]()
-        for byte in data {
-            var hex = String(byte, radix: 16)
-            if hex.count == 1 {
-                hex = "0" + hex
-            }
-            pairs.append(hex)
-        }
-        return pairs
-    }
+ 
+   
 
-    
-    
-    
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         switch characteristic.uuid {
         case bloodPressureCharacteristicUUID1:
             if let data = characteristic.value {
                 
                 let byteArray = [UInt8](data)
-                let hexString = byteToHexadecimal(data: byteArray, addSpace: true)!//byteArrayToHexString([UInt8](data))
-                let list = [getPairsFromHexString(data: byteArray)]
+                let hexString = Conversion.byteArrayToHexString1([UInt8](byteArray))
+                let list = [Conversion.getPairsFromHexString(data: byteArray)]
 //                print("The List :\(list)")
                 print("Received Data as Hexadecimal: \(hexString)")
                 
@@ -179,8 +151,8 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                     if let item = item,item.contains("fb"),item.count >= 5{
                         scanningLable.text = "scanning..."
                         let diastolicreading = item[(item.index(item.startIndex, offsetBy: 4))]
-                        print("Diastolic reading: \(hexadecimalToDecimal(String(diastolicreading))!)")
-                        diastolicLable.text = "\(hexadecimalToDecimal(String(diastolicreading))!)"
+                        print("Diastolic reading: \(Conversion.hexadecimalToDecimal(String(diastolicreading))!)")
+                        diastolicReadingLable.text = "\(Conversion.hexadecimalToDecimal(String(diastolicreading))!)"
                     }else if item!.contains("a5"){
                         scanningLable.text = "Tap Start"
                     }
@@ -189,13 +161,18 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                         let diastolicReading = item[item.index(item.startIndex, offsetBy: 4)]
                         let pulseReading = item[item.index(item.startIndex, offsetBy: 5)]
                         
-                        print("Systolic reading: \(hexadecimalToDecimal(systolicReading)!)")
-                        print("Diastolic reading: \(hexadecimalToDecimal(diastolicReading)!)")
-                        print("Pulse reading: \(hexadecimalToDecimal(pulseReading)!)")
+                        print("Systolic reading: \(Conversion.hexadecimalToDecimal(systolicReading)!)")
+                        print("Diastolic reading: \(Conversion.hexadecimalToDecimal(diastolicReading)!)")
+                        print("Pulse reading: \(Conversion.hexadecimalToDecimal(pulseReading)!)")
                         
-                        systolicLable.text = "\(hexadecimalToDecimal(systolicReading)!)"
-                        diastolicLable.text = "\(hexadecimalToDecimal(diastolicReading)!)"
-                        pulseLable.text = "\(hexadecimalToDecimal(pulseReading)!)"
+                        systolicReadingLable.text = "\(Conversion.hexadecimalToDecimal(systolicReading)!)"
+                        systolicLable.isHidden = false
+                        systolicReadingLable.isHidden = false
+                        diastolicReadingLable.text = "\(Conversion.hexadecimalToDecimal(diastolicReading)!)"
+                        pulseReadingLable.text = "\(Conversion.hexadecimalToDecimal(pulseReading)!)"
+                        pulseLable.isHidden  = false
+                        pulseReadingLable.isHidden = false
+                       
                         scanningLable.text = "Final Readings"
                         
                     }else if let item = item,item.contains("01") || item.contains("02") || item.contains("03") || item.contains("04") || item.contains("0C"){

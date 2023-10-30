@@ -101,7 +101,8 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                                 self.present(myTabBar, animated: true)
 
                             }
-                        }else if decoded.status == "failure"{
+                        }
+                        else if decoded.status == "failure"{
                             let alert = UIAlertController(title: "Alert", message: "server is Busy", preferredStyle: .alert)
                             alert.addAction(UIAlertAction(title: "Ok", style: .default))
                             self.present(alert, animated: true)

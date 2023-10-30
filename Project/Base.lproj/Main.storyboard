@@ -280,7 +280,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Diastolic Reading " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="glK-Qn-ZF2">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Diastolic Reading " textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="glK-Qn-ZF2" userLabel="Diastolic Reading">
                                 <rect key="frame" x="96" y="396" width="202" height="30"/>
                                 <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="25"/>
                                 <nil key="textColor"/>
@@ -338,10 +338,12 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="diastolicLable" destination="hpg-2v-6q2" id="ulk-Mr-IVQ"/>
-                        <outlet property="pulseLable" destination="Lqa-Hj-WuX" id="U8L-hT-Q1V"/>
+                        <outlet property="diastolicReadingLable" destination="hpg-2v-6q2" id="ulk-Mr-IVQ"/>
+                        <outlet property="pulseLable" destination="pCw-1v-Tlq" id="bHg-r7-TIo"/>
+                        <outlet property="pulseReadingLable" destination="Lqa-Hj-WuX" id="U8L-hT-Q1V"/>
                         <outlet property="scanningLable" destination="UgG-d0-Dca" id="NYh-n4-kkz"/>
-                        <outlet property="systolicLable" destination="8WF-d7-v20" id="5dT-AH-GgD"/>
+                        <outlet property="systolicLable" destination="0KW-Qb-5o9" id="f9e-bc-Gi6"/>
+                        <outlet property="systolicReadingLable" destination="8WF-d7-v20" id="tBe-NX-xpl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bMJ-Su-dgt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
