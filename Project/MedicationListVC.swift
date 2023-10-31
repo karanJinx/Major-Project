@@ -187,13 +187,13 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
 //                        }
                         print("the status:\(deleteDecoded.status!)")
                         if deleteDecoded.status == "success"{
-                            
-                            print("The medication idddd:\(medication.medicationId)")
+                            let currentMedicationId = medication.medicationId
+                            print("The medication idddd:\(currentMedicationId!)")
                             self.medication.remove(at: indexpath.row)
                             DispatchQueue.main.async {
                                 self.tableView.deleteRows(at: [indexpath], with: .fade)
                             }
-                            LocalNotificationManager.removeLocalNotification(identifier: String(medication.medicationId!))
+                            LocalNotificationManager.removeLocalNotification(identifier: String(currentMedicationId!))
                         }
                     }
                     catch{

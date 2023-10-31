@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CoreBluetooth
 
 struct Conversion{
     
@@ -68,6 +69,29 @@ struct Conversion{
             }
         }
         return hexString.trimmingCharacters(in: .whitespaces)
+    }
+    
+    static func reverseHexaDecimal(_ hexString: String) -> [String] {
+        var hexString = hexString
+        if hexString.count % 2 != 0 {
+            hexString = "0" + hexString // Add a leading zero if the length is odd
+        }
+
+        let firstPartIndex = hexString.index(hexString.startIndex, offsetBy: hexString.count / 2)
+        let firstPart = String(hexString[..<firstPartIndex])
+        let secondPart = String(hexString[firstPartIndex...])
+
+        return [firstPart, secondPart]
+    }
+    
+    static func findCharacteristic(withUUID uuid: CBUUID, in peripheral: CBPeripheral) -> CBCharacteristic? {
+        for service in peripheral.services ?? [] {
+            if let characteristic = service.characteristics?.first(where: { $0.uuid == uuid }) {
+                print("The characteristi:\(characteristic)")
+                return characteristic
+            }
+        }
+        return nil
     }
 
 }

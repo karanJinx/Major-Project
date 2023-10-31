@@ -25,7 +25,7 @@ class LocalNotificationManager{
    
     //schedule notification
     static func scheduleMedicationRemainder(medicationName: String,frequency: String,quantity: String,date: String,medicationId: String){
-        let medic:[MedicationData] = []
+        //let medic:[MedicationData] = []
         let center = UNUserNotificationCenter.current()
         //Content of the notification
         let content = UNMutableNotificationContent()
@@ -63,7 +63,7 @@ class LocalNotificationManager{
         
         
     //Create a request
-        var medicationId = medicationId
+        let medicationId = medicationId
         
         let request = UNNotificationRequest(identifier: medicationId , content: content, trigger: trigger)
         
@@ -75,7 +75,7 @@ class LocalNotificationManager{
     }
         
     
-    //canel the local notification
+    //cancel the local notification
     static func removeLocalNotification(identifier: String){
         let center = UNUserNotificationCenter.current()
         center.removePendingNotificationRequests(withIdentifiers: [identifier])

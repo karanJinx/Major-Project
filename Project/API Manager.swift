@@ -8,6 +8,11 @@
 import Foundation
 import UIKit
 
+protocol AlertPresentable {
+    func showAlert(title: String, message: String)
+}
+
+
 /// An enumeration HTTPMethod is defined to represent common HTTP request methods (GET, POST, PUT, DELETE). This makes it easier to specify the desired method when making requests.
 enum HTTPMethod: String {
     case get = "GET"
@@ -22,7 +27,7 @@ enum HTTPMethod: String {
 /// The private init() method ensures that no external code can create instances of APIManager
 class APIManager{
     static let shared = APIManager()
-    var viewController: UIViewController?
+    var viewController: AlertPresentable?
     
     private init() {}
     
@@ -78,14 +83,11 @@ class APIManager{
           
             
             if let httpResponse = response as? HTTPURLResponse  {
-                if httpResponse.statusCode == 503{
+                let responseStatusCode = httpResponse.statusCode
+                if responseStatusCode == 503{
                     DispatchQueue.main.async {
-                        let alert = UIAlertController(title: "Alert", message: "server is Busy", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "Ok", style: .default))
-                        self.viewController?.present(alert, animated: true)
-                        
+                        self.viewController?.showAlert(title: "Alert", message: "Server is Busy")
                     }
-                    
                 }
                 print("Statuscode :\(httpResponse.statusCode)")
             }
@@ -93,7 +95,7 @@ class APIManager{
             do {
                 if let data = data{
                    
-//                    var json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                    var json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
 //                    print("the json:\(json)")
                     completion(.success(data))
                 }else {

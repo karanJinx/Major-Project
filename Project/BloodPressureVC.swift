@@ -40,6 +40,31 @@ class BloodPressureVC: UIViewController{
         pulseReadingLable.isHidden = true
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        // Find the characteristic with the shutdown UUID in the discovered services
+        if let peripheralBPDevice = myPeripheral{
+            if let shutdownCharacteristic = Conversion.findCharacteristic(withUUID: bloodPressureCharacteristicUUID2, in: peripheralBPDevice) {
+                // Define the command to be sent
+                let commandBytes: [UInt8] = [0xFD, 0xFD, 0xFA, 0x06, 0x0D, 0x0A]
+                let commandSend = Data(commandBytes)
+
+                // Write the command to the shutdown characteristic without response
+                myPeripheral.writeValue(commandSend, for: shutdownCharacteristic, type: .withoutResponse)
+            }
+        }
+        
+
+    }
+    
+    /// Method to find the characteristic for the shutdown of ble device
+    /// - Parameters:
+    ///   - uuid: uuid is the characteristic for the shutdown(which is writeNoResponse)
+    ///   - peripheral: which is the ble device
+    /// - Returns: returns the characteristics
+    
+    
 }
 extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -102,6 +127,7 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
     
     
     
+    
     /// To discover the characteristics of the services
     /// - Parameters:
     ///   - peripheral: connected to BLE device
@@ -116,9 +142,12 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                 characteristic_writeWithoutResponse = characteristic
                 
                 let commandBytes: [UInt8] = [0xFD, 0xFD ,0xFA ,0x09, 0x13, 0x0B, 0x13, 0x12, 0x01, 0x14, 0x0D, 0x0A]
+                //let commandBytes: [UInt8] = [0xFD, 0xFD ,0xFA, 0x06, 0x0D, 0x0A]
                 let commandSend = Data(commandBytes)
                 peripheral.writeValue(commandSend, for: self.characteristic_writeWithoutResponse, type: .withoutResponse)
             }
+             
+            
 //            if characteristic.properties.contains(.read){
 //                peripheral.readValue(for: characteristic)
 //                print("\(characteristic.uuid) contains the read property")
@@ -131,6 +160,7 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
             
         }
     }
+    
  
    
 

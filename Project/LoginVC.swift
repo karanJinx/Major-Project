@@ -8,7 +8,15 @@
 import UIKit
 import Foundation
 
-class LoginVC: UIViewController, UITextFieldDelegate {
+class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
+    func showAlert(title: String, message: String) {
+        DispatchQueue.main.async {
+                    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default))
+                    self.present(alert, animated: true)
+                }
+    }
+    
     
     
     //MARK: - IBOUTLET
@@ -27,7 +35,56 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         
         emailTextField.delegate = self
         passwordTextField.delegate = self
+        
+        
+        // Add overlay view
+            view.addSubview(overlayView)
+            overlayView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            overlayView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+            overlayView.widthAnchor.constraint(equalToConstant: loaderSize).isActive = true
+            overlayView.heightAnchor.constraint(equalToConstant: loaderSize).isActive = true
+            overlayView.layer.cornerRadius = 10
+
+            // Add activity indicator
+            overlayView.addSubview(activityIndicator)
+            activityIndicator.centerXAnchor.constraint(equalTo: overlayView.centerXAnchor).isActive = true
+            activityIndicator.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor).isActive = true
+        
+        
     }
+    let overlayView: UIView = {
+            let view = UIView()
+            view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor.black.withAlphaComponent(20.0) // Semi-transparent background
+            view.isHidden = true // Initially hidden
+            return view
+    }()
+    
+    let loaderSize:CGFloat = 100.0
+    
+    let activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.color = .white
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
+
+    func showLoader() {
+        DispatchQueue.main.async {
+            self.overlayView.isHidden = false
+            self.activityIndicator.startAnimating()
+        }
+    }
+    func hideLoader() {
+        DispatchQueue.main.async {
+            self.overlayView.isHidden = true
+            self.activityIndicator.stopAnimating()
+        }
+    }
+
+
     
     /// KeyBoard disappers when we click the Return button
     /// - Parameter textField: email and password field
@@ -71,11 +128,13 @@ class LoginVC: UIViewController, UITextFieldDelegate {
             alert(message: "Password Cannot be Greater than 20 Characters")
         }
         else{
+            showLoader()
             let loginURL = APIHelper.share.baseURL + "login"
             let login = ["username" : trimmedUserName, "password" : trimmedPassword]
             
             //result is of type Result<Data, Error>, where Data represents the data received from the network request, and Error represents any potential errors.
             APIManager.shared.APIHelper(url: loginURL, params: login, method: .post , headers: nil, requestBody: nil, completion: { result in
+                self.hideLoader()
                 switch result {
 
                 case .success(let data):
@@ -85,9 +144,8 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                         let decoded = try JSONDecoder().decode(LoginResponseModal.self, from: data)
                         
                         //You're using JSONDecoder to decode the received data into an instance of a LoginResponseModal object. This is typically done to parse and work with the response data in a structured format.
+                        
                         if decoded.status == "success"{
-
-
                             print("the data is \(data)")
                             print("the token is \(decoded.data?.token ?? "")")
                              Token.token = decoded.data?.token
@@ -123,17 +181,21 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                     catch{
                         print("Error: try \(error.localizedDescription)")
                     }
-
-
-
-
                 case .failure(let error):
-                    print("Error \(error)")
+                    print("Errorrrr \(error)")
                 }
             }
         )
       }
+        func showAlert(title: String, message: String) {
+                DispatchQueue.main.async {
+                    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default))
+                    self.present(alert, animated: true)
+                }
+            }
     }
+    
 
 }
 
@@ -182,5 +244,3 @@ struct EnrolledProductsModal: Decodable{
 //    var isNewUser : String?
 //    var status : String?
 //}
-
-
