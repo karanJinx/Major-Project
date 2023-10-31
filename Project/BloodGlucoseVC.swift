@@ -43,7 +43,7 @@ class BloodGlucoseVC:UIViewController{
         finalReadingsLable.layer.shadowRadius = 4.0 // Shadow radius (adjust as needed)
         centralManager = CBCentralManager(delegate: self, queue: nil)
         view.addSubview(finalReadingsLable)
-
+        
     }
     
 }
@@ -104,10 +104,10 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
         if let characteristics = service.characteristics{
             for characteristic in characteristics {
                 print(characteristic)
-//                if characteristic.uuid == bloodGlucoMeterCharacteristicUUID3{
-//                    characteristic_read = characteristic
-//                    peripheral.readValue(for: characteristic_read)
-//                }
+                //                if characteristic.uuid == bloodGlucoMeterCharacteristicUUID3{
+                //                    characteristic_read = characteristic
+                //                    peripheral.readValue(for: characteristic_read)
+                //                }
                 
                 if characteristic.uuid == service1_Characteristic_1{
                     characteristic_notify = characteristic
@@ -117,27 +117,27 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                 if (characteristic.uuid == service1_Characteristic_2){
                     characteristic_writeWithoutResponse = characteristic
                     //let commandBytes: [UInt8] = [0x7B,0x01,0x10,0x01,0x20,0x77,0x55,0x00,0x00,0x01,0x0B,0x0B,0x04,0x7D] // SerialNumber
-                   // let commandAA: [UInt8] = [0x7B, 0x01, 0x10, 0x01, 0x20, 0xAA, 0x55, 0x00, 0x00, 0x02 ,0x01, 0x0D, 0x08, 0x7D] // Unit AA
-//                    let commandHistory: [UInt8] = [0x7B, 0x01 ,0x10, 0x01, 0x20, 0xDD, 0x55, 0x00, 0x00, 0x03, 0x0A, 0x06, 0x0C, 0x7D]
-//                    let commandhis = Data(commandHistory)
+                    // let commandAA: [UInt8] = [0x7B, 0x01, 0x10, 0x01, 0x20, 0xAA, 0x55, 0x00, 0x00, 0x02 ,0x01, 0x0D, 0x08, 0x7D] // Unit AA
+                    //                    let commandHistory: [UInt8] = [0x7B, 0x01 ,0x10, 0x01, 0x20, 0xDD, 0x55, 0x00, 0x00, 0x03, 0x0A, 0x06, 0x0C, 0x7D]
+                    //                    let commandhis = Data(commandHistory)
                     let commandBytes_stripIn : [UInt8] = [0x7B,0x01,0x10,0x01,0x20,0x12,0x99,0x00,0x00,0x0C,0x05,0x04,0x07,0x7D]
                     let command = Data(commandBytes_stripIn)
                     myPeripheral.writeValue(command, for: characteristic_writeWithoutResponse, type: .withoutResponse)
                 }
                 
                 
-                 //static method to write date and time
-//                if characteristic.uuid == service1_Characteristic_2{
-//                    characteristic_writeWithoutResponse = characteristic
-//                    let commandBytes: [UInt8] = [0x7B, 0x01, 0x10, 0x01, 0x20, 0x44, 0x66 ,0x00 ,0x06 ,0x10 ,0x07 ,0x0B, 0x0F, 0x32, 0x2A, 0x07,0x04, 0x03, 0x08, 0x7D]
-//                    let commandSend = Data(commandBytes)
-//                    peripheral.writeValue(commandSend, for: characteristic_writeWithoutResponse, type: .withoutResponse)
-//                }
-
-                if characteristic.uuid == service1_Characteristic_2{
+                //static method to write date and time
+                //                if characteristic.uuid == service1_Characteristic_2{
+                //                    characteristic_writeWithoutResponse = characteristic
+                //                    let commandBytes: [UInt8] = [0x7B, 0x01, 0x10, 0x01, 0x20, 0x44, 0x66 ,0x00 ,0x06 ,0x10 ,0x07 ,0x0B, 0x0F, 0x32, 0x2A, 0x07,0x04, 0x03, 0x08, 0x7D]
+                //                    let commandSend = Data(commandBytes)
+                //                    peripheral.writeValue(commandSend, for: characteristic_writeWithoutResponse, type: .withoutResponse)
+                //                }
                 
+                if characteristic.uuid == service1_Characteristic_2{
+                    
                     characteristic_writeWithoutResponse = characteristic
-
+                    
                     let calendar = Calendar.current
                     let components = calendar.dateComponents([.year,.month,.day,.hour,.minute,.second], from: Date())
                     let year = UInt8(components.year! % 100)
@@ -157,58 +157,58 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                     
                     let commandBytes: [UInt8] = [0x01, 0x10, 0x01, 0x20, 0x44, 0x66 ,0x00 ,0x06 ,UInt8(yearHexString,radix: 16)!,UInt8(monthHexString,radix: 16)!,UInt8(dayHexString,radix: 16)!, UInt8(hourHexString,radix: 16)!, UInt8(minuteHexString,radix: 16)!, UInt8(secondHexString,radix: 16)!]
                     print("the command bytes:\(commandBytes)")
-
+                    
                     //let commandBytes: [UInt8] = [0x01, 0x10, 0x01, 0x20, 0x44, 0x66 ,0x00 ,0x06 ,0x10 ,0x07 ,0x0B, 0x0F, 0x32, 0x2A]
                     let datalenght = UInt32(commandBytes.count)
-
+                    
                     let dataPointer = UnsafeMutablePointer<UInt8>.allocate(capacity: commandBytes.count)
                     dataPointer.initialize(from: commandBytes, count: commandBytes.count)
-
+                    
                     let crcResult = s_Crc16Bit(dataPointer,datalenght)
                     dataPointer.deallocate()
-
+                    
                     let o1 = Int((crcResult >> 8) & 0xFF)
                     let o2 = Int(crcResult & 0xFF)
-
+                    
                     print(String(format: "CRC Result: %02X", (o1 >> 4) & 0xFF))
                     print(String(format: "CRC Result: %02X", o1 & 0xF))
                     print(String(format: "CRC Result: %02X", (o2 >> 4) & 0xFF))
                     print(String(format: "CRC Result: %02X", o2 & 0xF))
                     print("The crc resrtt:\(crcResult)")
-
+                    
                     var crcBytes = [UInt8](repeating: 0, count: 4)
                     crcBytes[0] = UInt8((crcResult >> 12) & 0xF)
                     crcBytes[1] = UInt8((crcResult >> 8) & 0xF)
                     crcBytes[2] = UInt8((crcResult >> 4) & 0xF)
                     crcBytes[3] = UInt8(crcResult & 0xF)
                     print("The crc Bytes :\(crcBytes)")
-
+                    
                     let header: [UInt8] = [0x7B]
                     let footer: [UInt8] = [0x7D]
-
+                    
                     let mergedByteArray = header + commandBytes + crcBytes + footer
                     print("the mergedByteArray:\(mergedByteArray)")
                     let mergedHexadecimal = Conversion.byteArrayToHexString1([UInt8](mergedByteArray))
                     print("The mergerHex:\(mergedHexadecimal)")
-
+                    
                     let command = Data(mergedByteArray)
                     
                     print("The command:\(command)")
                     peripheral.writeValue(command, for: characteristic_writeWithoutResponse, type: .withoutResponse)
-
-//                    print("My commandByte:\(commandBytes)")
-//                    let command2 = byteArrayToHexString([UInt8](command))
-//                    print("My commandByte2:\(command2)")
-  
-
-
+                    
+                    //                    print("My commandByte:\(commandBytes)")
+                    //                    let command2 = byteArrayToHexString([UInt8](command))
+                    //                    print("My commandByte2:\(command2)")
+                    
+                    
+                    
                 }
-
+                
             }
         }
     }
     
-
+    
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         if let value = characteristic.value {
             //let byteArray = [UInt8](value)
@@ -242,11 +242,11 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                             
                             let resultInDecimal = String(index10HexValue!) + String(index11Hexvalue!)
                             print("The Final Reading:\(resultInDecimal)")
-//                            let resultInDecimal = UInt8(resultInHex,radix: 16)!
+                            //                            let resultInDecimal = UInt8(resultInHex,radix: 16)!
                             finalReadingsLable.isHidden = false
                             statusLable.text = "Final Readings"
                             finalReadingsLable.text = "\(resultInDecimal) mg/dL"
-
+                            
                         } else if values[9] == "55" {
                             statusLable.text = "Invalid strip"
                             print("Invalid strip")
@@ -267,18 +267,18 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
             }else{
                 print("Other header and footer")
             }
-
+            
             
             //print("The value :\(getPairsFromHexString(data: byteArray)!)")
         }
     }
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         if let error = error {
-               // Handle the error
-               print("Error writing value to characteristic \(characteristic.uuid): \(error.localizedDescription)")
-           } else {
-               // Write operation successful
-               print("Successfully wrote value to characteristic \(characteristic.uuid)")
-           }
+            // Handle the error
+            print("Error writing value to characteristic \(characteristic.uuid): \(error.localizedDescription)")
+        } else {
+            // Write operation successful
+            print("Successfully wrote value to characteristic \(characteristic.uuid)")
+        }
     }
 }

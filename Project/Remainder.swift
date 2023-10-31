@@ -22,7 +22,7 @@ class LocalNotificationManager{
         }
     }
     
-   
+    
     //schedule notification
     static func scheduleMedicationRemainder(medicationName: String,frequency: String,quantity: String,date: String,medicationId: String){
         //let medic:[MedicationData] = []
@@ -62,18 +62,18 @@ class LocalNotificationManager{
         }
         
         
-    //Create a request
+        //Create a request
         let medicationId = medicationId
         
         let request = UNNotificationRequest(identifier: medicationId , content: content, trigger: trigger)
         
-    //Register a request
+        //Register a request
         center.add(request) { error in
             print("Error in the Local Notification: \(error)")
         }
-       
-    }
         
+    }
+    
     
     //cancel the local notification
     static func removeLocalNotification(identifier: String){

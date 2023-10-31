@@ -17,9 +17,9 @@ class EcgVC: UIViewController{
     var write_characteristic: CBCharacteristic!
     var writeWithoutResponse_characteristic: CBCharacteristic!
     
-//    var ECGService_1 = CBUUID(string: "FE59")
-//    var service1_characteristic1 = CBUUID(string: "8EC90001-F315-4F60-9FB8-838830DAEA50") // Notify,Write
-//    var service1_characteristic2 = CBUUID(string: "8EC90002-F315-4F60-9FB8-838830DAEA50") // Read,writeWithoutResponse
+    //    var ECGService_1 = CBUUID(string: "FE59")
+    //    var service1_characteristic1 = CBUUID(string: "8EC90001-F315-4F60-9FB8-838830DAEA50") // Notify,Write
+    //    var service1_characteristic2 = CBUUID(string: "8EC90002-F315-4F60-9FB8-838830DAEA50") // Read,writeWithoutResponse
     
     var ECGService_2 = CBUUID(string: "14839AC4-7D7E-415C-9A42-167340CF2339")
     var service2_characteristic1 = CBUUID(string: "8B00ACE7-EB0B-49B0-BBE9-9AEE0A26E1A3") //Read,Write,WriteWithoutResponse
@@ -41,9 +41,9 @@ class EcgVC: UIViewController{
         }
         
     }
-
     
-     
+    
+    
     
 }
 extension EcgVC:CBCentralManagerDelegate,CBPeripheralDelegate{
@@ -64,7 +64,7 @@ extension EcgVC:CBCentralManagerDelegate,CBPeripheralDelegate{
             centralManager.scanForPeripherals(withServices: nil)
         @unknown default:
             print("Central is default")
-
+            
         }
     }
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
@@ -100,14 +100,14 @@ extension EcgVC:CBCentralManagerDelegate,CBPeripheralDelegate{
             dataPointer.initialize(from: commandBytes, count: commandBytes.count)
             let crcResult = crc8_compute(dataPointer, dataSize, 0x00)
             dataPointer.deallocate()
-
+            
             // Append the CRC byte to the commandBytes
             var bytesWithCRC = commandBytes
             bytesWithCRC.append(crcResult)
-
+            
             // Convert the array to Data
             let dataToWrite = Data(bytesWithCRC)
-
+            
             // Check if the characteristic supports writeWithoutResponse
             if characteristic.properties.contains(.writeWithoutResponse) {
                 // Perform the write operation
@@ -119,12 +119,12 @@ extension EcgVC:CBCentralManagerDelegate,CBPeripheralDelegate{
         }
         
     }
-   
-
+    
+    
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if let characteristics = service.characteristics{
             for characteristic in characteristics {
-               // print("The characteristics:\(characteristic)")
+                // print("The characteristics:\(characteristic)")
                 if characteristic.uuid == service2_characteristic2{
                     notify_characteristic = characteristic
                     peripheral.setNotifyValue(true, for: notify_characteristic)
@@ -159,52 +159,52 @@ extension EcgVC:CBCentralManagerDelegate,CBPeripheralDelegate{
                     print(minuteHexString)
                     let secondHexString = String(format: "%02X", second)
                     print(secondHexString)
-
+                    
                     //Writing Time
                     //let commandBytes: [UInt8] = [0xA5, 0xEC, ~0xEC, 0x00, 0x00, 0x07, 0x00, 0xE7, 0x07, 0x0A, 0x19, 0x12, 0x05, 0x32, 0x12]
                     let commandBytes: [UInt8] = [0xA5, 0xEC, ~0xEC, 0x00, 0x00, 0x07, 0x00, UInt8(yearInput[1],radix: 16)!, UInt8(yearInput[0],radix: 16)!, UInt8(monthHexString,radix: 16)!, UInt8(dayHexString,radix: 16)!, UInt8(hourHexString,radix: 16)!, UInt8(minuteHexString,radix: 16)!, UInt8(secondHexString,radix: 16)!]
                     self.writeDataWithCRC(commandBytes: commandBytes, peripheral: peripheral, characteristic: writeWithoutResponse_characteristic)
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
-//
-//                        let commandSend = Data(commandBytes)
-//                        peripheral.writeValue(commandSend, for: self.writeWithoutResponse_characteristic, type: .withoutResponse)
-//                        print("write success")
-//                    }
+                    //                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5){
+                    //
+                    //                        let commandSend = Data(commandBytes)
+                    //                        peripheral.writeValue(commandSend, for: self.writeWithoutResponse_characteristic, type: .withoutResponse)
+                    //                        print("write success")
+                    //                    }
                     
                     //writing swithcing device
-                        let commandBytes1: [UInt8] = [0xA5, 0x09, ~0x09, 0x00, 0x01, 0x01,0x00, 0x01]
-                        self.writeDataWithCRC(commandBytes: commandBytes1, peripheral: peripheral, characteristic: self.writeWithoutResponse_characteristic)
-
-//                    writing real time data
-                        let commandBytes2: [UInt8] = [0xA5, 0x08, ~0x08, 0x00, 0x02, 0x00, 0x00]
-                        self.writeDataWithCRC(commandBytes: commandBytes2, peripheral: peripheral, characteristic: self.writeWithoutResponse_characteristic)
-//
-////                    //writing
-//                        let commandBytes3: [UInt8] = [0xA5, 0x03, ~0x03, 0x00, 0x03, 0x00, 0x00]
-//                        self.writeDataWithCRC(commandBytes: commandBytes3, peripheral: peripheral, characteristic: self.writeWithoutResponse_characteristic)
-
-//                    //writing
-//                        let commandBytes4: [UInt8] = [0xA5, 0x03, ~0x03, 0x00, 0x04, 0x00, 0x00] // file details
-//                        self.writeDataWithCRC(commandBytes: commandBytes4, peripheral: peripheral, characteristic: self.writeWithoutResponse_characteristic)
-
+                    let commandBytes1: [UInt8] = [0xA5, 0x09, ~0x09, 0x00, 0x01, 0x01,0x00, 0x01]
+                    self.writeDataWithCRC(commandBytes: commandBytes1, peripheral: peripheral, characteristic: self.writeWithoutResponse_characteristic)
+                    
+                    //                    writing real time data
+                    let commandBytes2: [UInt8] = [0xA5, 0x08, ~0x08, 0x00, 0x02, 0x00, 0x00]
+                    self.writeDataWithCRC(commandBytes: commandBytes2, peripheral: peripheral, characteristic: self.writeWithoutResponse_characteristic)
+                    //
+                    ////                    //writing
+                    //                        let commandBytes3: [UInt8] = [0xA5, 0x03, ~0x03, 0x00, 0x03, 0x00, 0x00]
+                    //                        self.writeDataWithCRC(commandBytes: commandBytes3, peripheral: peripheral, characteristic: self.writeWithoutResponse_characteristic)
+                    
+                    //                    //writing
+                    //                        let commandBytes4: [UInt8] = [0xA5, 0x03, ~0x03, 0x00, 0x04, 0x00, 0x00] // file details
+                    //                        self.writeDataWithCRC(commandBytes: commandBytes4, peripheral: peripheral, characteristic: self.writeWithoutResponse_characteristic)
+                    
                 }
-   
                 
-//                if characteristic.properties.contains(.notify){
-//                    print("Notify:\(characteristic)")
-//                }
-//                if characteristic.properties.contains(.read){
-//                    print("Read:\(characteristic)")
-//                }
-//                if characteristic.properties.contains(.write){
-//                    print("Write:\(characteristic)")
-//                }
-//                if characteristic.properties.contains(.writeWithoutResponse){
-//                    print("WriteWithoutResponse:\(characteristic)")
-//                }
+                
+                //                if characteristic.properties.contains(.notify){
+                //                    print("Notify:\(characteristic)")
+                //                }
+                //                if characteristic.properties.contains(.read){
+                //                    print("Read:\(characteristic)")
+                //                }
+                //                if characteristic.properties.contains(.write){
+                //                    print("Write:\(characteristic)")
+                //                }
+                //                if characteristic.properties.contains(.writeWithoutResponse){
+                //                    print("WriteWithoutResponse:\(characteristic)")
+                //                }
             }
         }
-       
+        
     }
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         //print("the characteristic:\(characteristic)")
@@ -216,7 +216,7 @@ extension EcgVC:CBCentralManagerDelegate,CBPeripheralDelegate{
             
         }
     }
-
+    
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         if let error = error {
             print("Error writing characteristic: \(error.localizedDescription)")
@@ -224,7 +224,7 @@ extension EcgVC:CBCentralManagerDelegate,CBPeripheralDelegate{
         }
         if let value = characteristic.value {
             print("Characteristic \(value) written")
-                                    
+            
         } else {
             print("Characteristic value is empty")
         }

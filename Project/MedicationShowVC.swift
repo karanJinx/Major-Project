@@ -17,7 +17,7 @@ class MedicationShowVC: UIViewController{
     @IBOutlet var quantityLable: UILabel!
     @IBOutlet var effectiveDateLable: UILabel!
     @IBOutlet var lastEffectiveDateLable: UILabel!
-
+    
     
     var medication1 = MedicationData()
     
@@ -37,7 +37,7 @@ class MedicationShowVC: UIViewController{
         customs(viewName: nameView)
         customs(viewName: frequencyView)
         customs(viewName: dateView)
-
+        
         nameLable.text = medication1.name
         frequencyLable.text = medication1.frequency
         quantityLable.text = String(medication1.quantity!)

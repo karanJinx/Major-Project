@@ -61,46 +61,46 @@ struct DeletionList: Codable{
     var effectiveDate: String?
     var lastEffectiveDate: String?
     var invalidFlag: String?
-
+    
 }
 
 
 class MedicationListVC: UIViewController,DataEnterDelegate{
     
     var medication :[MedicationData] = []
-
-   // var notificationIdentifier: String?
+    
+    // var notificationIdentifier: String?
     
     func didUserEnterInformation() {
         ListMedication()
     }
     
-
+    
     @IBOutlet var tableView: UITableView!
     @IBOutlet var addBarButton: UIBarButtonItem!
     
-
-    override func viewDidLoad() {
     
+    override func viewDidLoad() {
+        
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
         
         ListMedication()
         
-       tableView.reloadData()
+        tableView.reloadData()
     }
-
-//    func editMedication(_ editedMedication: MedicationData) {
-//        // Find the index of the edited medication in the array
-//        if let index = medication.firstIndex(where: { $0.medicationId == editedMedication.medicationId }) {
-//            // Update the medication in the array
-//            medication[index] = editedMedication
-//
-//            // Reload the table view
-//            tableView.reloadData()
-//        }
-//    }
+    
+    //    func editMedication(_ editedMedication: MedicationData) {
+    //        // Find the index of the edited medication in the array
+    //        if let index = medication.firstIndex(where: { $0.medicationId == editedMedication.medicationId }) {
+    //            // Update the medication in the array
+    //            medication[index] = editedMedication
+    //
+    //            // Reload the table view
+    //            tableView.reloadData()
+    //        }
+    //    }
     @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "AddMedicationVC") as! AddMedicationVC
@@ -118,8 +118,8 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
             case .success(let data):
                 
                 do{
-//                    let meddicationJson = try JSONSerialization.jsonObject(with: data)
-//                    print("The meddicationjson:\(meddicationJson)")
+                    //                    let meddicationJson = try JSONSerialization.jsonObject(with: data)
+                    //                    print("The meddicationjson:\(meddicationJson)")
                     var medicationDecoded = try JSONDecoder().decode(MedicationListResponse.self, from: data)
                     let medicationDataArray = medicationDecoded.data
                     for medicationDatasingle in medicationDataArray{
@@ -133,7 +133,7 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
                     DispatchQueue.main.async {
                         // If you missed it will never display in the list screen.
                         self.tableView.reloadData()
-
+                        
                     }
                     
                 }
@@ -174,17 +174,17 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
                         
                         
                         // to see the medication Id
-//                        if let deletionData = deleteDecoded.data,let deletionList = deletionData.list{
-//                            for items in deletionList{
-//                                if items.invalidFlag == "Yes"{
-//                                    if let medicationid = items.medicationId{
-//                                        print("the deleted medicationIdddd :\(medicationid)")
-//
-//                                    }
-//                                }
-//
-//                            }
-//                        }
+                        //                        if let deletionData = deleteDecoded.data,let deletionList = deletionData.list{
+                        //                            for items in deletionList{
+                        //                                if items.invalidFlag == "Yes"{
+                        //                                    if let medicationid = items.medicationId{
+                        //                                        print("the deleted medicationIdddd :\(medicationid)")
+                        //
+                        //                                    }
+                        //                                }
+                        //
+                        //                            }
+                        //                        }
                         print("the status:\(deleteDecoded.status!)")
                         if deleteDecoded.status == "success"{
                             let currentMedicationId = medication.medicationId
@@ -214,14 +214,14 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
     func handlerEditAction(at indexPath: IndexPath){
         let itemToEdit = medication[indexPath.row]
         print("The item To edit :\(itemToEdit)")
-
+        
         let editViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "AddMedicationVC") as! AddMedicationVC
         editViewController.delegate = self
         editViewController.medicationData = itemToEdit
         navigationController?.pushViewController(editViewController, animated: true)
-       
+        
     }
-
+    
 }
 extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -250,16 +250,16 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
         cell.dateDayLable.text = medicationItem.effectiveDate
         
         cell.baseView.layer.cornerRadius = 15
-
+        
         cell.baseView.layer.shadowColor = UIColor.black.cgColor
         cell.baseView.layer.shadowOpacity = 0.4
         cell.baseView.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
         cell.baseView.layer.shadowRadius = 3.0
         
-       
+        
         return cell
     }
-
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 115
     }
@@ -276,11 +276,11 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
             self.handlerEditAction(at: indexPath)
             completionHandler(true)
         }
-    
+        
         editAction.backgroundColor = .systemGreen
         return UISwipeActionsConfiguration(actions: [editAction])
     }
-  
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
             let itemToDelete = medication[indexPath.row]

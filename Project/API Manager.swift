@@ -42,7 +42,7 @@ class APIManager{
     ///   - completion: A closure (callback) that is called when the request is complete, passing a Result object that can contain either the response data or an error.
     func APIHelper(url: String,params: [String:Any], method: HTTPMethod , headers: [String:String]?, requestBody: Data?, completion: @escaping (Result<Data, Error>) -> Void){
         
-//        This line initializes an empty array called queryItems to store URL query items. Query items are key-value pairs that are used to pass parameters in the URL.
+        //        This line initializes an empty array called queryItems to store URL query items. Query items are key-value pairs that are used to pass parameters in the URL.
         var queryItems : [URLQueryItem] = []
         
         // dict from the apihelper method (param) is converted into the urlqueryitem and appended into the queryitems
@@ -53,10 +53,10 @@ class APIManager{
         
         
         var urlComponents = URLComponents(string: url )
-       // This line sets the queryItems array as the query items of the urlComponents
+        // This line sets the queryItems array as the query items of the urlComponents
         urlComponents?.queryItems = queryItems
         
-//         A URLRequest is created with the URL generated from urlComponents. This sets up the initial request with the base URL and the query parameters.
+        //         A URLRequest is created with the URL generated from urlComponents. This sets up the initial request with the base URL and the query parameters.
         var request = URLRequest(url: (urlComponents?.url)!)
         request.httpMethod = method.rawValue
         request.httpBody = requestBody
@@ -73,14 +73,14 @@ class APIManager{
         // creating a URLSession instance using the .shared static property. URLSession is part of the Foundation framework and is responsible for making network requests
         let session = URLSession.shared
         
-       //You're creating a data task with the given request. A data task is used to fetch data from a specified URL. The task is asynchronous, meaning it won't block the main thread while fetching data. The task takes a closure that's called when the task completes.
+        //You're creating a data task with the given request. A data task is used to fetch data from a specified URL. The task is asynchronous, meaning it won't block the main thread while fetching data. The task takes a closure that's called when the task completes.
         let dataTask = session.dataTask(with: request) { (data, response, error) in
             
             if let error = error {
                 completion(.failure(error))
                 return
             }
-          
+            
             
             if let httpResponse = response as? HTTPURLResponse  {
                 let responseStatusCode = httpResponse.statusCode
@@ -94,14 +94,14 @@ class APIManager{
             
             do {
                 if let data = data{
-                   
+                    
                     var json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-//                    print("the json:\(json)")
+                    //                    print("the json:\(json)")
                     completion(.success(data))
                 }else {
                     let error = NSError(domain: "InvalidData", code: 0, userInfo: nil)
                     completion(.failure(error))
-                 }
+                }
             }catch {
                 completion(.failure(error))
             }
@@ -111,4 +111,3 @@ class APIManager{
     }
     
 }
-    

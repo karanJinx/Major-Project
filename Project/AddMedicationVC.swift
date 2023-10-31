@@ -10,7 +10,7 @@ import UserNotifications
 
 protocol DataEnterDelegate{
     func didUserEnterInformation()
-  
+    
 }
 
 
@@ -73,8 +73,8 @@ struct MedicationSearch: Codable{
 
 struct MedicationDetails : Codable{
     var others : [OtherMedication]?
-
-
+    
+    
 }
 struct OtherMedication : Codable{
     var mediProId: String?
@@ -94,7 +94,7 @@ struct OtherMedication : Codable{
     var frequency: String?
     var frequencyCode: String?
     var customFrequency: String?
-  
+    
 }
 
 //Edit Medication
@@ -146,8 +146,8 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
     
     
     var delegate: DataEnterDelegate? = nil
-
-   
+    
+    
     let datePicker = UIDatePicker()
     let datePickerEndDate = UIDatePicker()
     
@@ -156,12 +156,12 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
     var frequenciesFromApi:[MedicationFrequency] = []
     
     var meidcineNameFromApi: [String] = []
-
+    
     var filteredSuggestion: [String] = []
-
+    
     let rowHeight: CGFloat = 40.0
-  
-  
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -179,7 +179,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         notesTextfield.text = medicationData?.notes
         effectiveDateTextField.text = medicationData?.effectiveDate
         effectiveEndDateTimeTextField.text = medicationData?.lastEffectiveDate
-       
+        
         medicationNameTextField.tag = 1
         frequencyTextField.tag = 2
         quantityTextField.tag = 3
@@ -207,13 +207,13 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         DatePicker()
         DatePicker2()
         
-//        let currentDate = Date()
-//        let dateformat = DateFormatter()
-//        dateformat.dateFormat = "MM-dd-yyyy hh:mm a"
-//
-//
-//        effectiveDateTextField.text = dateformat.string(from: currentDate)
-
+        //        let currentDate = Date()
+        //        let dateformat = DateFormatter()
+        //        dateformat.dateFormat = "MM-dd-yyyy hh:mm a"
+        //
+        //
+        //        effectiveDateTextField.text = dateformat.string(from: currentDate)
+        
         // Do any additional setup after loading the view.
         let frequencyApi = APIHelper.share.baseURLWeb + "hum-codes/CPLN-MEDI-FREQ"
         let frequencyParam = ["id": 33689]
@@ -238,7 +238,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                             
                         }
                         print("The dataValues:\(datalistValues)")
-    
+                        
                     }else{
                         print("Error")
                     }
@@ -279,7 +279,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         effectiveDateTextField.text = formatter.string(from: datePicker.date)
         effectiveDateTextField.resignFirstResponder()
         
-        }
+    }
     @objc func cancelButtonTappedForEffectiveDate(_ button: UIBarButtonItem){
         effectiveDateTextField.resignFirstResponder()
     }
@@ -299,8 +299,8 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         formatter.dateFormat = "MM-dd-yyyy hh:mm a"
         effectiveEndDateTimeTextField.text = formatter.string(from: datePickerEndDate.date)
         effectiveEndDateTimeTextField.resignFirstResponder()
-       
-        }
+        
+    }
     @objc func cancelButtonTappedLastEffectiveDate(_ button: UIBarButtonItem){
         effectiveEndDateTimeTextField.resignFirstResponder()
     }
@@ -367,68 +367,68 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
             let dataString = String(data: saveDataJson, encoding: .utf8)
             print("The save data aa:\(dataString)")
             APIManager.shared.APIHelper(url: saveApi, params: [:], method: .post, headers: headers, requestBody: saveDataJson) { result in
-        
-                    switch result {
-        
-                    case .success(let data):
-                       
-                      
-                        do{
-                            let serializeData = try JSONSerialization.jsonObject(with: data) //as? [String:Any]
-                            print("The serializedata : \(serializeData)")
-        
-                            let saveDecoded = try JSONDecoder().decode(ResponseData.self, from: data)
-//                            if let dataInfo = saveDecoded.data,let medicationList = dataInfo.list{
-//                                for medicationnnn in medicationList{
-//                                    let medicationIddd = medicationnnn.medicationId
-//                                    print("The medicationIddd:\(medicationIddd)")
-//                                }
-//                            }
-
-                            Token.logId = saveDecoded.logId
-                            print("The logId:\(saveDecoded.logId)")
-                            if saveDecoded.status == "success"{
-                                DispatchQueue.main.async {
-                                    LocalNotificationManager.scheduleMedicationRemainder(medicationName: self.medicationNameTextField.text!, frequency: self.frequencyTextField.text!, quantity: self.quantityTextField.text!, date: self.effectiveDateTextField.text!, medicationId:medicationIdString)
-                                }
-                                
-                                
-                                let datas = saveDecoded.data
-                                let dataList = datas?.list
-                                print("The save datas: \(datas))")
-                                if case let saveList? = dataList{
-                                    for saves in saveList{
-                                        print("the dataaa lists: \(saves.effectiveDate)")
-                                    }
-                                }
-                                
-                                self.delegate?.didUserEnterInformation()
-                                
-                                DispatchQueue.main.async {
-                                    self.navigationController?.popViewController(animated: true)
-                                }
-                                
+                
+                switch result {
+                    
+                case .success(let data):
+                    
+                    
+                    do{
+                        let serializeData = try JSONSerialization.jsonObject(with: data) //as? [String:Any]
+                        print("The serializedata : \(serializeData)")
+                        
+                        let saveDecoded = try JSONDecoder().decode(ResponseData.self, from: data)
+                        //                            if let dataInfo = saveDecoded.data,let medicationList = dataInfo.list{
+                        //                                for medicationnnn in medicationList{
+                        //                                    let medicationIddd = medicationnnn.medicationId
+                        //                                    print("The medicationIddd:\(medicationIddd)")
+                        //                                }
+                        //                            }
+                        
+                        Token.logId = saveDecoded.logId
+                        print("The logId:\(saveDecoded.logId)")
+                        if saveDecoded.status == "success"{
+                            DispatchQueue.main.async {
+                                LocalNotificationManager.scheduleMedicationRemainder(medicationName: self.medicationNameTextField.text!, frequency: self.frequencyTextField.text!, quantity: self.quantityTextField.text!, date: self.effectiveDateTextField.text!, medicationId:medicationIdString)
                             }
+                            
+                            
+                            let datas = saveDecoded.data
+                            let dataList = datas?.list
+                            print("The save datas: \(datas))")
+                            if case let saveList? = dataList{
+                                for saves in saveList{
+                                    print("the dataaa lists: \(saves.effectiveDate)")
+                                }
+                            }
+                            
+                            self.delegate?.didUserEnterInformation()
+                            
+                            DispatchQueue.main.async {
+                                self.navigationController?.popViewController(animated: true)
+                            }
+                            
                         }
-                        catch{
-                            print("Catch error:\(error.localizedDescription)")
-                        }
-        
-                    case .failure(let error):
-                        print("save api error: \(error)")
                     }
+                    catch{
+                        print("Catch error:\(error.localizedDescription)")
+                    }
+                    
+                case .failure(let error):
+                    print("save api error: \(error)")
                 }
+            }
         }
         catch{
             print("json serialization error in the save data: \(error)")
         }
-     
-    }
         
+    }
+    
     func medicationvalidation(){
         let validationUrl = APIHelper.share.baseURLWeb + "medications/validation"
         let headers = ["X-Auth-Token": Token.token!,"Content-Type": "application/json"]
-    
+        
         let jsonDict: [String: Any] = [
             "patientId": Token.patientId!,
             "careplanId": Token.careplanId!,
@@ -440,21 +440,21 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         print("The validation request :\(jsonDict)")
         do{
             let jsonData = try JSONSerialization.data(withJSONObject: jsonDict,options: [])
-
+            
             APIManager.shared.APIHelper(url: validationUrl, params: [:], method: .post, headers: headers, requestBody: jsonData) { result in
                 switch result {
-                    case .success(let data):
-                        // Handle success: data is the successfully received data
+                case .success(let data):
+                    // Handle success: data is the successfully received data
                     let dataString = String(data: data, encoding: .utf8)
                     print("the validation data string: \(dataString)")
                     if dataString == "true"{
                         DispatchQueue.main.async {
                             self.saveAPI()
-//                            let quantity1 = Int(self.quantityTextField.text!)
-                           
+                            //                            let quantity1 = Int(self.quantityTextField.text!)
+                            
                         }
                         //print("true successful")
-   
+                        
                     }else{
                         DispatchQueue.main.async {
                             let alert = UIAlertController(title: "Alert!", message: dataString, preferredStyle: .alert)
@@ -464,12 +464,12 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                         print("False successful")
                     }
                     
-                        //print("Received data:\(dataString)")
-                    case .failure(let error):
+                    //print("Received data:\(dataString)")
+                case .failure(let error):
                     
-                        // Handle failure: error contains the error information
+                    // Handle failure: error contains the error information
                     print("Error:: \(error.localizedDescription)")
-                    }
+                }
             }
         }
         catch{
@@ -478,47 +478,47 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
     }
     func SearchApi(){
         if medicationNameTextField.text!.count == 4 {
-                    let medicationApi = APIHelper.share.baseURLWeb + "medications/names"
-                    let medicationParam = ["medName" : medicationNameTextField.text!,"isCarePlan" : "Y"] as [String : Any]
-                    let headers = ["X-Auth-Token":Token.token!]
+            let medicationApi = APIHelper.share.baseURLWeb + "medications/names"
+            let medicationParam = ["medName" : medicationNameTextField.text!,"isCarePlan" : "Y"] as [String : Any]
+            let headers = ["X-Auth-Token":Token.token!]
             APIManager.shared.APIHelper(url: medicationApi, params: medicationParam, method: .post, headers: headers, requestBody: nil) { result in
-                        switch result{
-
-                        case .success(let medications):
-                           
-                            do{
-                                let medicationDecoded = try JSONDecoder().decode(MedicationSearch.self, from: medications)
-                                if medicationDecoded.status == "success"{
-                                    let dataMedication = medicationDecoded.data
-                                    let dataOthers = dataMedication?.others
-                                    //print("The dataOther:\(dataOthers)")
-                                    if case let values? = dataOthers{
-                                        for medName in values{
-                                            let mediPropName = medName.mediProprietaryName ?? ""
-                                            let mediNonPropName = medName.mediNonProprietaryName ?? ""
-                                            self.filteredSuggestion.append(mediPropName + mediNonPropName )
-                                        }
-                                    }
-                                    DispatchQueue.main.async {
-                                        self.searchTableview.reloadData()
-                                        self.searchTableview.isHidden = false
-
-                                    }
-          
+                switch result{
+                    
+                case .success(let medications):
+                    
+                    do{
+                        let medicationDecoded = try JSONDecoder().decode(MedicationSearch.self, from: medications)
+                        if medicationDecoded.status == "success"{
+                            let dataMedication = medicationDecoded.data
+                            let dataOthers = dataMedication?.others
+                            //print("The dataOther:\(dataOthers)")
+                            if case let values? = dataOthers{
+                                for medName in values{
+                                    let mediPropName = medName.mediProprietaryName ?? ""
+                                    let mediNonPropName = medName.mediNonProprietaryName ?? ""
+                                    self.filteredSuggestion.append(mediPropName + mediNonPropName )
                                 }
                             }
-                            catch{
-                                print("Errorrr:\(error.localizedDescription)")
+                            DispatchQueue.main.async {
+                                self.searchTableview.reloadData()
+                                self.searchTableview.isHidden = false
+                                
                             }
-                            print(medications)
-                        case .failure(let error):
-                            print("EError: \(error)")
+                            
                         }
                     }
+                    catch{
+                        print("Errorrr:\(error.localizedDescription)")
+                    }
+                    print(medications)
+                case .failure(let error):
+                    print("EError: \(error)")
                 }
+            }
+        }
     }
-
-
+    
+    
     func saveButtonAlert(message:String){
         let alert = UIAlertController(title: "Alert!", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel))
@@ -530,7 +530,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         let frequencyField = frequencyTextField.text!
         let quantityField = quantityTextField.text!
         let notesField = notesTextfield.text!
-      
+        
         if medicineField.isEmpty{
             saveButtonAlert(message: "Medicine Field is empty")
         }else if frequencyField.isEmpty{
@@ -552,10 +552,10 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         print("Effective end date:\(effectiveEndDateTimeTextField.text!)")
         
         
-
+        
     }
-
-
+    
+    
 }
 extension AddMedicationVC:UITextFieldDelegate{
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -569,24 +569,24 @@ extension AddMedicationVC:UITextFieldDelegate{
             self.SearchApi()
             
             if textField.tag == 1{
-                        let character = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890'")
-                        let set = CharacterSet(charactersIn: string)
-                        
-                        return character.isSuperset(of: set)
-                    }
+                let character = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890'")
+                let set = CharacterSet(charactersIn: string)
+                
+                return character.isSuperset(of: set)
+            }
             else if textField.tag == 3{
-                        let allowdedCharacter1 = CharacterSet(charactersIn: "1234567890.")
-                        let set1 = CharacterSet(charactersIn: string)
-                  
-                        let maxNumbers = 3
-                        let currentText = (textField.text ?? "") as NSString
-                        let newText = currentText.replacingCharacters(in: range, with: string)
-                      
-                        return true && allowdedCharacter1.isSuperset(of: set1) && newText.count <= maxNumbers
-                    }
+                let allowdedCharacter1 = CharacterSet(charactersIn: "1234567890.")
+                let set1 = CharacterSet(charactersIn: string)
+                
+                let maxNumbers = 3
+                let currentText = (textField.text ?? "") as NSString
+                let newText = currentText.replacingCharacters(in: range, with: string)
+                
+                return true && allowdedCharacter1.isSuperset(of: set1) && newText.count <= maxNumbers
+            }
         }
- 
-
+        
+        
         return true
     }
 }
@@ -635,11 +635,11 @@ extension AddMedicationVC: UITableViewDelegate,UITableViewDataSource{
         searchTableview.reloadData()
         searchTableview.isHidden = true
     }
-
+    
 }
 
 
-                
-        
+
+
 
 

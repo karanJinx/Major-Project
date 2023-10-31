@@ -76,11 +76,11 @@ struct Conversion{
         if hexString.count % 2 != 0 {
             hexString = "0" + hexString // Add a leading zero if the length is odd
         }
-
+        
         let firstPartIndex = hexString.index(hexString.startIndex, offsetBy: hexString.count / 2)
         let firstPart = String(hexString[..<firstPartIndex])
         let secondPart = String(hexString[firstPartIndex...])
-
+        
         return [firstPart, secondPart]
     }
     
@@ -93,5 +93,5 @@ struct Conversion{
         }
         return nil
     }
-
+    
 }

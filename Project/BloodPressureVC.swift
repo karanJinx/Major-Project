@@ -42,20 +42,20 @@ class BloodPressureVC: UIViewController{
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-
+        
         // Find the characteristic with the shutdown UUID in the discovered services
         if let peripheralBPDevice = myPeripheral{
             if let shutdownCharacteristic = Conversion.findCharacteristic(withUUID: bloodPressureCharacteristicUUID2, in: peripheralBPDevice) {
                 // Define the command to be sent
                 let commandBytes: [UInt8] = [0xFD, 0xFD, 0xFA, 0x06, 0x0D, 0x0A]
                 let commandSend = Data(commandBytes)
-
+                
                 // Write the command to the shutdown characteristic without response
                 myPeripheral.writeValue(commandSend, for: shutdownCharacteristic, type: .withoutResponse)
             }
         }
         
-
+        
     }
     
     /// Method to find the characteristic for the shutdown of ble device
@@ -108,7 +108,7 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("Connected")
         scanningLable.text = "Device Connected Successfully."
-//        peripheral.discoverServices([bloodPressureServiceUUID])
+        //        peripheral.discoverServices([bloodPressureServiceUUID])
         peripheral.discoverServices(nil)
         
     }
@@ -146,24 +146,24 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                 let commandSend = Data(commandBytes)
                 peripheral.writeValue(commandSend, for: self.characteristic_writeWithoutResponse, type: .withoutResponse)
             }
-             
             
-//            if characteristic.properties.contains(.read){
-//                peripheral.readValue(for: characteristic)
-//                print("\(characteristic.uuid) contains the read property")
-//            }
+            
+            //            if characteristic.properties.contains(.read){
+            //                peripheral.readValue(for: characteristic)
+            //                print("\(characteristic.uuid) contains the read property")
+            //            }
             if characteristic.properties.contains(.notify){
                 peripheral.setNotifyValue(true, for: characteristic)
                 print("\(characteristic.uuid) contains the notify property")
             }
-           
+            
             
         }
     }
     
- 
-   
-
+    
+    
+    
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         switch characteristic.uuid {
         case bloodPressureCharacteristicUUID1:
@@ -172,10 +172,10 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                 let byteArray = [UInt8](data)
                 let hexString = Conversion.byteArrayToHexString1([UInt8](byteArray))
                 let list = [Conversion.getPairsFromHexString(data: byteArray)]
-//                print("The List :\(list)")
+                //                print("The List :\(list)")
                 print("Received Data as Hexadecimal: \(hexString)")
                 
-               
+                
                 
                 for item in list {
                     if let item = item,item.contains("fb"),item.count >= 5{
@@ -202,23 +202,23 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                         pulseReadingLable.text = "\(Conversion.hexadecimalToDecimal(pulseReading)!)"
                         pulseLable.isHidden  = false
                         pulseReadingLable.isHidden = false
-                       
+                        
                         scanningLable.text = "Final Readings"
                         
                     }else if let item = item,item.contains("01") || item.contains("02") || item.contains("03") || item.contains("04") || item.contains("0C"){
                         print("The human heartbeat signal is too small or the pressure drops suddenly")
                         scanningLable.text = "If the measurement is wrong, please wear the CUFF again according to the instruction manual.Keep quiet and re-measure. (Use this sentence for the above 5 items)."
-                     }
+                    }
                     else if let item = item{
                         item.contains("0B")
                         scanningLable.text = "The battery is low, please replace the battery"
                     }
                     
-
-
+                    
+                    
                 }
             }
-
+            
             else {
                 print("No value received for Blood Pressure characteristic")
             }

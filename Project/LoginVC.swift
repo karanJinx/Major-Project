@@ -11,10 +11,10 @@ import Foundation
 class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
     func showAlert(title: String, message: String) {
         DispatchQueue.main.async {
-                    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default))
-                    self.present(alert, animated: true)
-                }
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default))
+            self.present(alert, animated: true)
+        }
     }
     
     
@@ -38,26 +38,26 @@ class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
         
         
         // Add overlay view
-            view.addSubview(overlayView)
-            overlayView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-            overlayView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-            overlayView.widthAnchor.constraint(equalToConstant: loaderSize).isActive = true
-            overlayView.heightAnchor.constraint(equalToConstant: loaderSize).isActive = true
-            overlayView.layer.cornerRadius = 10
-
-            // Add activity indicator
-            overlayView.addSubview(activityIndicator)
-            activityIndicator.centerXAnchor.constraint(equalTo: overlayView.centerXAnchor).isActive = true
-            activityIndicator.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor).isActive = true
+        view.addSubview(overlayView)
+        overlayView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        overlayView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        overlayView.widthAnchor.constraint(equalToConstant: loaderSize).isActive = true
+        overlayView.heightAnchor.constraint(equalToConstant: loaderSize).isActive = true
+        overlayView.layer.cornerRadius = 10
+        
+        // Add activity indicator
+        overlayView.addSubview(activityIndicator)
+        activityIndicator.centerXAnchor.constraint(equalTo: overlayView.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor).isActive = true
         
         
     }
     let overlayView: UIView = {
-            let view = UIView()
-            view.translatesAutoresizingMaskIntoConstraints = false
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.black.withAlphaComponent(20.0) // Semi-transparent background
-            view.isHidden = true // Initially hidden
-            return view
+        view.isHidden = true // Initially hidden
+        return view
     }()
     
     let loaderSize:CGFloat = 100.0
@@ -70,7 +70,7 @@ class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
         return indicator
     }()
     
-
+    
     func showLoader() {
         DispatchQueue.main.async {
             self.overlayView.isHidden = false
@@ -83,8 +83,8 @@ class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
             self.activityIndicator.stopAnimating()
         }
     }
-
-
+    
+    
     
     /// KeyBoard disappers when we click the Return button
     /// - Parameter textField: email and password field
@@ -94,7 +94,7 @@ class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
         passwordTextField.resignFirstResponder()
         return true
     }
-   
+    
     
     @IBAction func submitButtonPressed(_ sender: UIButton)  {
         let username = emailTextField.text!
@@ -104,8 +104,8 @@ class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
         
         
         
-//        print(username)
-//        print(trimmedUserName)
+        //        print(username)
+        //        print(trimmedUserName)
         
         /// Showing alert when the textField(username or password) is empty
         /// - Parameter message: What message to show to the user
@@ -136,9 +136,9 @@ class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
             APIManager.shared.APIHelper(url: loginURL, params: login, method: .post , headers: nil, requestBody: nil, completion: { result in
                 self.hideLoader()
                 switch result {
-
+                    
                 case .success(let data):
-
+                    
                     do{
                         //If the network request is successful (i.e., .success), you proceed to decode the data received from the server.
                         let decoded = try JSONDecoder().decode(LoginResponseModal.self, from: data)
@@ -148,16 +148,16 @@ class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
                         if decoded.status == "success"{
                             print("the data is \(data)")
                             print("the token is \(decoded.data?.token ?? "")")
-                             Token.token = decoded.data?.token
-
-//                            print("the token is \(decoded.token ?? "")")
-//                            Token.token = decoded.token
-
+                            Token.token = decoded.data?.token
+                            
+                            //                            print("the token is \(decoded.token ?? "")")
+                            //                            Token.token = decoded.token
+                            
                             DispatchQueue.main.async {
                                 let myTabBar = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabBar") as! UITabBarController
                                 myTabBar.modalPresentationStyle = .overCurrentContext
                                 self.present(myTabBar, animated: true)
-
+                                
                             }
                         }
                         else if decoded.status == "failure"{
@@ -171,10 +171,10 @@ class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
                                 let alert = UIAlertController(title: "Alert", message: (message), preferredStyle: .alert)
                                 alert.addAction(UIAlertAction(title: "OK", style: .cancel))
                                 self.present(alert, animated: true)
-//                                let message = decoded.status
-//                                let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
-//                                alert.addAction(UIAlertAction(title: "OK", style: .cancel))
-//                                self.present(alert, animated: true)
+                                //                                let message = decoded.status
+                                //                                let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
+                                //                                alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+                                //                                self.present(alert, animated: true)
                             }
                         }
                     }
@@ -185,18 +185,18 @@ class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
                     print("Errorrrr \(error)")
                 }
             }
-        )
-      }
+            )
+        }
         func showAlert(title: String, message: String) {
-                DispatchQueue.main.async {
-                    let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .default))
-                    self.present(alert, animated: true)
-                }
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: .default))
+                self.present(alert, animated: true)
             }
+        }
     }
     
-
+    
 }
 
 struct LoginResponseModal: Decodable{
