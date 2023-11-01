@@ -15,6 +15,7 @@ class Cell: UITableViewCell {
     @IBOutlet var frequencyLable: UILabel!
     @IBOutlet var quantityLable: UILabel!
     @IBOutlet var dateDayLable: UILabel!
+    @IBOutlet var lastDayDateLable: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

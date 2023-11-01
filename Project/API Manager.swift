@@ -92,19 +92,17 @@ class APIManager{
                 print("Statuscode :\(httpResponse.statusCode)")
             }
             
-            do {
+            
                 if let data = data{
                     
-                    var json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                    //                    print("the json:\(json)")
+//                    var json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+//                    //                    print("the json:\(json)")
                     completion(.success(data))
                 }else {
                     let error = NSError(domain: "InvalidData", code: 0, userInfo: nil)
                     completion(.failure(error))
                 }
-            }catch {
-                completion(.failure(error))
-            }
+            
         }
         
         dataTask.resume()

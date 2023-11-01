@@ -31,6 +31,37 @@ struct MedicationFrequency: Codable {
 
 
 // medication validity
+//struct MedicationInfo: Codable {
+//    let medicationId: Int?
+//    let name: String?
+//    let code: String?
+//    let frequencyCode: String?
+//    let customFrequency: String?
+//    let quantity: Int?
+//    let frequency: String
+//    let notes: String?
+//    let nonProprietaryId: String?
+//    let effectiveDate: String?
+//    let lastEffectiveDate: String?
+//    let invalidFlag: String?
+//}
+//struct DataInfo: Codable {
+//    let timestamp: String?
+//    let carePlanDate: String?
+//    let careplanId: Int?
+//    let activeDiseases: String?
+//    let list: [MedicationInfo]?
+//    let diagnosisId: String?
+//}
+//struct ResponseData: Codable {
+//    let id: Int?
+//    let preventativeMeasureGoalCode: String?
+//    let status: String?
+//    let data: DataInfo?
+//    let timestamp: String?
+//    let carePlanDate: String?
+//    var logId: Int?
+//}
 struct ResponseData: Codable {
     let id: Int?
     let preventativeMeasureGoalCode: String?
@@ -38,17 +69,16 @@ struct ResponseData: Codable {
     let data: DataInfo?
     let timestamp: String?
     let carePlanDate: String?
-    var logId: Int?
+    let logId: Int?
 }
 struct DataInfo: Codable {
     let timestamp: String?
     let carePlanDate: String?
     let careplanId: Int?
     let activeDiseases: String?
-    let list: [MedicationInfo]?
+    let list: [MedicationInfo]
     let diagnosisId: String?
 }
-
 struct MedicationInfo: Codable {
     let medicationId: Int?
     let name: String?
@@ -56,13 +86,21 @@ struct MedicationInfo: Codable {
     let frequencyCode: String?
     let customFrequency: String?
     let quantity: Int?
-    let frequency: String
+    let frequency: String?
     let notes: String?
     let nonProprietaryId: String?
     let effectiveDate: String?
     let lastEffectiveDate: String?
     let invalidFlag: String?
 }
+
+
+
+
+
+
+
+
 
 //medication search
 
@@ -162,7 +200,6 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
     let rowHeight: CGFloat = 40.0
     
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         //getting authorization from the user
@@ -207,12 +244,12 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         DatePicker()
         DatePicker2()
         
-        //        let currentDate = Date()
-        //        let dateformat = DateFormatter()
-        //        dateformat.dateFormat = "MM-dd-yyyy hh:mm a"
-        //
-        //
-        //        effectiveDateTextField.text = dateformat.string(from: currentDate)
+                let currentDate = Date()
+                let dateformat = DateFormatter()
+                dateformat.dateFormat = "MM-dd-yyyy hh:mm a"
+        
+        
+                effectiveDateTextField.text = dateformat.string(from: currentDate)
         
         // Do any additional setup after loading the view.
         let frequencyApi = APIHelper.share.baseURLWeb + "hum-codes/CPLN-MEDI-FREQ"
@@ -338,7 +375,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
             medicationIdString = medicationIdStr
         }
         print("The medicationIdString:\(medicationIdString)")
-        var saveJson:[String:Any] = [
+        let saveJson:[String:Any] = [
             "patientId": Token.patientId!,
             "careplanId": Token.careplanId!,
             "medicationId": "",//"\(medicationIdString)"
@@ -374,7 +411,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                     
                     
                     do{
-                        let serializeData = try JSONSerialization.jsonObject(with: data) //as? [String:Any]
+                        let serializeData = try JSONSerialization.jsonObject(with: data) as? [String:Any]
                         print("The serializedata : \(serializeData)")
                         
                         let saveDecoded = try JSONDecoder().decode(ResponseData.self, from: data)
@@ -446,7 +483,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                 case .success(let data):
                     // Handle success: data is the successfully received data
                     let dataString = String(data: data, encoding: .utf8)
-                    print("the validation data string: \(dataString)")
+                    print("the validation data string: \(dataString!)")
                     if dataString == "true"{
                         DispatchQueue.main.async {
                             self.saveAPI()

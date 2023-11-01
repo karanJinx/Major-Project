@@ -52,14 +52,29 @@ class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
         
         
     }
+    
+    /// a loader overView on top of the view,(1)assinged instance uiview,(2)createdView ,which is actual overlay view.(3)setting autocontraint to false,(4)settign bacgroundcolor to back opacity 20(5)view is Initially hidden
     let overlayView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor.black.withAlphaComponent(20.0) // Semi-transparent background
         view.isHidden = true // Initially hidden
+        
+        // Create and customize the "Loading" label
+        let loadingLabel = UILabel()
+        loadingLabel.text = "Loading..."
+        loadingLabel.textColor = .white
+        loadingLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        loadingLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(loadingLabel)
+        
+        loadingLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        loadingLabel.centerYAnchor.constraint(equalTo: view.bottomAnchor,constant: -20).isActive = true
+        
         return view
     }()
     
+    //used to set the height and width of the overlay view
     let loaderSize:CGFloat = 100.0
     
     let activityIndicator: UIActivityIndicatorView = {

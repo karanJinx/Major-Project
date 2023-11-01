@@ -45,7 +45,10 @@ class BloodGlucoseVC:UIViewController{
         view.addSubview(finalReadingsLable)
         
     }
-    
+
+    @IBAction func backButtonPressedBG(_ sender: Any) {
+        Method.showConfirmationAlertToGoBackTo(from: self, targetViewController: HomeVC())
+    }
 }
 extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
@@ -253,8 +256,8 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                         }
                     } else if values[5] == "d2" && values[6] == "66" {
                         if values[9] == "0b" {
-                            statusLable.text = "Bluetooth disconnected from the peripheral"
-                            print("Bluetooth disconnected from the peripheral")
+                            statusLable.text = "Bluetooth disconnected"
+                            print("Bluetooth disconnected")
                         }
                     } else if values[5] == "44" && values[6] == "99"{
                         print("Time setted in the BG device")

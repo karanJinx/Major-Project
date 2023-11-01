@@ -34,6 +34,31 @@ class WeighingScaleVC: UIViewController{
         
         view.addSubview(weightLable)
     }
+    
+//    func showConfirmationAlertToGoBackTo(_ targetViewController: UIViewController) {
+//        let alertController = UIAlertController(title: "Confirmation", message: "Are you sure you want to go back to the Home?", preferredStyle: .alert)
+//
+//        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] (_) in
+//            if let homeVC = self?.navigationController?.viewControllers.first(where: { $0 is HomeVC }) {
+//                self?.navigationController?.popToViewController(homeVC, animated: true)
+//            }
+//        }
+//
+//        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+//
+//        // Add the actions to the alert controller
+//        alertController.addAction(okAction)
+//        alertController.addAction(cancelAction)
+//
+//        // Present the alert
+//        present(alertController, animated: true, completion: nil)
+//    }
+
+    @IBAction func BackButtonPressedWeightScale(_ sender: Any) {
+        Method.showConfirmationAlertToGoBackTo(from: self, targetViewController: HomeVC())
+
+    }
+    
 }
 extension WeighingScaleVC: CBCentralManagerDelegate{
     func centralManagerDidUpdateState(_ central: CBCentralManager) {

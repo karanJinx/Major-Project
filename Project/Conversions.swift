@@ -84,6 +84,12 @@ struct Conversion{
         return [firstPart, secondPart]
     }
     
+    /// Method to find the characteristic for the shutdown of ble device
+    /// - Parameters:
+    ///   - uuid: uuid is the characteristic for the shutdown(which is writeNoResponse)
+    ///   - peripheral: which is the ble device
+    /// - Returns: returns the characteristics
+    
     static func findCharacteristic(withUUID uuid: CBUUID, in peripheral: CBPeripheral) -> CBCharacteristic? {
         for service in peripheral.services ?? [] {
             if let characteristic = service.characteristics?.first(where: { $0.uuid == uuid }) {

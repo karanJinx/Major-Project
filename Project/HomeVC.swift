@@ -41,6 +41,7 @@ class HomeVC:UIViewController{
     func navigation(identifier: String){
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyBoard.instantiateViewController(identifier: identifier)
+        vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
     

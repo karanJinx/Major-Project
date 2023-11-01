@@ -24,7 +24,7 @@ class MedicationShowVC: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        hidesBottomBarWhenPushed = true
         /// setting corner radius and shadow for showing the medication in the list screen
         /// - Parameter viewName: parameter refering the UIView
         func customs(viewName:UIView){
@@ -42,7 +42,7 @@ class MedicationShowVC: UIViewController{
         frequencyLable.text = medication1.frequency
         quantityLable.text = String(medication1.quantity!)
         effectiveDateLable.text = medication1.effectiveDate
-        lastEffectiveDateLable.text = medication1.lastEffectiveDate
+        lastEffectiveDateLable.text = medication1.lastEffectiveDate ?? "-"
         
     }
 }

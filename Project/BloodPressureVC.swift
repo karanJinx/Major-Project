@@ -57,13 +57,10 @@ class BloodPressureVC: UIViewController{
         
         
     }
-    
-    /// Method to find the characteristic for the shutdown of ble device
-    /// - Parameters:
-    ///   - uuid: uuid is the characteristic for the shutdown(which is writeNoResponse)
-    ///   - peripheral: which is the ble device
-    /// - Returns: returns the characteristics
-    
+    @IBAction func backButtonPressedBP(_ sender: Any) {
+        Method.showConfirmationAlertToGoBackTo(from: self, targetViewController: HomeVC())
+    }
+
     
 }
 extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{

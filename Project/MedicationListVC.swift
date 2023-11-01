@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+
 //List Medication Response
 struct MedicationListResponse: Codable{
     var id : String?
@@ -248,8 +249,8 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
         //let quantity = String(medicationItem.quantity!)
         //cell.quantityLable.text = quantity
         cell.dateDayLable.text = medicationItem.effectiveDate
-        
-        cell.baseView.layer.cornerRadius = 15
+        cell.lastDayDateLable.text = medicationItem.lastEffectiveDate ?? "-"
+        cell.baseView.layer.cornerRadius = 5
         
         cell.baseView.layer.shadowColor = UIColor.black.cgColor
         cell.baseView.layer.shadowOpacity = 0.4
@@ -261,14 +262,17 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 115
+        return 160
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyBoard.instantiateViewController(withIdentifier: "MedicationShowVC") as! MedicationShowVC
         vc.medication1 = medication[indexPath.row]
+        vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
+        
+        
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -280,7 +284,19 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
         editAction.backgroundColor = .systemGreen
         return UISwipeActionsConfiguration(actions: [editAction])
     }
-    
+    func showToast(controller: UIViewController, message : String, seconds: Double) {
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        alert.view.backgroundColor = UIColor.black
+        alert.view.alpha = 0.6
+        alert.view.layer.cornerRadius = 15
+
+        alert.view.frame.origin.y = controller.view.frame.size.height - alert.view.frame.size.height
+        controller.present(alert, animated: true)
+
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + seconds) {
+            alert.dismiss(animated: true)
+        }
+    }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
             let itemToDelete = medication[indexPath.row]
@@ -288,6 +304,7 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
             print("Item to Delete:\(itemToDelete)")
             print("deleted medication id: \(itemToDelete.medicationId)")
             DeleteApi(at: indexPath, medication: itemToDelete)
+            showToast(controller: self, message: "Medication Deleted Successfully", seconds: 3.0)
         }
     }
     
