@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		580369922AB2111F00C6B098 /* AddMedicationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 580369912AB2111F00C6B098 /* AddMedicationVC.swift */; };
 		580C95152AF26A1D005A82A7 /* Methods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 580C95142AF26A1D005A82A7 /* Methods.swift */; };
+		5810509F2AF3F7610042AF11 /* AfterReadingAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5810509E2AF3F7610042AF11 /* AfterReadingAlert.swift */; };
 		583F9C732AEFA6390037D1FB /* Conversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 583F9C722AEFA6390037D1FB /* Conversions.swift */; };
 		589906832AA88F9500B13EC1 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 589906822AA88F9500B13EC1 /* SettingsVC.swift */; };
 		589906852AA8A7F800B13EC1 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 589906842AA8A7F800B13EC1 /* HomeVC.swift */; };
@@ -35,6 +36,7 @@
 /* Begin PBXFileReference section */
 		580369912AB2111F00C6B098 /* AddMedicationVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMedicationVC.swift; sourceTree = "<group>"; };
 		580C95142AF26A1D005A82A7 /* Methods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Methods.swift; sourceTree = "<group>"; };
+		5810509E2AF3F7610042AF11 /* AfterReadingAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterReadingAlert.swift; sourceTree = "<group>"; };
 		583F9C722AEFA6390037D1FB /* Conversions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversions.swift; sourceTree = "<group>"; };
 		589906822AA88F9500B13EC1 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		589906842AA8A7F800B13EC1 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 				589933D92AA989DC007BBAF4 /* EcgVC.swift */,
 				583F9C722AEFA6390037D1FB /* Conversions.swift */,
 				580C95142AF26A1D005A82A7 /* Methods.swift */,
+				5810509E2AF3F7610042AF11 /* AfterReadingAlert.swift */,
 				589933E12AA9CFAA007BBAF4 /* MedicationListVC.swift */,
 				580369912AB2111F00C6B098 /* AddMedicationVC.swift */,
 				5899C9D72ABD5D0C008FD0C2 /* MedicationShowVC.swift */,
@@ -214,6 +217,7 @@
 				58C298202AC7EA4400568682 /* Remainder.swift in Sources */,
 				58B07AE22AB0D9FA00F8A5C8 /* Global Token.swift in Sources */,
 				580369922AB2111F00C6B098 /* AddMedicationVC.swift in Sources */,
+				5810509F2AF3F7610042AF11 /* AfterReadingAlert.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

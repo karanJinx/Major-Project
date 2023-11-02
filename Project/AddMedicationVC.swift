@@ -244,12 +244,12 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         DatePicker()
         DatePicker2()
         
-                let currentDate = Date()
-                let dateformat = DateFormatter()
-                dateformat.dateFormat = "MM-dd-yyyy hh:mm a"
-        
-        
-                effectiveDateTextField.text = dateformat.string(from: currentDate)
+//                let currentDate = Date()
+//                let dateformat = DateFormatter()
+//                dateformat.dateFormat = "MM-dd-yyyy hh:mm a"
+//
+//
+//                effectiveDateTextField.text = dateformat.string(from: currentDate)
         
         // Do any additional setup after loading the view.
         let frequencyApi = APIHelper.share.baseURLWeb + "hum-codes/CPLN-MEDI-FREQ"
@@ -274,7 +274,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                             self.frequenciesFromApi.append(contentsOf: values)
                             
                         }
-                        print("The dataValues:\(datalistValues)")
+                        //print("The dataValues:\(datalistValues!)")
                         
                     }else{
                         print("Error")
@@ -373,27 +373,29 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
             print("the medica id:\(medicId)")
             let medicationIdStr = String(medicId)
             medicationIdString = medicationIdStr
+            Token.medicationId = medicationIdString
         }
         print("The medicationIdString:\(medicationIdString)")
+        
         let saveJson:[String:Any] = [
             "patientId": Token.patientId!,
             "careplanId": Token.careplanId!,
-            "medicationId": "",//"\(medicationIdString)"
-            "code": "248543",
-            "name": medicationNameTextField.text!,
-            "notes": notesTextfield.text!,
-            "effectiveDate": effectiveDateTextField.text,
-            "lastEffectiveDate": effectiveEndDateTimeTextField.text,
+            "medicationId": medicationIdString,
+            "code": "",
+            "name": medicationNameTextField.text ?? "" ,
+            "notes": notesTextfield.text ?? "",
+            "effectiveDate": effectiveDateTextField.text ?? "",
+            "lastEffectiveDate": "",
             "frequency": frequencyString ,
             "customFrequency": "",
-            "quantity": quantityTextField.text!,
+            "quantity": quantityTextField.text ?? 0,
             "activeFlag": "Y",
             "productCode": "ccm",
             "visitId": "",
             "isFavoriteFlag": "N",
             "logId": Token.logId,
-            "careplanLogMessageUserInput": "A new medication '\(medicationNameTextField.text!)' has been added.",
-            "careplanLogMessage": "A new medication '\(medicationNameTextField.text!)' has been added In a quantity of '\(quantityTextField.text!)'."
+            "careplanLogMessageUserInput": "A new medication '\(medicationNameTextField.text ?? "")' has been added.",
+            "careplanLogMessage": "A new medication '\(medicationNameTextField.text ?? "")' has been added In a quantity of '\(quantityTextField.text ?? "")'."
         ]
         print("The save Json: \(saveJson)")
         
@@ -402,7 +404,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
             
             let saveDataJson = try JSONSerialization.data(withJSONObject: saveJson,options: [])
             let dataString = String(data: saveDataJson, encoding: .utf8)
-            print("The save data aa:\(dataString)")
+            print("The save data aa:\(dataString!)")
             APIManager.shared.APIHelper(url: saveApi, params: [:], method: .post, headers: headers, requestBody: saveDataJson) { result in
                 
                 switch result {
@@ -412,32 +414,25 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                     
                     do{
                         let serializeData = try JSONSerialization.jsonObject(with: data) as? [String:Any]
-                        print("The serializedata : \(serializeData)")
+                        print("The serializedata : \(serializeData!)")
                         
                         let saveDecoded = try JSONDecoder().decode(ResponseData.self, from: data)
-                        //                            if let dataInfo = saveDecoded.data,let medicationList = dataInfo.list{
-                        //                                for medicationnnn in medicationList{
-                        //                                    let medicationIddd = medicationnnn.medicationId
-                        //                                    print("The medicationIddd:\(medicationIddd)")
-                        //                                }
-                        //                            }
+                        if let saveMedicationId = saveDecoded.data{
+                            for medicaId in saveMedicationId.list{
+                                print("the medicationIdfirstfound:\(medicaId)")
+                            }
+                        }
                         
-                        Token.logId = saveDecoded.logId
+                        
+                        
+                        Token.logId = String(saveDecoded.logId!)
                         print("The logId:\(saveDecoded.logId)")
                         if saveDecoded.status == "success"{
                             DispatchQueue.main.async {
                                 LocalNotificationManager.scheduleMedicationRemainder(medicationName: self.medicationNameTextField.text!, frequency: self.frequencyTextField.text!, quantity: self.quantityTextField.text!, date: self.effectiveDateTextField.text!, medicationId:medicationIdString)
                             }
                             
-                            
-                            let datas = saveDecoded.data
-                            let dataList = datas?.list
-                            print("The save datas: \(datas))")
-                            if case let saveList? = dataList{
-                                for saves in saveList{
-                                    print("the dataaa lists: \(saves.effectiveDate)")
-                                }
-                            }
+        
                             
                             self.delegate?.didUserEnterInformation()
                             
@@ -466,10 +461,17 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         let validationUrl = APIHelper.share.baseURLWeb + "medications/validation"
         let headers = ["X-Auth-Token": Token.token!,"Content-Type": "application/json"]
         
+        var medicationIdString2 = ""
+        if let medicId2 = medicationData?.medicationId{
+            print("the medica id:\(medicId2)")
+            let medicationIdStr2 = String(medicId2)
+            medicationIdString2 = medicationIdStr2
+//            Token.medicationId = medicationIdString
+        }
         let jsonDict: [String: Any] = [
             "patientId": Token.patientId!,
             "careplanId": Token.careplanId!,
-            "medicationId": medicationData?.medicationId,
+            "medicationId":medicationIdString2,
             "name": medicationNameTextField.text ?? "",
             "effectiveDate": effectiveDateTextField.text ?? "",
             "lastEffectiveDate": effectiveEndDateTimeTextField.text ?? ""
@@ -592,6 +594,26 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         
     }
     
+    
+    @IBAction func backButtonPressedDiscardEditMedication(_ sender: Any) {
+        let alertController = UIAlertController(
+               title: "Confirmation?",
+               message: "Are you sure you want go back?",
+               preferredStyle: .alert
+           )
+
+        let discardAction = UIAlertAction(title: "Ok", style: .default) { [weak self] (_) in
+               // Handle discarding changes (e.g., pop the view controller)
+               self?.navigationController?.popViewController(animated: true)
+           }
+
+           let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+
+           alertController.addAction(discardAction)
+           alertController.addAction(cancelAction)
+
+           present(alertController, animated: true)
+    }
     
 }
 extension AddMedicationVC:UITextFieldDelegate{

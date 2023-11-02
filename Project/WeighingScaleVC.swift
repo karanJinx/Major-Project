@@ -118,7 +118,10 @@ extension WeighingScaleVC: CBCentralManagerDelegate{
                     
                     weightLable.isHidden = false
                     weightLable.text = "\(String(finalWeight)) Kg"
-                    scanLable.text = "Weight Calculated Successfully."
+                    scanLable.text = "Weight Measured Successfully."
+                    weightLable.backgroundColor = .systemGreen
+                    AlertAfterReading.alertReadingHasTaken(title: "Weight Measured Successfully", message: "The weight has been measured successfully.", viewController: self)
+                    
                 }
             }
         }

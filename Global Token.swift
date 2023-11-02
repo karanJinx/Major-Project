@@ -12,7 +12,7 @@ struct Token {
     static var patientId : String? = "53266"
     static var careplanId : Int? = 34533
     static var medicationId : String? = ""
-    static var logId: Int? = 0
-    static var code:String = ""
+    static var logId: String? = ""
+    static var code: String? = ""
 }
 

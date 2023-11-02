@@ -249,6 +249,8 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                             finalReadingsLable.isHidden = false
                             statusLable.text = "Final Readings"
                             finalReadingsLable.text = "\(resultInDecimal) mg/dL"
+                            finalReadingsLable.backgroundColor = .systemGreen
+                            AlertAfterReading.alertReadingHasTaken(title: "Reading Measured Successfully", message: "Blood glucose level has been Measured successfully",viewController: self)
                             
                         } else if values[9] == "55" {
                             statusLable.text = "Invalid strip"

@@ -16,6 +16,7 @@ class BloodPressureVC: UIViewController{
     @IBOutlet var scanningLable: UILabel!
     @IBOutlet var systolicLable: UILabel!
     @IBOutlet var pulseLable: UILabel!
+    @IBOutlet var diastolicMeasuringLable: UILabel!
     
     
     var bloodPressureServiceUUID = CBUUID(string: "0xFFF0")
@@ -176,12 +177,16 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                 
                 for item in list {
                     if let item = item,item.contains("fb"),item.count >= 5{
-                        scanningLable.text = "scanning..."
+                        scanningLable.text = "Measuring"
                         let diastolicreading = item[(item.index(item.startIndex, offsetBy: 4))]
                         print("Diastolic reading: \(Conversion.hexadecimalToDecimal(String(diastolicreading))!)")
+                        DispatchQueue.main.async {
+                            self.diastolicMeasuringLable.text = "Measuring Values"
+                        }
                         diastolicReadingLable.text = "\(Conversion.hexadecimalToDecimal(String(diastolicreading))!)"
-                    }else if item!.contains("a5"){
-                        scanningLable.text = "Tap Start"
+                    }
+                    else if item!.contains("a5"){
+                        scanningLable.text = "Press Start in device"
                     }
                     else if let item = item,item.contains("fc"),item.count >= 6{
                         let systolicReading = item[item.index(item.startIndex, offsetBy: 3)]
@@ -192,6 +197,9 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                         print("Diastolic reading: \(Conversion.hexadecimalToDecimal(diastolicReading)!)")
                         print("Pulse reading: \(Conversion.hexadecimalToDecimal(pulseReading)!)")
                         
+                        DispatchQueue.main.async {
+                            self.diastolicMeasuringLable.text = "Diastolic Reading"
+                        }
                         systolicReadingLable.text = "\(Conversion.hexadecimalToDecimal(systolicReading)!)"
                         systolicLable.isHidden = false
                         systolicReadingLable.isHidden = false
@@ -201,10 +209,14 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                         pulseReadingLable.isHidden = false
                         
                         scanningLable.text = "Final Readings"
+                        scanningLable.textColor = .systemGreen
+                        AlertAfterReading.alertReadingHasTaken(title: "Reading Measured Successfully", message: "blood Pressure has been Measured successfully", viewController: self)
                         
                     }else if let item = item,item.contains("01") || item.contains("02") || item.contains("03") || item.contains("04") || item.contains("0C"){
                         print("The human heartbeat signal is too small or the pressure drops suddenly")
                         scanningLable.text = "If the measurement is wrong, please wear the CUFF again according to the instruction manual.Keep quiet and re-measure. (Use this sentence for the above 5 items)."
+                        diastolicMeasuringLable.isHidden = true
+                        diastolicReadingLable.isHidden = true
                     }
                     else if let item = item{
                         item.contains("0B")

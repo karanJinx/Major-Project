@@ -79,6 +79,7 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
     
     @IBOutlet var tableView: UITableView!
     @IBOutlet var addBarButton: UIBarButtonItem!
+    @IBOutlet var hideView: UIView!
     
     
     override func viewDidLoad() {
@@ -90,8 +91,9 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
         ListMedication()
         
         tableView.reloadData()
+        
+       
     }
-    
     //    func editMedication(_ editedMedication: MedicationData) {
     //        // Find the index of the edited medication in the array
     //        if let index = medication.firstIndex(where: { $0.medicationId == editedMedication.medicationId }) {
@@ -122,14 +124,16 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
                     //                    let meddicationJson = try JSONSerialization.jsonObject(with: data)
                     //                    print("The meddicationjson:\(meddicationJson)")
                     var medicationDecoded = try JSONDecoder().decode(MedicationListResponse.self, from: data)
-                    let medicationDataArray = medicationDecoded.data
-                    for medicationDatasingle in medicationDataArray{
-                        let mdcId = medicationDatasingle.medicationId
-                        print("The mdcId:\(mdcId)")
-                    }
-                    
-                    print("The decoded medication edited: \(medicationDecoded)")
+                    print("hte medicationDecoded:\(medicationDecoded)")
+//                    let medicationDataArray = medicationDecoded.data
+//                    for medicationDatasingle in medicationDataArray{
+//                        let mdcId = medicationDatasingle.medicationId
+//                        print("The mdcId:\(mdcId)")
+//                    }
+//
+//                    print("The decoded medication edited: \(medicationDecoded)")
                     self.medication = medicationDecoded.data
+                    print("the medicaiton:\(self.medication)")
                     
                     DispatchQueue.main.async {
                         // If you missed it will never display in the list screen.
@@ -194,6 +198,7 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
                             DispatchQueue.main.async {
                                 self.tableView.deleteRows(at: [indexpath], with: .fade)
                             }
+                            
                             LocalNotificationManager.removeLocalNotification(identifier: String(currentMedicationId!))
                         }
                     }
@@ -212,20 +217,12 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
         
     }
     
-    func handlerEditAction(at indexPath: IndexPath){
-        let itemToEdit = medication[indexPath.row]
-        print("The item To edit :\(itemToEdit)")
-        
-        let editViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "AddMedicationVC") as! AddMedicationVC
-        editViewController.delegate = self
-        editViewController.medicationData = itemToEdit
-        navigationController?.pushViewController(editViewController, animated: true)
-        
-    }
+   
     
 }
 extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
         return medication.count
         
     }
@@ -275,15 +272,33 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
         
     }
     
+    func handlerEditAction(at indexPath: IndexPath){
+        let itemToEdit = medication[indexPath.row]
+        print("The item To edit :\(itemToEdit)")
+        
+        let editViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "AddMedicationVC") as! AddMedicationVC
+        
+        editViewController.delegate = self
+        editViewController.medicationData = itemToEdit
+        
+        
+        navigationController?.pushViewController(editViewController, animated: true)
+        
+    }
+    
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let editAction = UIContextualAction(style: .normal, title: "Edit") { _, _, completionHandler in
             self.handlerEditAction(at: indexPath)
+            
             completionHandler(true)
         }
         
         editAction.backgroundColor = .systemGreen
         return UISwipeActionsConfiguration(actions: [editAction])
     }
+    
+    
+    
     func showToast(controller: UIViewController, message : String, seconds: Double) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.view.backgroundColor = UIColor.black
@@ -297,10 +312,10 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
             alert.dismiss(animated: true)
         }
     }
+   
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
             let itemToDelete = medication[indexPath.row]
-            
             print("Item to Delete:\(itemToDelete)")
             print("deleted medication id: \(itemToDelete.medicationId)")
             DeleteApi(at: indexPath, medication: itemToDelete)
