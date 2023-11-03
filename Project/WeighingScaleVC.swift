@@ -18,11 +18,22 @@ class WeighingScaleVC: UIViewController{
     
     @IBOutlet var weightLable: UILabel!
     @IBOutlet var scanLable: UILabel!
+    @IBOutlet var weightMeasureLable: UILabel!
     var centralManager: CBCentralManager!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.backgroundColor = .systemGray6 
+        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
+
+        // Set the status bar color to match the navigation bar
+        navigationController?.navigationBar.barStyle = .black
+        
         weightLable.isHidden = true
+        weightMeasureLable.isHidden = false
         centralManager = CBCentralManager(delegate: self, queue: nil)
         
         weightLable.layer.cornerRadius = 20
@@ -101,7 +112,7 @@ extension WeighingScaleVC: CBCentralManagerDelegate{
                     let unstableHexReading = String(hexstring[startIndex..<endIndex])
                     let unstableDecimalReading = Conversion.hexadecimalToDecimal(String(unstableHexReading))!
                     let exactUnstableReading = Double(unstableDecimalReading) / Double(10)
-                    scanLable.text = "Scanning..."
+                    scanLable.text = "Measuring"
                     weightLable.isHidden = false
                     weightLable.text = "\(String(exactUnstableReading)) Kg"
                     
@@ -120,6 +131,7 @@ extension WeighingScaleVC: CBCentralManagerDelegate{
                     weightLable.text = "\(String(finalWeight)) Kg"
                     scanLable.text = "Weight Measured Successfully."
                     weightLable.backgroundColor = .systemGreen
+                    weightMeasureLable.isHidden = true
                     AlertAfterReading.alertReadingHasTaken(title: "Weight Measured Successfully", message: "The weight has been measured successfully.", viewController: self)
                     
                 }

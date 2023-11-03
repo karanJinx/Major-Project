@@ -26,13 +26,21 @@ class HomeVC:UIViewController{
             viewname.layer.shadowColor = UIColor.black.cgColor
             viewname.layer.shadowOpacity = 0.7
             viewname.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
-            viewname.layer.shadowRadius = 5.0
+            viewname.layer.shadowRadius = 7.0
         }
         
         shadow(viewname: weightscaleView)
         shadow(viewname: bloodGlucoseView)
         shadow(viewname: BloodPressureView)
         shadow(viewname: ecgView)
+        
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.backgroundColor = .systemGray6 
+        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
+
+        // Set the status bar color to match the navigation bar
+        navigationController?.navigationBar.barStyle = .black
     }
     
     

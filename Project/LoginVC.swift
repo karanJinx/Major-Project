@@ -104,7 +104,7 @@ class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
     /// KeyBoard disappers when we click the Return button
     /// - Parameter textField: email and password field
     /// - Returns: true
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool  {
         emailTextField.resignFirstResponder()
         passwordTextField.resignFirstResponder()
         return true
@@ -202,13 +202,7 @@ class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
             }
             )
         }
-        func showAlert(title: String, message: String) {
-            DispatchQueue.main.async {
-                let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: .default))
-                self.present(alert, animated: true)
-            }
-        }
+
     }
     
     

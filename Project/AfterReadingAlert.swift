@@ -19,4 +19,5 @@ struct AlertAfterReading{
         // Present the alert
             viewController.present(alertController, animated: true)
     }
+   
 }

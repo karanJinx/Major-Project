@@ -24,6 +24,15 @@ class MedicationShowVC: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.backgroundColor = .systemGray6 
+        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
+        
+        // Set the status bar color to match the navigation bar
+        navigationController?.navigationBar.barStyle = .black
+        
         hidesBottomBarWhenPushed = true
         /// setting corner radius and shadow for showing the medication in the list screen
         /// - Parameter viewName: parameter refering the UIView
@@ -43,6 +52,8 @@ class MedicationShowVC: UIViewController{
         quantityLable.text = String(medication1.quantity!)
         effectiveDateLable.text = medication1.effectiveDate
         lastEffectiveDateLable.text = medication1.lastEffectiveDate ?? "-"
+        
+        
         
     }
 }

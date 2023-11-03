@@ -32,6 +32,14 @@ class BloodPressureVC: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.backgroundColor = .systemGray6 
+        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
+
+        // Set the status bar color to match the navigation bar
+        navigationController?.navigationBar.barStyle = .black
+        
         centralManager = CBCentralManager(delegate: self, queue: nil)
         
         systolicLable.isHidden = true
@@ -210,7 +218,7 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                         
                         scanningLable.text = "Final Readings"
                         scanningLable.textColor = .systemGreen
-                        AlertAfterReading.alertReadingHasTaken(title: "Reading Measured Successfully", message: "blood Pressure has been Measured successfully", viewController: self)
+                        AlertAfterReading.alertReadingHasTaken(title: "Reading Measured Successfully", message: "Blood Pressure has been Measured successfully", viewController: self)
                         
                     }else if let item = item,item.contains("01") || item.contains("02") || item.contains("03") || item.contains("04") || item.contains("0C"){
                         print("The human heartbeat signal is too small or the pressure drops suddenly")
@@ -219,8 +227,9 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                         diastolicReadingLable.isHidden = true
                     }
                     else if let item = item{
-                        item.contains("0B")
-                        scanningLable.text = "The battery is low, please replace the battery"
+                        if item.contains("0B"){
+                            scanningLable.text = "The battery is low, please replace the battery"
+                        }
                     }
                     
                     

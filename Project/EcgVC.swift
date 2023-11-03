@@ -28,6 +28,13 @@ class EcgVC: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.backgroundColor = .systemGray6 
+        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
+
+        // Set the status bar color to match the navigation bar
+        navigationController?.navigationBar.barStyle = .black
         centralManager = CBCentralManager(delegate: self, queue: nil)
     }
     override func viewWillDisappear(_ animated: Bool) {

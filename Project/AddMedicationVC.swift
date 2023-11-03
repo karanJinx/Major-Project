@@ -202,6 +202,15 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        let navigationBarAppearance = UINavigationBarAppearance()
+        navigationBarAppearance.backgroundColor = .systemGray6 
+        navigationController?.navigationBar.standardAppearance = navigationBarAppearance
+        navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
+        
+        // Set the status bar color to match the navigation bar
+        navigationController?.navigationBar.barStyle = .black
         //getting authorization from the user
         LocalNotificationManager.requestPermission()
         
@@ -243,13 +252,14 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         
         DatePicker()
         DatePicker2()
+        cancelpickerView()
         
-//                let currentDate = Date()
-//                let dateformat = DateFormatter()
-//                dateformat.dateFormat = "MM-dd-yyyy hh:mm a"
-//
-//
-//                effectiveDateTextField.text = dateformat.string(from: currentDate)
+        //                let currentDate = Date()
+        //                let dateformat = DateFormatter()
+        //                dateformat.dateFormat = "MM-dd-yyyy hh:mm a"
+        //
+        //
+        //                effectiveDateTextField.text = dateformat.string(from: currentDate)
         
         // Do any additional setup after loading the view.
         let frequencyApi = APIHelper.share.baseURLWeb + "hum-codes/CPLN-MEDI-FREQ"
@@ -290,7 +300,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         
     }
     
-    
+
     /// this function is used to update the table view when we enter the medicaiton name in the text field
     /// - Parameter suggestion: as per the text in the textfield , it shows medication name
     func updateTableView(with suggestion :[String]){
@@ -341,6 +351,16 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
     @objc func cancelButtonTappedLastEffectiveDate(_ button: UIBarButtonItem){
         effectiveEndDateTimeTextField.resignFirstResponder()
     }
+    func cancelpickerView(){
+        let toolBar = UIToolbar()
+        toolBar.sizeToFit()
+        let canceleButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonTappedFrequency))
+        toolBar.setItems([canceleButton], animated: true)
+        frequencyTextField.inputAccessoryView = toolBar
+    }
+    @objc func cancelButtonTappedFrequency(_ button: UIBarButtonItem){
+        frequencyTextField.resignFirstResponder()
+    }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         medicationNameTextField.resignFirstResponder()
         quantityTextField.resignFirstResponder()
@@ -349,7 +369,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         notesTextfield.resignFirstResponder()
         return true
     }
-    
+  
     //MARK: - API
     func saveAPI(){
         let saveApi = APIHelper.share.baseURLWeb + "medications"
@@ -385,7 +405,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
             "name": medicationNameTextField.text ?? "" ,
             "notes": notesTextfield.text ?? "",
             "effectiveDate": effectiveDateTextField.text ?? "",
-            "lastEffectiveDate": "",
+            "lastEffectiveDate": effectiveEndDateTimeTextField.text ?? "",
             "frequency": frequencyString ,
             "customFrequency": "",
             "quantity": quantityTextField.text ?? 0,
@@ -393,7 +413,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
             "productCode": "ccm",
             "visitId": "",
             "isFavoriteFlag": "N",
-            "logId": Token.logId,
+            "logId": Token.logId ?? "",
             "careplanLogMessageUserInput": "A new medication '\(medicationNameTextField.text ?? "")' has been added.",
             "careplanLogMessage": "A new medication '\(medicationNameTextField.text ?? "")' has been added In a quantity of '\(quantityTextField.text ?? "")'."
         ]
@@ -426,18 +446,19 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                         
                         
                         Token.logId = String(saveDecoded.logId!)
-                        print("The logId:\(saveDecoded.logId)")
+                        print("The logId:\(saveDecoded.logId!)")
                         if saveDecoded.status == "success"{
                             DispatchQueue.main.async {
                                 LocalNotificationManager.scheduleMedicationRemainder(medicationName: self.medicationNameTextField.text!, frequency: self.frequencyTextField.text!, quantity: self.quantityTextField.text!, date: self.effectiveDateTextField.text!, medicationId:medicationIdString)
                             }
                             
-        
+                            
                             
                             self.delegate?.didUserEnterInformation()
                             
                             DispatchQueue.main.async {
                                 self.navigationController?.popViewController(animated: true)
+
                             }
                             
                         }
@@ -466,7 +487,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
             print("the medica id:\(medicId2)")
             let medicationIdStr2 = String(medicId2)
             medicationIdString2 = medicationIdStr2
-//            Token.medicationId = medicationIdString
+            //            Token.medicationId = medicationIdString
         }
         let jsonDict: [String: Any] = [
             "patientId": Token.patientId!,
@@ -489,9 +510,10 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                     if dataString == "true"{
                         DispatchQueue.main.async {
                             self.saveAPI()
-                            //                            let quantity1 = Int(self.quantityTextField.text!)
-                            
+                            //dont put toast
                         }
+                        
+                        
                         //print("true successful")
                         
                     }else{
@@ -516,7 +538,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         }
     }
     func SearchApi(){
-        if medicationNameTextField.text!.count == 4 {
+        if medicationNameTextField.text!.count == 3 {
             let medicationApi = APIHelper.share.baseURLWeb + "medications/names"
             let medicationParam = ["medName" : medicationNameTextField.text!,"isCarePlan" : "Y"] as [String : Any]
             let headers = ["X-Auth-Token":Token.token!]
@@ -559,7 +581,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
     
     
     func saveButtonAlert(message:String){
-        let alert = UIAlertController(title: "Alert!", message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel))
         self.present(alert, animated: true)
     }
@@ -571,16 +593,17 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         let notesField = notesTextfield.text!
         
         if medicineField.isEmpty{
-            saveButtonAlert(message: "Medicine Field is empty")
+            saveButtonAlert(message: "Medicine name should not be empty")
         }else if frequencyField.isEmpty{
-            saveButtonAlert(message: "Frequency Field is empty")
+            saveButtonAlert(message: "Frequency should not be empty")
         }else if quantityField.isEmpty{
-            saveButtonAlert(message: "Quantity Field is empty")
+            saveButtonAlert(message: "Quantity should not be empty")
         }else if notesField.isEmpty{
-            saveButtonAlert(message: "Notes Field is empty")
+            saveButtonAlert(message: "Notes should not be empty")
+        }else{
+            self.medicationvalidation()
         }
         
-        self.medicationvalidation()
         
         
         print("Medicine Name :\(medicationNameTextField.text ?? "")")
@@ -597,25 +620,26 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
     
     @IBAction func backButtonPressedDiscardEditMedication(_ sender: Any) {
         let alertController = UIAlertController(
-               title: "Confirmation?",
-               message: "Are you sure you want go back?",
-               preferredStyle: .alert
-           )
-
-        let discardAction = UIAlertAction(title: "Ok", style: .default) { [weak self] (_) in
-               // Handle discarding changes (e.g., pop the view controller)
-               self?.navigationController?.popViewController(animated: true)
-           }
-
-           let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-
-           alertController.addAction(discardAction)
-           alertController.addAction(cancelAction)
-
-           present(alertController, animated: true)
+            title: "Confirmation?",
+            message: "Are you sure you want go back?",
+            preferredStyle: .alert
+        )
+        
+        let discardAction = UIAlertAction(title: "Ok", style: .default) { _ in
+            // Handle discarding changes (e.g., pop the view controller)
+            self.navigationController?.popViewController(animated: true)
+        }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
+        
+        alertController.addAction(discardAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true)
     }
     
 }
+
 extension AddMedicationVC:UITextFieldDelegate{
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let textFieldText = medicationNameTextField.text as NSString?
