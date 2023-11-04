@@ -74,6 +74,7 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
     
     func didUserEnterInformation() {
         ListMedication()
+        
     }
     
     
@@ -101,19 +102,12 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
         // Set the status bar color to match the navigation bar
         navigationController?.navigationBar.barStyle = .black
     }
-    //    func editMedication(_ editedMedication: MedicationData) {
-    //        // Find the index of the edited medication in the array
-    //        if let index = medication.firstIndex(where: { $0.medicationId == editedMedication.medicationId }) {
-    //            // Update the medication in the array
-    //            medication[index] = editedMedication
-    //
-    //            // Reload the table view
-    //            tableView.reloadData()
-    //        }
-    //    }
+
     @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "AddMedicationVC") as! AddMedicationVC
+        vc.navigationItem.title = "Add Medication"
+        vc.isNewMedication = false
         vc.delegate = self
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
@@ -261,7 +255,7 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
         //let quantity = String(medicationItem.quantity!)
         //cell.quantityLable.text = quantity
         cell.dateDayLable.text = medicationItem.effectiveDate
-        cell.lastDayDateLable.text = medicationItem.lastEffectiveDate ?? "-"
+        cell.lastDayDateLable.text = medicationItem.lastEffectiveDate ?? "  -"
         cell.baseView.layer.cornerRadius = 5
         
         cell.baseView.layer.shadowColor = UIColor.black.cgColor
@@ -269,8 +263,9 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
         cell.baseView.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
         cell.baseView.layer.shadowRadius = 3.0
         
-        
+       
         return cell
+        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -290,24 +285,26 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
     func handlerEditAction(at indexPath: IndexPath){
         let itemToEdit = medication[indexPath.row]
         print("The item To edit :\(itemToEdit)")
-        
+        AddMedicationVC().title = "Edit Medication"
         let editViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "AddMedicationVC") as! AddMedicationVC
         editViewController.hidesBottomBarWhenPushed = true
         editViewController.delegate = self
         editViewController.medicationData = itemToEdit
-        
+        editViewController.navigationItem.title = "Edit Medication"
+        editViewController.isNewMedication = true
         
         navigationController?.pushViewController(editViewController, animated: true)
         
     }
     
+
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let editAction = UIContextualAction(style: .normal, title: "Edit") { _, _, completionHandler in
-            self.handlerEditAction(at: indexPath)
-            
+        let editAction = UIContextualAction(style: .normal, title: "Edit") { [weak self] (_, _, completionHandler) in
+            self?.handlerEditAction(at: indexPath)
             completionHandler(true)
+
         }
-        
+
         editAction.backgroundColor = .systemGreen
         return UISwipeActionsConfiguration(actions: [editAction])
     }
@@ -332,12 +329,12 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
             let itemToDelete = medication[indexPath.row]
             print("Item to Delete:\(itemToDelete)")
             print("deleted medication id: \(itemToDelete.medicationId!)")
-            let alert = UIAlertController(title: "confirmation", message: "Sure you want to delete the medication", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: .default,handler: { _ in
+            let alert = UIAlertController(title: "Confirmation", message: "Are you sure about deleting the medication?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default,handler: { _ in
                 self.DeleteApi(at: indexPath, medication: itemToDelete)
                 self.showToastAlert("Medication deleted successfully", duration: 1.5)
             }))
-            alert.addAction(UIAlertAction(title: "cancel", style: .cancel))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
             self.present(alert, animated: true)
             
         }

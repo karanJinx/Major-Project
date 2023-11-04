@@ -968,7 +968,7 @@
             </objects>
             <point key="canvasLocation" x="6716.7938931297704" y="1437.323943661972"/>
         </scene>
-        <!--Add Medication-->
+        <!--Add MedicationVC-->
         <scene sceneID="YxT-90-0fd">
             <objects>
                 <viewController storyboardIdentifier="AddMedicationVC" id="inj-pq-0EB" customClass="AddMedicationVC" customModule="Project" customModuleProvider="target" sceneMemberID="viewController">
@@ -989,7 +989,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Quantity" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="bzq-sJ-o0m">
-                                <rect key="frame" x="15" y="385" width="363" height="34"/>
+                                <rect key="frame" x="15" y="379" width="363" height="34"/>
                                 <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="34" id="M8c-gy-rZO"/>
@@ -1022,7 +1022,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Notes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CDP-C7-lwb">
-                                <rect key="frame" x="15" y="447" width="136.66666666666666" height="21"/>
+                                <rect key="frame" x="15" y="441" width="136.66666666666666" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="kIa-6b-dfc"/>
                                     <constraint firstAttribute="width" constant="136.66666666666666" id="vMr-ax-eli"/>
@@ -1032,25 +1032,25 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Notes" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pw4-hT-e2c">
-                                <rect key="frame" x="15" y="494" width="369" height="34"/>
+                                <rect key="frame" x="15" y="488" width="369" height="34"/>
                                 <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter Date and Time" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ZvG-9X-1Kn">
-                                <rect key="frame" x="15" y="595" width="363" height="34"/>
+                                <rect key="frame" x="15" y="589" width="363" height="34"/>
                                 <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter end date and time" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cNI-Iz-YLJ">
-                                <rect key="frame" x="15" y="702" width="363" height="34"/>
+                                <rect key="frame" x="15" y="696" width="363" height="34"/>
                                 <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Effective Date and Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y6c-vq-zfx">
-                                <rect key="frame" x="15" y="554" width="210" height="23"/>
+                                <rect key="frame" x="15" y="548" width="210" height="23"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="23" id="qgU-3i-nC7"/>
                                 </constraints>
@@ -1059,7 +1059,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last Effective Date and Time" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FrF-Rd-1Ns">
-                                <rect key="frame" x="15" y="655" width="363" height="23"/>
+                                <rect key="frame" x="15" y="649" width="363" height="23"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="23" id="VZy-F3-9p9"/>
                                 </constraints>
@@ -1068,7 +1068,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Dkz-Zf-q0N">
-                                <rect key="frame" x="15" y="196" width="363" height="241"/>
+                                <rect key="frame" x="15" y="196" width="363" height="235"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="5OV-sa-paB">
@@ -1116,7 +1116,6 @@
                             <constraint firstItem="dCs-Sw-8eh" firstAttribute="leading" secondItem="5kN-8n-yli" secondAttribute="leading" id="Ztv-JS-Zpe"/>
                             <constraint firstItem="dCs-Sw-8eh" firstAttribute="trailing" secondItem="tFU-mM-RBP" secondAttribute="trailing" id="bCu-I8-ZmB"/>
                             <constraint firstItem="cNI-Iz-YLJ" firstAttribute="trailing" secondItem="FrF-Rd-1Ns" secondAttribute="trailing" id="c8S-Pj-w24"/>
-                            <constraint firstItem="bzq-sJ-o0m" firstAttribute="top" secondItem="r0u-Gd-UBL" secondAttribute="bottom" constant="26" id="cNe-oQ-9c3"/>
                             <constraint firstItem="tFU-mM-RBP" firstAttribute="top" secondItem="iaz-v8-Mmb" secondAttribute="bottom" constant="16" id="cid-Wt-SRK"/>
                             <constraint firstItem="cNI-Iz-YLJ" firstAttribute="top" secondItem="FrF-Rd-1Ns" secondAttribute="bottom" constant="24" id="dck-Q4-8Tf"/>
                             <constraint firstItem="CDP-C7-lwb" firstAttribute="top" secondItem="bzq-sJ-o0m" secondAttribute="bottom" constant="28" id="dri-T4-nPJ"/>
@@ -1136,15 +1135,15 @@
                             <constraint firstItem="5kN-8n-yli" firstAttribute="leading" secondItem="Ik4-BO-fYP" secondAttribute="leading" constant="15" id="zCx-zI-0QL"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Add Medication" id="Zjc-9C-gBw">
+                    <navigationItem key="navigationItem" id="Zjc-9C-gBw">
                         <barButtonItem key="leftBarButtonItem" title="&lt; Back" id="sYg-lU-Ngr">
                             <connections>
                                 <action selector="backButtonPressedDiscardEditMedication:" destination="inj-pq-0EB" id="FUd-1Y-w3E"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="Asm-be-JqC">
+                        <barButtonItem key="rightBarButtonItem" title="Save" id="TnI-ZD-Am0">
                             <connections>
-                                <action selector="saveButtonPressed:" destination="inj-pq-0EB" id="FPH-sm-uIf"/>
+                                <action selector="saveButtonPressed:" destination="inj-pq-0EB" id="dOL-ex-pgV"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

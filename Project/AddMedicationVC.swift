@@ -31,37 +31,6 @@ struct MedicationFrequency: Codable {
 
 
 // medication validity
-//struct MedicationInfo: Codable {
-//    let medicationId: Int?
-//    let name: String?
-//    let code: String?
-//    let frequencyCode: String?
-//    let customFrequency: String?
-//    let quantity: Int?
-//    let frequency: String
-//    let notes: String?
-//    let nonProprietaryId: String?
-//    let effectiveDate: String?
-//    let lastEffectiveDate: String?
-//    let invalidFlag: String?
-//}
-//struct DataInfo: Codable {
-//    let timestamp: String?
-//    let carePlanDate: String?
-//    let careplanId: Int?
-//    let activeDiseases: String?
-//    let list: [MedicationInfo]?
-//    let diagnosisId: String?
-//}
-//struct ResponseData: Codable {
-//    let id: Int?
-//    let preventativeMeasureGoalCode: String?
-//    let status: String?
-//    let data: DataInfo?
-//    let timestamp: String?
-//    let carePlanDate: String?
-//    var logId: Int?
-//}
 struct ResponseData: Codable {
     let id: Int?
     let preventativeMeasureGoalCode: String?
@@ -93,13 +62,6 @@ struct MedicationInfo: Codable {
     let lastEffectiveDate: String?
     let invalidFlag: String?
 }
-
-
-
-
-
-
-
 
 
 //medication search
@@ -179,12 +141,11 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
     @IBOutlet var effectiveEndDateTimeTextField: UITextField!
     @IBOutlet var notesTextfield: UITextField!
     @IBOutlet var searchTableview: UITableView!
-    
+        
     var medicationData: MedicationData!
     
     
     var delegate: DataEnterDelegate? = nil
-    
     
     let datePicker = UIDatePicker()
     let datePickerEndDate = UIDatePicker()
@@ -199,10 +160,20 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
     
     let rowHeight: CGFloat = 40.0
     
-    
+    var isNewMedication: Bool = true // Default to adding a new medication
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
+
+        //To update the barbutton in add screen from save to update
+        if isNewMedication{
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Update", style: .plain, target: self, action: #selector(saveButtonPressed))
+            
+        }else{
+            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveButtonPressed))
+            
+        }
         
         let navigationBarAppearance = UINavigationBarAppearance()
         navigationBarAppearance.backgroundColor = .systemGray6 
@@ -448,6 +419,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                         Token.logId = String(saveDecoded.logId!)
                         print("The logId:\(saveDecoded.logId!)")
                         if saveDecoded.status == "success"{
+                            
                             DispatchQueue.main.async {
                                 LocalNotificationManager.scheduleMedicationRemainder(medicationName: self.medicationNameTextField.text!, frequency: self.frequencyTextField.text!, quantity: self.quantityTextField.text!, date: self.effectiveDateTextField.text!, medicationId:medicationIdString)
                             }
@@ -456,11 +428,12 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                             
                             self.delegate?.didUserEnterInformation()
                             
+                           
                             DispatchQueue.main.async {
                                 self.navigationController?.popViewController(animated: true)
-
                             }
                             
+                           
                         }
                     }
                     catch{
@@ -509,9 +482,28 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                     print("the validation data string: \(dataString!)")
                     if dataString == "true"{
                         DispatchQueue.main.async {
-                            self.saveAPI()
-                            //dont put toast
-                        }
+                            if self.isNewMedication == false {
+                                                   // Medication is new, show "Medication saved successfully" alert
+                                                   let alert = UIAlertController(title: nil, message: "Medication saved successfully", preferredStyle: .alert)
+                                                   self.present(alert, animated: true)
+                                                   // Dismiss the alert after the specified duration
+                                                   DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                                       alert.dismiss(animated: true, completion: nil)
+                                                   }
+                                               } else {
+                                                   // Medication is not new, show "Medication updated successfully" alert
+                                                   let alert = UIAlertController(title: nil, message: "Medication updated successfully", preferredStyle: .alert)
+                                                   self.present(alert, animated: true)
+                                                   // Dismiss the alert after the specified duration
+                                                   DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                                       alert.dismiss(animated: true, completion: nil)
+                                                   }
+                                               }
+
+                                               // Call the save API after successful validation
+                                               self.saveAPI()
+                                           }
+                        
                         
                         
                         //print("true successful")
@@ -538,7 +530,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         }
     }
     func SearchApi(){
-        if medicationNameTextField.text!.count == 3 {
+        if medicationNameTextField.text!.count == 4 {
             let medicationApi = APIHelper.share.baseURLWeb + "medications/names"
             let medicationParam = ["medName" : medicationNameTextField.text!,"isCarePlan" : "Y"] as [String : Any]
             let headers = ["X-Auth-Token":Token.token!]
@@ -585,8 +577,10 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         alert.addAction(UIAlertAction(title: "OK", style: .cancel))
         self.present(alert, animated: true)
     }
+    
     @IBAction func saveButtonPressed(_ sender: UIBarButtonItem) {
-        
+
+
         let medicineField = medicationNameTextField.text!
         let frequencyField = frequencyTextField.text!
         let quantityField = quantityTextField.text!
@@ -600,8 +594,10 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
             saveButtonAlert(message: "Quantity should not be empty")
         }else if notesField.isEmpty{
             saveButtonAlert(message: "Notes should not be empty")
-        }else{
+        }
+        else {
             self.medicationvalidation()
+            
         }
         
         
@@ -612,20 +608,18 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         print("Notes :\(notesTextfield.text!)")
         print("Effective Date:\(effectiveDateTextField.text!)")
         print("Effective end date:\(effectiveEndDateTimeTextField.text!)")
-        
-        
-        
     }
     
     
-    @IBAction func backButtonPressedDiscardEditMedication(_ sender: Any) {
+    @IBAction func backButtonPressedDiscardEditMedication(_ sender: UIBarButtonItem) {
+        
         let alertController = UIAlertController(
             title: "Confirmation?",
             message: "Are you sure you want go back?",
             preferredStyle: .alert
         )
         
-        let discardAction = UIAlertAction(title: "Ok", style: .default) { _ in
+        let discardAction = UIAlertAction(title: "OK", style: .default) { _ in
             // Handle discarding changes (e.g., pop the view controller)
             self.navigationController?.popViewController(animated: true)
         }
