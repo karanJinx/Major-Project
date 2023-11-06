@@ -26,6 +26,8 @@ class SettingVC:UIViewController{
         let scene = view.window?.windowScene?.delegate as? SceneDelegate
         let window = scene?.window
         window?.rootViewController = vc
+
+
     }
     func showAlert(title:String,message:String){
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)

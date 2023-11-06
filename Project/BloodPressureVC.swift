@@ -168,7 +168,7 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
     }
     
     
-    
+   
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         switch characteristic.uuid {
@@ -219,6 +219,8 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                         scanningLable.text = "Final Readings"
                         scanningLable.textColor = .systemGreen
                         AlertAfterReading.alertReadingHasTaken(title: "Reading Measured Successfully", message: "Blood Pressure has been Measured successfully", viewController: self)
+                        
+                        
                         
                     }else if let item = item,item.contains("01") || item.contains("02") || item.contains("03") || item.contains("04") || item.contains("0C"){
                         print("The human heartbeat signal is too small or the pressure drops suddenly")
