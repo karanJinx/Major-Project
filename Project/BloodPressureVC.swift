@@ -218,7 +218,14 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                         
                         scanningLable.text = "Final Readings"
                         scanningLable.textColor = .systemGreen
-                        AlertAfterReading.alertReadingHasTaken(title: "Reading Measured Successfully", message: "Blood Pressure has been Measured successfully", viewController: self)
+                        //AlertAfterReading.alertReadingHasTaken(title: "Reading Measured Successfully", message: "Blood Pressure has been Measured successfully", viewController: self)
+                        if let popViewcontroller = storyboard?.instantiateViewController(withIdentifier: "BloodPressurePopupVC") as? BloodPressurePopupVC{
+                            popViewcontroller.systolicFinalreading = String(Conversion.hexadecimalToDecimal(systolicReading)!)
+                            popViewcontroller.diastolicFinalreading = String(Conversion.hexadecimalToDecimal(diastolicReading)!)
+                            popViewcontroller.pulseFinalreading = String(Conversion.hexadecimalToDecimal(pulseReading)!)
+                            popViewcontroller.modalPresentationStyle = .overCurrentContext
+                            self.present(popViewcontroller, animated: true)
+                        }
                         
                         
                         

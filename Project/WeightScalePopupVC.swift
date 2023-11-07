@@ -19,21 +19,20 @@ class WeightScalePopupVC: UIViewController{
         super.viewDidLoad()
         readingsLable.text = finalReading
         popupview.layer.cornerRadius = 5
-        titleLable.layer.cornerRadius = 10
         buttonLable.layer.cornerRadius = 5
         
         let desiredCornerRadius: CGFloat = 5
-                titleLable.layer.cornerRadius = desiredCornerRadius
-                titleLable.layer.masksToBounds = true
+        titleLable.layer.cornerRadius = desiredCornerRadius
+        titleLable.layer.masksToBounds = true
      
     
     }
     @IBAction func buttonPressedNavigateToHome(_ sender: UIButton) {
-        navigateToHomeScreen(from: self, targetViewController: HomeVC())
+        performSegue(withIdentifier: "PopToHomeVCFromWeightScale", sender: self)
         print("Button working")
     }
     
-    func navigateToHomeScreen(from presentingViewController: UIViewController, targetViewController: UIViewController){
+//    func navigateToHomeScreen(from presentingViewController: UIViewController, targetViewController: UIViewController){
 //        if let homeVc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as? HomeVC {
 //            if let navcontroller = self.navigationController{
 //                navcontroller.popToViewController(homeVc, animated: false)
@@ -41,8 +40,8 @@ class WeightScalePopupVC: UIViewController{
 //            }
 //        }
         //dismiss(animated: true,completion: nil)
-        performSegue(withIdentifier: "HomeVCPop", sender: self)
-    }
+        
+//    }
     
 }
 

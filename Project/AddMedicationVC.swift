@@ -585,6 +585,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         let frequencyField = frequencyTextField.text!
         let quantityField = quantityTextField.text!
         let notesField = notesTextfield.text!
+        let effectiveDateField = effectiveDateTextField.text!
         
         if medicineField.isEmpty{
             saveButtonAlert(message: "Medicine name should not be empty")
@@ -594,6 +595,8 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
             saveButtonAlert(message: "Quantity should not be empty")
         }else if notesField.isEmpty{
             saveButtonAlert(message: "Notes should not be empty")
+        }else if effectiveDateField.isEmpty{
+            saveButtonAlert(message: "Effective date should not be empty")
         }
         else {
             self.medicationvalidation()

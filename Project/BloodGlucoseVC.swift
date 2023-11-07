@@ -281,7 +281,12 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                             statusLable.text = "Final Readings"
                             finalReadingsLable.text = "\(resultInDecimal) mg/dL"
                             finalReadingsLable.backgroundColor = .systemGreen
-                            AlertAfterReading.alertReadingHasTaken(title: "Reading Measured Successfully", message: "Blood glucose level has been Measured successfully",viewController: self)
+                            //AlertAfterReading.alertReadingHasTaken(title: "Reading Measured Successfully", message: "Blood glucose level has been Measured successfully",viewController: self)
+                            if let popViewcontroller = storyboard?.instantiateViewController(withIdentifier: "BloodGlucosePopupVC") as? BloodGlucosePopupVC{
+                                popViewcontroller.finalReadings = String("\(resultInDecimal) mg/dL")
+                                popViewcontroller.modalPresentationStyle = .overCurrentContext
+                                self.present(popViewcontroller, animated: true)
+                            }
                             
                         } else if values[9] == "55" {
                             statusLable.text = "Invalid strip"

@@ -11,7 +11,9 @@
 		580C95152AF26A1D005A82A7 /* Methods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 580C95142AF26A1D005A82A7 /* Methods.swift */; };
 		5810509F2AF3F7610042AF11 /* AfterReadingAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5810509E2AF3F7610042AF11 /* AfterReadingAlert.swift */; };
 		581050A72AF8E8810042AF11 /* WeightScalePopupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 581050A62AF8E8810042AF11 /* WeightScalePopupVC.swift */; };
+		5833FF842AF954550083DB2D /* BloodPressurePopupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5833FF832AF954550083DB2D /* BloodPressurePopupVC.swift */; };
 		583F9C732AEFA6390037D1FB /* Conversions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 583F9C722AEFA6390037D1FB /* Conversions.swift */; };
+		584B36D72AF9FF1600731EF6 /* BloodGlucosePopupVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 584B36D62AF9FF1600731EF6 /* BloodGlucosePopupVC.swift */; };
 		589906832AA88F9500B13EC1 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 589906822AA88F9500B13EC1 /* SettingsVC.swift */; };
 		589906852AA8A7F800B13EC1 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 589906842AA8A7F800B13EC1 /* HomeVC.swift */; };
 		589933D42AA98868007BBAF4 /* WeighingScaleVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 589933D32AA98868007BBAF4 /* WeighingScaleVC.swift */; };
@@ -39,7 +41,9 @@
 		580C95142AF26A1D005A82A7 /* Methods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Methods.swift; sourceTree = "<group>"; };
 		5810509E2AF3F7610042AF11 /* AfterReadingAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AfterReadingAlert.swift; sourceTree = "<group>"; };
 		581050A62AF8E8810042AF11 /* WeightScalePopupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightScalePopupVC.swift; sourceTree = "<group>"; };
+		5833FF832AF954550083DB2D /* BloodPressurePopupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodPressurePopupVC.swift; sourceTree = "<group>"; };
 		583F9C722AEFA6390037D1FB /* Conversions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversions.swift; sourceTree = "<group>"; };
+		584B36D62AF9FF1600731EF6 /* BloodGlucosePopupVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BloodGlucosePopupVC.swift; sourceTree = "<group>"; };
 		589906822AA88F9500B13EC1 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		589906842AA8A7F800B13EC1 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
 		589933D32AA98868007BBAF4 /* WeighingScaleVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeighingScaleVC.swift; sourceTree = "<group>"; };
@@ -108,7 +112,9 @@
 				589933D32AA98868007BBAF4 /* WeighingScaleVC.swift */,
 				581050A62AF8E8810042AF11 /* WeightScalePopupVC.swift */,
 				589933D72AA989C9007BBAF4 /* BloodGlucoseVC.swift */,
+				584B36D62AF9FF1600731EF6 /* BloodGlucosePopupVC.swift */,
 				589933D52AA989BA007BBAF4 /* BloodPressureVC.swift */,
+				5833FF832AF954550083DB2D /* BloodPressurePopupVC.swift */,
 				589933D92AA989DC007BBAF4 /* EcgVC.swift */,
 				583F9C722AEFA6390037D1FB /* Conversions.swift */,
 				580C95142AF26A1D005A82A7 /* Methods.swift */,
@@ -203,6 +209,7 @@
 				58B64FE42AAF6FA600BF6282 /* API Helper.swift in Sources */,
 				589933DA2AA989DC007BBAF4 /* EcgVC.swift in Sources */,
 				589DE0AA2AA5D8860025FAA4 /* LoginVC.swift in Sources */,
+				584B36D72AF9FF1600731EF6 /* BloodGlucosePopupVC.swift in Sources */,
 				589906852AA8A7F800B13EC1 /* HomeVC.swift in Sources */,
 				5899C9D82ABD5D0C008FD0C2 /* MedicationShowVC.swift in Sources */,
 				589933D82AA989C9007BBAF4 /* BloodGlucoseVC.swift in Sources */,
@@ -215,6 +222,7 @@
 				581050A72AF8E8810042AF11 /* WeightScalePopupVC.swift in Sources */,
 				589DE0A62AA5D8860025FAA4 /* AppDelegate.swift in Sources */,
 				58B7CD0B2AAB301400A065AB /* API Manager.swift in Sources */,
+				5833FF842AF954550083DB2D /* BloodPressurePopupVC.swift in Sources */,
 				589DE0A82AA5D8860025FAA4 /* SceneDelegate.swift in Sources */,
 				583F9C732AEFA6390037D1FB /* Conversions.swift in Sources */,
 				589933E22AA9CFAA007BBAF4 /* MedicationListVC.swift in Sources */,

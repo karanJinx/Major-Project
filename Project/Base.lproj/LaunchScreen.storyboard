@@ -17,9 +17,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="humhealth Logo" translatesAutoresizingMaskIntoConstraints="NO" id="Cyg-ox-3xV">
-                                <rect key="frame" x="36.666666666666657" y="341.66666666666669" width="320" height="169"/>
+                                <rect key="frame" x="71.666666666666686" y="301" width="250" height="200"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="250" id="6b0-e9-HlN"/>
                                     <constraint firstAttribute="width" constant="250" id="S0x-Lt-A4h"/>
                                 </constraints>
                             </imageView>
@@ -27,8 +26,9 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Cyg-ox-3xV" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="I18-rl-Wot"/>
-                            <constraint firstItem="Cyg-ox-3xV" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="XS5-cP-DtZ"/>
+                            <constraint firstItem="Cyg-ox-3xV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="71.666666666666657" id="RUB-ta-nfX"/>
+                            <constraint firstItem="Cyg-ox-3xV" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="242" id="fQ4-Ue-9yo"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Cyg-ox-3xV" secondAttribute="bottom" constant="317" id="nuO-A3-G2R"/>
                         </constraints>
                     </view>
                 </viewController>
