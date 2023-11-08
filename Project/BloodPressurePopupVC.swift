@@ -27,8 +27,8 @@ class BloodPressurePopupVC: UIViewController{
         titleLableBP.layer.masksToBounds = true
         
         
-        OKButton.layer.cornerRadius = 5
-        popupView.layer.cornerRadius = 5
+        OKButton.layer.cornerRadius = 7
+        popupView.layer.cornerRadius = 10
         
         systolicLable.text = systolicFinalreading
         diastolicLable.text = diastolicFinalreading

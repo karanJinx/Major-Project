@@ -216,6 +216,14 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         
         medicationNameTextField.keyboardType = .asciiCapable
         quantityTextField.keyboardType = .asciiCapable
+        //adding clear button in textfield and setting it active always
+        medicationNameTextField.clearButtonMode = .always
+        frequencyTextField.clearButtonMode = .always
+        quantityTextField.clearButtonMode = .always
+        notesTextfield.clearButtonMode = .always
+        effectiveDateTextField.clearButtonMode = .always
+        effectiveEndDateTimeTextField.clearButtonMode = .always
+        
         
         searchTableview.delegate = self
         searchTableview.dataSource = self

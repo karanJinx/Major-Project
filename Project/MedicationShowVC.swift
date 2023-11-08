@@ -37,11 +37,11 @@ class MedicationShowVC: UIViewController{
         /// setting corner radius and shadow for showing the medication in the list screen
         /// - Parameter viewName: parameter refering the UIView
         func customs(viewName:UIView){
-            viewName.layer.cornerRadius = 10
+            viewName.layer.cornerRadius = 5
             viewName.layer.shadowColor = UIColor.black.cgColor
-            viewName.layer.shadowOpacity = 0.7
+            viewName.layer.shadowOpacity = 0.4
             viewName.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
-            viewName.layer.shadowRadius = 5.0
+            viewName.layer.shadowRadius = 3.0
         }
         customs(viewName: nameView)
         customs(viewName: frequencyView)
@@ -51,7 +51,7 @@ class MedicationShowVC: UIViewController{
         frequencyLable.text = medication1.frequency
         quantityLable.text = String(medication1.quantity!)
         effectiveDateLable.text = medication1.effectiveDate
-        lastEffectiveDateLable.text = medication1.lastEffectiveDate ?? " -"
+        lastEffectiveDateLable.text = medication1.lastEffectiveDate ?? " - "
         
         
         

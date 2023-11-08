@@ -18,8 +18,8 @@ class WeightScalePopupVC: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         readingsLable.text = finalReading
-        popupview.layer.cornerRadius = 5
-        buttonLable.layer.cornerRadius = 5
+        popupview.layer.cornerRadius = 15
+        buttonLable.layer.cornerRadius = 7
         
         let desiredCornerRadius: CGFloat = 5
         titleLable.layer.cornerRadius = desiredCornerRadius

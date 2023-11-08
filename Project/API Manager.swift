@@ -8,10 +8,6 @@
 import Foundation
 import UIKit
 
-protocol AlertPresentable {
-    func showAlert(title: String, message: String)
-}
-
 
 /// An enumeration HTTPMethod is defined to represent common HTTP request methods (GET, POST, PUT, DELETE). This makes it easier to specify the desired method when making requests.
 enum HTTPMethod: String {
@@ -27,7 +23,7 @@ enum HTTPMethod: String {
 /// The private init() method ensures that no external code can create instances of APIManager
 class APIManager{
     static let shared = APIManager()
-    var viewController: AlertPresentable?
+   
     
     private init() {}
     
@@ -51,7 +47,7 @@ class APIManager{
             queryItems.append(queryItem)
         }
         
-        
+        //urlComponents will help you break down and work with the different elements of the URL
         var urlComponents = URLComponents(string: url )
         // This line sets the queryItems array as the query items of the urlComponents
         urlComponents?.queryItems = queryItems
@@ -85,11 +81,9 @@ class APIManager{
             if let httpResponse = response as? HTTPURLResponse  {
                 let responseStatusCode = httpResponse.statusCode
                 if responseStatusCode == 503{
-                    DispatchQueue.main.async {
-                        self.viewController?.showAlert(title: "Alert", message: "Server is Busy")
-                    }
+                    print("Statuscode :\(httpResponse.statusCode)")
                 }
-                print("Statuscode :\(httpResponse.statusCode)")
+                
             }
             
             
@@ -104,7 +98,7 @@ class APIManager{
                 }
             
         }
-        
+        //To start the task we need to call this method
         dataTask.resume()
     }
     

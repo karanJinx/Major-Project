@@ -285,7 +285,6 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
     func handlerEditAction(at indexPath: IndexPath){
         let itemToEdit = medication[indexPath.row]
         print("The item To edit :\(itemToEdit)")
-        AddMedicationVC().title = "Edit Medication"
         let editViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "AddMedicationVC") as! AddMedicationVC
         editViewController.hidesBottomBarWhenPushed = true
         editViewController.delegate = self

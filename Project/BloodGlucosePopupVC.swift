@@ -20,8 +20,8 @@ class BloodGlucosePopupVC:UIViewController{
         
         readingsLable.text = finalReadings
         
-        popupView.layer.cornerRadius = 5
-        button.layer.cornerRadius = 5
+        popupView.layer.cornerRadius = 10
+        button.layer.cornerRadius = 7
         
         let desiredCornerRadius:CGFloat = 5
         titleBGLable.layer.cornerRadius = desiredCornerRadius

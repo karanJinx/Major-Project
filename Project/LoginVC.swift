@@ -8,14 +8,8 @@
 import UIKit
 import Foundation
 
-class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
-    func showAlert(title: String, message: String) {
-        DispatchQueue.main.async {
-            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Ok", style: .default))
-            self.present(alert, animated: true)
-        }
-    }
+class LoginVC: UIViewController, UITextFieldDelegate {
+
     
     
     
@@ -145,10 +139,10 @@ class LoginVC: UIViewController, UITextFieldDelegate,AlertPresentable {
         else{
             showLoader()
             let loginURL = APIHelper.share.baseURL + "login"
-            let login = ["username" : trimmedUserName, "password" : trimmedPassword]
+            let loginParam = ["username" : trimmedUserName, "password" : trimmedPassword]
             
             //result is of type Result<Data, Error>, where Data represents the data received from the network request, and Error represents any potential errors.
-            APIManager.shared.APIHelper(url: loginURL, params: login, method: .post , headers: nil, requestBody: nil, completion: { result in
+            APIManager.shared.APIHelper(url: loginURL, params: loginParam, method: .post , headers: nil, requestBody: nil, completion: { result in
                 self.hideLoader()
                 switch result {
                     
