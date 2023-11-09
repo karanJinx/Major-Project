@@ -126,7 +126,7 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
                     //                    let meddicationJson = try JSONSerialization.jsonObject(with: data)
                     //                    print("The meddicationjson:\(meddicationJson)")
                     let medicationDecoded = try JSONDecoder().decode(MedicationListResponse.self, from: data)
-                    print("hte medicationDecoded:\(medicationDecoded)")
+                    print("the medicationDecoded:\(medicationDecoded)")
                     //                    let medicationDataArray = medicationDecoded.data
                     //                    for medicationDatasingle in medicationDataArray{
                     //                        let mdcId = medicationDatasingle.medicationId

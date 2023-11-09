@@ -216,6 +216,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         
         medicationNameTextField.keyboardType = .asciiCapable
         quantityTextField.keyboardType = .asciiCapable
+        
         //adding clear button in textfield and setting it active always
         medicationNameTextField.clearButtonMode = .always
         frequencyTextField.clearButtonMode = .always
@@ -228,6 +229,9 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         searchTableview.delegate = self
         searchTableview.dataSource = self
         searchTableview.isHidden = true
+        
+        datePicker.maximumDate = Date()
+        datePickerEndDate.maximumDate = Date()
         
         DatePicker()
         DatePicker2()

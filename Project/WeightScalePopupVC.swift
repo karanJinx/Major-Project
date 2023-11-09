@@ -28,20 +28,16 @@ class WeightScalePopupVC: UIViewController{
     
     }
     @IBAction func buttonPressedNavigateToHome(_ sender: UIButton) {
-        performSegue(withIdentifier: "PopToHomeVCFromWeightScale", sender: self)
+        navigateToHomeScreen()
         print("Button working")
     }
     
-//    func navigateToHomeScreen(from presentingViewController: UIViewController, targetViewController: UIViewController){
-//        if let homeVc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "HomeVC") as? HomeVC {
-//            if let navcontroller = self.navigationController{
-//                navcontroller.popToViewController(homeVc, animated: false)
-//                navcontroller.pushViewController(homeVc, animated: true)
-//            }
-//        }
-        //dismiss(animated: true,completion: nil)
+    func navigateToHomeScreen(){
+        let myTabBar = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabBar") as! UITabBarController
+        myTabBar.modalPresentationStyle = .overCurrentContext
+        self.present(myTabBar, animated: true)
         
-//    }
+    }
     
 }
 

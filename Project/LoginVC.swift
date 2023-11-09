@@ -189,6 +189,13 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                     }
                     catch{
                         print("Error: try \(error.localizedDescription)")
+                        DispatchQueue.main.async {
+                            //Build (503 error)
+                            let alert = UIAlertController(title: "Alert", message: "Please try again after sometime.", preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK", style: .default))
+                            self.present(alert, animated: true)
+                        }
+                        
                     }
                 case .failure(let error):
                     print("Errorrrr \(error)")

@@ -176,71 +176,83 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
             if let data = characteristic.value {
                 
                 let byteArray = [UInt8](data)
-                let hexString = Conversion.byteArrayToHexString1([UInt8](byteArray))
-                let list = [Conversion.getPairsFromHexString(data: byteArray)]
+                let hexString = [Conversion.byteArrayToHexString1([UInt8](byteArray))]
+//                let list = [Conversion.getPairsFromHexString(data: byteArray)]
                 //                print("The List :\(list)")
                 print("Received Data as Hexadecimal: \(hexString)")
                 
                 
                 
-                for item in list {
-                    if let item = item,item.contains("fb"),item.count >= 5{
-                        scanningLable.text = "Measuring"
-                        let diastolicreading = item[(item.index(item.startIndex, offsetBy: 4))]
-                        print("Diastolic reading: \(Conversion.hexadecimalToDecimal(String(diastolicreading))!)")
-                        DispatchQueue.main.async {
-                            self.diastolicMeasuringLable.text = "Measuring Values"
+                for item in hexString {
+                    if item.count >= 6{
+                        if item.contains("FB"){
+                            scanningLable.text = "Measuring"
+                            let diastolicreading = item[item.index(item.startIndex, offsetBy: 4)]
+                            
+                            DispatchQueue.main.async {
+                                self.diastolicMeasuringLable.text = "Measuring Values"
+                            }
+                            let diastolic_hex = Int(Conversion.hexadecimalToDecimal(diastolicreading)!)
+                            print("Diastolic reading: \(diastolic_hex)")
+                            diastolicReadingLable.text = String(diastolic_hex)
                         }
-                        diastolicReadingLable.text = "\(Conversion.hexadecimalToDecimal(String(diastolicreading))!)"
-                    }
-                    else if item!.contains("a5"){
-                        scanningLable.text = "Press Start in device"
-                    }
-                    else if let item = item,item.contains("fc"),item.count >= 6{
-                        let systolicReading = item[item.index(item.startIndex, offsetBy: 3)]
-                        let diastolicReading = item[item.index(item.startIndex, offsetBy: 4)]
-                        let pulseReading = item[item.index(item.startIndex, offsetBy: 5)]
-                        
-                        print("Systolic reading: \(Conversion.hexadecimalToDecimal(systolicReading)!)")
-                        print("Diastolic reading: \(Conversion.hexadecimalToDecimal(diastolicReading)!)")
-                        print("Pulse reading: \(Conversion.hexadecimalToDecimal(pulseReading)!)")
-                        
-                        DispatchQueue.main.async {
-                            self.diastolicMeasuringLable.text = "Diastolic Reading"
+                        else if item.contains("A5") {
+                            scanningLable.text = "Press Start in device"
                         }
-                        systolicReadingLable.text = "\(Conversion.hexadecimalToDecimal(systolicReading)!)"
-                        systolicLable.isHidden = false
-                        systolicReadingLable.isHidden = false
-                        diastolicReadingLable.text = "\(Conversion.hexadecimalToDecimal(diastolicReading)!)"
-                        pulseReadingLable.text = "\(Conversion.hexadecimalToDecimal(pulseReading)!)"
-                        pulseLable.isHidden  = false
-                        pulseReadingLable.isHidden = false
-                        
-                        scanningLable.text = "Final Readings"
-                        scanningLable.textColor = .systemGreen
-                        //AlertAfterReading.alertReadingHasTaken(title: "Reading Measured Successfully", message: "Blood Pressure has been Measured successfully", viewController: self)
-                        if let popViewcontroller = storyboard?.instantiateViewController(withIdentifier: "BloodPressurePopupVC") as? BloodPressurePopupVC{
-                            popViewcontroller.systolicFinalreading = String(Conversion.hexadecimalToDecimal(systolicReading)!)
-                            popViewcontroller.diastolicFinalreading = String(Conversion.hexadecimalToDecimal(diastolicReading)!)
-                            popViewcontroller.pulseFinalreading = String(Conversion.hexadecimalToDecimal(pulseReading)!)
-                            popViewcontroller.modalPresentationStyle = .overCurrentContext
-                            self.present(popViewcontroller, animated: true)
+                        else if item.contains("FC") {
+                            let systolicReading = item[item.index(item.startIndex, offsetBy: 3)]
+                            let diastolicReading = item[item.index(item.startIndex, offsetBy: 4)]
+                            let pulseReading = item[item.index(item.startIndex, offsetBy: 5)]
+                            
+                           
+                            let systolic_hex = Int(Conversion.hexadecimalToDecimal(systolicReading)!)
+                            print("systolic reading: \(systolic_hex)")
+                            systolicReadingLable.text = String(systolic_hex)
+                            
+                            let diastolic_hex = Int(Conversion.hexadecimalToDecimal(diastolicReading)!)
+                            print("Diastolic reading: \(diastolic_hex)")
+                            diastolicReadingLable.text = String(diastolic_hex)
+                            
+                            DispatchQueue.main.async {
+                                self.diastolicMeasuringLable.text = "Diastolic Reading"
+                            }
+                            
+                            let pulse_hex = Int(Conversion.hexadecimalToDecimal(pulseReading)!)
+                            print("Diastolic reading: \(pulse_hex)")
+                            pulseReadingLable.text = String(pulse_hex)
+                            
+                            systolicLable.isHidden = false
+                            systolicReadingLable.isHidden = false
+                           
+                            
+                            pulseLable.isHidden  = false
+                            pulseReadingLable.isHidden = false
+                            
+                            scanningLable.text = "Final Readings"
+                            scanningLable.textColor = .systemGreen
+                            
+                            if let popViewcontroller = storyboard?.instantiateViewController(withIdentifier: "BloodPressurePopupVC") as? BloodPressurePopupVC{
+                                popViewcontroller.systolicFinalreading = String(systolic_hex)
+                                popViewcontroller.diastolicFinalreading = String(diastolic_hex)
+                                popViewcontroller.pulseFinalreading = String(pulse_hex)
+                                popViewcontroller.modalPresentationStyle = .overCurrentContext
+                                self.present(popViewcontroller, animated: true)
+                            }
+                            
+                            //AlertAfterReading.alertReadingHasTaken(title: "Reading Measured Successfully", message: "Blood Pressure has been Measured successfully", viewController: self)
+                            
+                        }else if item.contains("01") || item.contains("02") || item.contains("03") || item.contains("04") || item.contains("0C") || item.contains("05"){
+                            print("The human heartbeat signal is too small or the pressure drops suddenly")
+                            scanningLable.text = "If the measurement is wrong, please wear the CUFF again according to the instruction manual.Keep quiet and re-measure. (Use this sentence for the above 5 items)."
+                            diastolicMeasuringLable.isHidden = true
+                            diastolicReadingLable.isHidden = true
                         }
-                        
-                        
-                        
-                    }else if let item = item,item.contains("01") || item.contains("02") || item.contains("03") || item.contains("04") || item.contains("0C"){
-                        print("The human heartbeat signal is too small or the pressure drops suddenly")
-                        scanningLable.text = "If the measurement is wrong, please wear the CUFF again according to the instruction manual.Keep quiet and re-measure. (Use this sentence for the above 5 items)."
-                        diastolicMeasuringLable.isHidden = true
-                        diastolicReadingLable.isHidden = true
-                    }
-                    else if let item = item{
-                        if item.contains("0B"){
-                            scanningLable.text = "The battery is low, please replace the battery"
+                        else if item.contains("0B"){
+                                scanningLable.text = "The battery is low, please replace the battery"
                         }
+
                     }
-                    
+                                        
                     
                     
                 }
@@ -262,3 +274,61 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
         }
     }
 }
+
+
+//if let item = item,item.contains("fb"),item.count >= 5{
+//    scanningLable.text = "Measuring"
+//    let diastolicreading = item[(item.index(item.startIndex, offsetBy: 4))]
+//    print("Diastolic reading: \(Conversion.hexadecimalToDecimal(String(diastolicreading))!)")
+//    DispatchQueue.main.async {
+//        self.diastolicMeasuringLable.text = "Measuring Values"
+//    }
+//    diastolicReadingLable.text = "\(Conversion.hexadecimalToDecimal(String(diastolicreading))!)"
+//}
+//else if item!.contains("a5") {
+//    scanningLable.text = "Press Start in device"
+//}
+//else if let item = item,item.contains("fc"),item.count >= 6{
+//    let systolicReading = item[item.index(item.startIndex, offsetBy: 3)]
+//    let diastolicReading = item[item.index(item.startIndex, offsetBy: 4)]
+//    let pulseReading = item[item.index(item.startIndex, offsetBy: 5)]
+//
+//    print("Systolic reading: \(Conversion.hexadecimalToDecimal(systolicReading)!)")
+//    print("Diastolic reading: \(Conversion.hexadecimalToDecimal(diastolicReading)!)")
+//    print("Pulse reading: \(Conversion.hexadecimalToDecimal(pulseReading)!)")
+//
+//    DispatchQueue.main.async {
+//        self.diastolicMeasuringLable.text = "Diastolic Reading"
+//    }
+//    systolicReadingLable.text = "\(Conversion.hexadecimalToDecimal(systolicReading)!)"
+//    systolicLable.isHidden = false
+//    systolicReadingLable.isHidden = false
+//    diastolicReadingLable.text = "\(Conversion.hexadecimalToDecimal(diastolicReading)!)"
+//    pulseReadingLable.text = "\(Conversion.hexadecimalToDecimal(pulseReading)!)"
+//    pulseLable.isHidden  = false
+//    pulseReadingLable.isHidden = false
+//
+//    scanningLable.text = "Final Readings"
+//    scanningLable.textColor = .systemGreen
+//    //AlertAfterReading.alertReadingHasTaken(title: "Reading Measured Successfully", message: "Blood Pressure has been Measured successfully", viewController: self)
+//    if let popViewcontroller = storyboard?.instantiateViewController(withIdentifier: "BloodPressurePopupVC") as? BloodPressurePopupVC{
+//        popViewcontroller.systolicFinalreading = String(Conversion.hexadecimalToDecimal(systolicReading)!)
+//        popViewcontroller.diastolicFinalreading = String(Conversion.hexadecimalToDecimal(diastolicReading)!)
+//        popViewcontroller.pulseFinalreading = String(Conversion.hexadecimalToDecimal(pulseReading)!)
+//        popViewcontroller.modalPresentationStyle = .overCurrentContext
+//        self.present(popViewcontroller, animated: true)
+//    }
+//
+//
+//
+//}else if let item = item,item.contains("01") || item.contains("02") || item.contains("03") || item.contains("04") || item.contains("0C"){
+//    print("The human heartbeat signal is too small or the pressure drops suddenly")
+//    scanningLable.text = "If the measurement is wrong, please wear the CUFF again according to the instruction manual.Keep quiet and re-measure. (Use this sentence for the above 5 items)."
+//    diastolicMeasuringLable.isHidden = true
+//    diastolicReadingLable.isHidden = true
+//}
+//else if let item = item{
+//    if item.contains("0B"){
+//        scanningLable.text = "The battery is low, please replace the battery"
+//    }
+//}

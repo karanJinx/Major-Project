@@ -214,7 +214,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemGroupedBackgroundColor"/>
+                                <color key="backgroundColor" systemColor="tertiarySystemGroupedBackgroundColor"/>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="ECG" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aVM-mb-qJ0">
                                 <rect key="frame" x="269" y="548" width="41" height="21"/>
@@ -459,7 +459,6 @@
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="buttonPressedNavigateToHome:" destination="fax-Cb-Z6K" eventType="touchUpInside" id="v1q-aC-bqi"/>
-                                            <segue destination="Pbf-98-0ak" kind="presentation" identifier="PopToHomeVCFromWeightScale" modalPresentationStyle="overCurrentContext" id="Bn9-VN-a8i"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Weight Measured Successfully." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iMS-6P-xqq">
@@ -492,7 +491,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="humhealthlogoappicon" translatesAutoresizingMaskIntoConstraints="NO" id="sT1-PR-M4c">
-                                        <rect key="frame" x="0.0" y="15" width="30" height="30"/>
+                                        <rect key="frame" x="2" y="16" width="30" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                 </subviews>
@@ -549,7 +548,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="MeU-Jf-5CG">
-                                <rect key="frame" x="0.0" y="44" width="393" height="759"/>
+                                <rect key="frame" x="0.0" y="103" width="393" height="666"/>
                                 <color key="backgroundColor" systemColor="tertiarySystemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" rowHeight="169" id="Suq-z9-r45" customClass="Cell" customModule="Project" customModuleProvider="target">
@@ -644,7 +643,7 @@
                                 </prototypes>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e0h-5a-6ZS">
-                                <rect key="frame" x="0.0" y="44" width="393" height="788"/>
+                                <rect key="frame" x="0.0" y="103" width="393" height="729"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Patient doesn't have any active medications yet!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Sx-6O-Wzb">
                                         <rect key="frame" x="0.0" y="352" width="393" height="65"/>
@@ -703,13 +702,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Medication Details" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UPN-4t-DcC">
-                                <rect key="frame" x="16" y="145" width="170" height="24"/>
-                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="20"/>
+                                <rect key="frame" x="16" y="145" width="163.66666666666666" height="23"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bQk-Pq-T8g">
-                                <rect key="frame" x="16" y="199" width="361" height="35.333333333333343"/>
+                                <rect key="frame" x="16" y="198" width="361" height="35.333333333333343"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="O1m-an-r9J">
                                         <rect key="frame" x="8" y="7.9999999999999982" width="70" height="20.333333333333329"/>
@@ -738,7 +737,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9IG-Xb-MdH">
-                                <rect key="frame" x="16" y="264.33333333333331" width="361" height="76.666666666666686"/>
+                                <rect key="frame" x="16" y="263.33333333333331" width="361" height="76.666666666666686"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Frequency :" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gmw-Ba-AtD">
                                         <rect key="frame" x="8" y="7.9999999999999982" width="105" height="20.333333333333329"/>
@@ -787,7 +786,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jaB-X5-fuv">
-                                <rect key="frame" x="16" y="371" width="361" height="81.666666666666686"/>
+                                <rect key="frame" x="16" y="370" width="361" height="81.666666666666686"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Effective Date:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qOU-Bk-z0R">
                                         <rect key="frame" x="8" y="14.999999999999998" width="115" height="19.333333333333329"/>
@@ -939,7 +938,7 @@
                     <tabBarItem key="tabBarItem" title="Settings" image="gearshape.fill" catalog="system" id="6rf-8w-TMq"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="9Ro-k4-rQp">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -958,7 +957,7 @@
                     <tabBarItem key="tabBarItem" title="Home" image="aa home" id="anX-mg-70y"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="S4E-h4-OU6">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -978,7 +977,7 @@
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="y8E-Ht-XyB">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="44"/>
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" systemColor="systemGray5Color"/>
                         <textAttributes key="titleTextAttributes">
@@ -1070,7 +1069,6 @@
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="buttonPressedToNavigateToHomeVC:" destination="T0z-Fu-Pse" eventType="touchUpInside" id="VKB-3v-MvW"/>
-                                            <segue destination="Pbf-98-0ak" kind="presentation" identifier="PopToHomeVCFromBloodGlucose" modalPresentationStyle="overCurrentContext" id="b1U-xV-WzH"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" Final Readings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kgk-vR-bOw">
@@ -1102,7 +1100,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="4Gg-xj-kEn">
-                                        <rect key="frame" x="4" y="16" width="27" height="28"/>
+                                        <rect key="frame" x="3" y="17" width="27" height="28"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                 </subviews>
@@ -1455,7 +1453,6 @@
                                         </buttonConfiguration>
                                         <connections>
                                             <action selector="ButtonPressedToNavigateToHomescreen:" destination="n7h-bn-0dD" eventType="touchUpInside" id="aAh-aT-pYh"/>
-                                            <segue destination="Pbf-98-0ak" kind="presentation" identifier="PopToHomeVCFromBloodPressure" modalPresentationStyle="overCurrentContext" id="G7j-bh-zgd"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Systolic" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9na-MJ-bod">
@@ -1515,7 +1512,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="hlN-KY-dzJ">
-                                        <rect key="frame" x="5" y="17" width="28" height="28"/>
+                                        <rect key="frame" x="3" y="18" width="28" height="28"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     </imageView>
                                 </subviews>
@@ -1649,9 +1646,6 @@
             <point key="canvasLocation" x="4723" y="536"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="G7j-bh-zgd"/>
-    </inferredMetricsTieBreakers>
     <resources>
         <image name="Blood_glucose-re" width="200" height="200"/>
         <image name="ECG image" width="200" height="200"/>

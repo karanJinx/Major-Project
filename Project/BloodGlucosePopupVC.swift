@@ -29,6 +29,12 @@ class BloodGlucosePopupVC:UIViewController{
     }
     
     @IBAction func buttonPressedToNavigateToHomeVC(_ sender: Any) {
-        performSegue(withIdentifier: "PopToHomeVCFromBloodGlucose", sender: self)
+        navigateToHome()
+    }
+    
+    func navigateToHome(){
+        let tabbar = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabBar") as! UITabBarController
+        tabbar.modalPresentationStyle = .overCurrentContext
+        present(tabbar, animated: true)
     }
 }

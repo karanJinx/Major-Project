@@ -35,7 +35,13 @@ class BloodPressurePopupVC: UIViewController{
         pulseLable.text = pulseFinalreading
     }
     @IBAction func ButtonPressedToNavigateToHomescreen(_ sender: Any) {
-        performSegue(withIdentifier: "PopToHomeVCFromBloodPressure", sender: self)
+       navigateToHome()
+    }
+    
+    func navigateToHome(){
+        let tabbar = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabBar") as! UITabBarController
+        tabbar.modalPresentationStyle = .overCurrentContext
+        present(tabbar, animated: true)
     }
     
 }

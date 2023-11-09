@@ -35,12 +35,12 @@ class HomeVC:UIViewController{
         shadow(viewname: ecgView)
         
         let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.backgroundColor = .systemGray6 
+        navigationBarAppearance.backgroundColor = .systemGray6
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
 
         // Set the status bar color to match the navigation bar
-        navigationController?.navigationBar.barStyle = .black
+        navigationController?.navigationBar.barStyle = .default
     }
     
     
