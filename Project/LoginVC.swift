@@ -30,6 +30,9 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         emailTextField.delegate = self
         passwordTextField.delegate = self
         
+        emailTextField.clearButtonMode = .whileEditing
+        passwordTextField.clearButtonMode = .whileEditing
+        
         
         // Add overlay view
         view.addSubview(overlayView)

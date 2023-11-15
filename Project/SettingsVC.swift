@@ -13,7 +13,7 @@ class SettingVC:UIViewController{
         super.viewDidLoad()
         
         let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.backgroundColor = .systemGray6 // Replace with the color you want
+        navigationBarAppearance.backgroundColor = .systemGray6 
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
 
