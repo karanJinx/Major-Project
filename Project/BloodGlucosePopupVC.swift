@@ -35,6 +35,9 @@ class BloodGlucosePopupVC:UIViewController{
     func navigateToHome(){
         let tabbar = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabBar") as! UITabBarController
         tabbar.modalPresentationStyle = .overCurrentContext
-        present(tabbar, animated: true)
+        //present(tabbar, animated: true)
+        let scene = view.window?.windowScene?.delegate as? SceneDelegate
+        let window = scene?.window
+        window?.rootViewController = tabbar
     }
 }

@@ -215,7 +215,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         frequencyTextField.inputView = pickerView
         
         medicationNameTextField.keyboardType = .asciiCapable
-        quantityTextField.keyboardType = .asciiCapable
+        quantityTextField.keyboardType = .asciiCapableNumberPad
         
         //adding clear button in textfield and setting it active always
         medicationNameTextField.clearButtonMode = .always
@@ -245,42 +245,8 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         //                effectiveDateTextField.text = dateformat.string(from: currentDate)
         
         // Do any additional setup after loading the view.
-        let frequencyApi = APIHelper.share.baseURLWeb + "hum-codes/CPLN-MEDI-FREQ"
-        let frequencyParam = ["id": 33689]
-        let headers = ["X-Auth-Token":Token.token!]
-        APIManager.shared.APIHelper(url: frequencyApi, params: frequencyParam, method: .get, headers: headers, requestBody: nil) { result in
-            switch result {
-                
-            case .success(let data):
-                do{
-                    let freqDecoded = try JSONDecoder().decode(MedicationFrequencyResponse.self, from: data)
-                    
-                    if freqDecoded.status == "success"{
-                        
-                        let datalist = freqDecoded.data
-                        //print(datalist)
-                        var datalistkeys = datalist?.keys
-                        //print(datalistkeys!)
-                        var datalistValues = datalist?.values
-                        //print("The frequency datas:\(datalistValues!)")
-                        if case let values? = datalistValues{
-                            self.frequenciesFromApi.append(contentsOf: values)
-                            
-                        }
-                        //print("The dataValues:\(datalistValues!)")
-                        
-                    }else{
-                        print("Error")
-                    }
-                }
-                catch{
-                    print("Catch error:\(error.localizedDescription)")
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
         
+        frequencyApi()
     }
     
 
@@ -463,6 +429,44 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         
     }
     
+    func frequencyApi(){
+        let frequencyApi = APIHelper.share.baseURLWeb + "hum-codes/CPLN-MEDI-FREQ"
+        let frequencyParam = ["id": 33689]
+        let headers = ["X-Auth-Token":Token.token!]
+        APIManager.shared.APIHelper(url: frequencyApi, params: frequencyParam, method: .get, headers: headers, requestBody: nil) { result in
+            switch result {
+                
+            case .success(let data):
+                do{
+                    let freqDecoded = try JSONDecoder().decode(MedicationFrequencyResponse.self, from: data)
+                    
+                    if freqDecoded.status == "success"{
+                        
+                        let datalist = freqDecoded.data
+                        //print(datalist)
+                        var datalistkeys = datalist?.keys
+                        //print(datalistkeys!)
+                        var datalistValues = datalist?.values
+                        //print("The frequency datas:\(datalistValues!)")
+                        if case let values? = datalistValues{
+                            self.frequenciesFromApi.append(contentsOf: values)
+                            
+                        }
+                        //print("The dataValues:\(datalistValues!)")
+                        
+                    }else{
+                        print("Error")
+                    }
+                }
+                catch{
+                    print("Catch error:\(error.localizedDescription)")
+                }
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
     func medicationvalidation(){
         let validationUrl = APIHelper.share.baseURLWeb + "medications/validation"
         let headers = ["X-Auth-Token": Token.token!,"Content-Type": "application/json"]
@@ -494,9 +498,9 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                     print("the validation data string: \(dataString!)")
                     if dataString == "true"{
                         DispatchQueue.main.async {
-                            if self.isNewMedication == false {
+                            if self.isNewMedication == true {
                                                    // Medication is new, show "Medication saved successfully" alert
-                                                   let alert = UIAlertController(title: nil, message: "Medication saved successfully", preferredStyle: .alert)
+                                                   let alert = UIAlertController(title: nil, message: "Medication updated successfully", preferredStyle: .alert)
                                                    self.present(alert, animated: true)
                                                    // Dismiss the alert after the specified duration
                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -504,7 +508,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                                                    }
                                                } else {
                                                    // Medication is not new, show "Medication updated successfully" alert
-                                                   let alert = UIAlertController(title: nil, message: "Medication updated successfully", preferredStyle: .alert)
+                                                   let alert = UIAlertController(title: nil, message: "Medication saved successfully", preferredStyle: .alert)
                                                    self.present(alert, animated: true)
                                                    // Dismiss the alert after the specified duration
                                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -664,17 +668,22 @@ extension AddMedicationVC:UITextFieldDelegate{
                 let character = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890'")
                 let set = CharacterSet(charactersIn: string)
                 
-                return character.isSuperset(of: set)
+//                let maxLenght = 10
+//                let currentString:NSString = (textField.text ?? "") as NSString
+//                let newString:NSString = currentString.replacingCharacters(in: range, with: string) as NSString
+                
+                return character.isSuperset(of: set) //&& newString.length <= maxLenght
             }
-            else if textField.tag == 3{
-                let allowdedCharacter1 = CharacterSet(charactersIn: "1234567890.")
-                let set1 = CharacterSet(charactersIn: string)
+            
+            else if textField.tag == 3 {
+                let character = CharacterSet(charactersIn: "1234567890.")
+                let set = CharacterSet(charactersIn: string)
                 
-                let maxNumbers = 3
-                let currentText = (textField.text ?? "") as NSString
-                let newText = currentText.replacingCharacters(in: range, with: string)
+                let maxlenght = 4
+                let currentString:NSString = (textField.text ?? "") as NSString
+                let newstring:NSString = currentString.replacingCharacters(in: range, with: string) as NSString
                 
-                return true && allowdedCharacter1.isSuperset(of: set1) && newText.count <= maxNumbers
+                return character.isSuperset(of: set) && newstring.length <= maxlenght
             }
         }
         

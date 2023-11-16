@@ -9,6 +9,17 @@ import Foundation
 import UIKit
 import CoreBluetooth
 
+enum bloodPressureReadingOptions: String{
+    case measuringReading = "FB"
+    case finalReading = "FC"
+    case readyToTakeReading = "A5"
+    case signalIsTooSmall = "01"
+    case noiseInterference = "02"
+    case tooLongInflamation = "03"
+    case abnormalResult = "04"
+    case batteryLow = "0B"
+}
+
 class BloodPressureVC: UIViewController{
     @IBOutlet var systolicReadingLable: UILabel!
     @IBOutlet var diastolicReadingLable: UILabel!
@@ -185,7 +196,7 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                 
                 for item in hexString {
                     if item.count >= 6{
-                        if item.contains("FB"){
+                        if item.contains(bloodPressureReadingOptions.measuringReading.rawValue){
                             scanningLable.text = "Measuring"
                             let diastolicreading = item[item.index(item.startIndex, offsetBy: 4)]
                             
@@ -196,10 +207,10 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                             print("Diastolic reading: \(diastolic_hex)")
                             diastolicReadingLable.text = String(diastolic_hex)
                         }
-                        else if item.contains("A5") {
+                        else if item.contains(bloodPressureReadingOptions.readyToTakeReading.rawValue) {
                             scanningLable.text = "Press Start in device"
                         }
-                        else if item.contains("FC") {
+                        else if item.contains(bloodPressureReadingOptions.finalReading.rawValue) {
                             let systolicReading = item[item.index(item.startIndex, offsetBy: 3)]
                             let diastolicReading = item[item.index(item.startIndex, offsetBy: 4)]
                             let pulseReading = item[item.index(item.startIndex, offsetBy: 5)]
@@ -241,13 +252,13 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                             
                             //AlertAfterReading.alertReadingHasTaken(title: "Reading Measured Successfully", message: "Blood Pressure has been Measured successfully", viewController: self)
                             
-                        }else if item.contains("01") || item.contains("02") || item.contains("03") || item.contains("04") || item.contains("0C") || item.contains("05"){
+                        }else if item.contains(bloodPressureReadingOptions.signalIsTooSmall.rawValue) || item.contains(bloodPressureReadingOptions.noiseInterference.rawValue) || item.contains(bloodPressureReadingOptions.tooLongInflamation.rawValue) || item.contains(bloodPressureReadingOptions.abnormalResult.rawValue) || item.contains("0C") || item.contains("05"){
                             print("The human heartbeat signal is too small or the pressure drops suddenly")
                             scanningLable.text = "If the measurement is wrong, please wear the CUFF again according to the instruction manual.Keep quiet and re-measure. (Use this sentence for the above 5 items)."
                             diastolicMeasuringLable.isHidden = true
                             diastolicReadingLable.isHidden = true
                         }
-                        else if item.contains("0B"){
+                        else if item.contains(bloodPressureReadingOptions.batteryLow.rawValue){
                                 scanningLable.text = "The battery is low, please replace the battery"
                         }
 

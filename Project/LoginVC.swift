@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Foundation
 
 class LoginVC: UIViewController, UITextFieldDelegate {
 
@@ -201,7 +200,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                         
                     }
                 case .failure(let error):
-                    print("Errorrrr \(error)")
+                    print("Error \(error)")
                 }
             }
             )

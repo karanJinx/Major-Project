@@ -34,9 +34,11 @@ class WeightScalePopupVC: UIViewController{
     
     func navigateToHomeScreen(){
         let myTabBar = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabBar") as! UITabBarController
-        myTabBar.modalPresentationStyle = .overCurrentContext
-        self.present(myTabBar, animated: true)
-        
+        //myTabBar.modalPresentationStyle = .overCurrentContext
+        //self.present(myTabBar, animated: true)
+        let scene = view.window?.windowScene?.delegate as? SceneDelegate
+        let window = scene?.window
+        window?.rootViewController = myTabBar
     }
     
 }

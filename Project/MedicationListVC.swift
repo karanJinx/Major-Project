@@ -121,7 +121,7 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
             switch result {
                 
             case .success(let data):
-                
+                print("Working")
                 do{
                     //                    let meddicationJson = try JSONSerialization.jsonObject(with: data)
                     //                    print("The meddicationjson:\(meddicationJson)")
@@ -255,7 +255,7 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
         //let quantity = String(medicationItem.quantity!)
         //cell.quantityLable.text = quantity
         cell.dateDayLable.text = medicationItem.effectiveDate
-        cell.lastDayDateLable.text = medicationItem.lastEffectiveDate ?? "  -"
+        cell.lastDayDateLable.text = medicationItem.lastEffectiveDate ?? "  -  "
         cell.baseView.layer.cornerRadius = 5
         
         cell.baseView.layer.shadowColor = UIColor.black.cgColor
