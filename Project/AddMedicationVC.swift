@@ -215,7 +215,8 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         frequencyTextField.inputView = pickerView
         
         medicationNameTextField.keyboardType = .asciiCapable
-        quantityTextField.keyboardType = .asciiCapableNumberPad
+        quantityTextField.keyboardType = .numbersAndPunctuation
+        notesTextfield.keyboardType = .asciiCapable
         
         //adding clear button in textfield and setting it active always
         medicationNameTextField.clearButtonMode = .always
@@ -401,13 +402,9 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                             DispatchQueue.main.async {
                                 LocalNotificationManager.scheduleMedicationRemainder(medicationName: self.medicationNameTextField.text!, frequency: self.frequencyTextField.text!, quantity: self.quantityTextField.text!, date: self.effectiveDateTextField.text!, medicationId:medicationIdString)
                             }
-                            
-                            
-                            
-                            self.delegate?.didUserEnterInformation()
-                            
-                           
+
                             DispatchQueue.main.async {
+                                self.delegate?.didUserEnterInformation()
                                 self.navigationController?.popViewController(animated: true)
                             }
                             
@@ -664,29 +661,29 @@ extension AddMedicationVC:UITextFieldDelegate{
             
             self.SearchApi()
             
-            if textField.tag == 1{
-                let character = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890'")
-                let set = CharacterSet(charactersIn: string)
-                
-//                let maxLenght = 10
-//                let currentString:NSString = (textField.text ?? "") as NSString
-//                let newString:NSString = currentString.replacingCharacters(in: range, with: string) as NSString
-                
-                return character.isSuperset(of: set) //&& newString.length <= maxLenght
-            }
-            
-            else if textField.tag == 3 {
-                let character = CharacterSet(charactersIn: "1234567890.")
-                let set = CharacterSet(charactersIn: string)
-                
-                let maxlenght = 4
-                let currentString:NSString = (textField.text ?? "") as NSString
-                let newstring:NSString = currentString.replacingCharacters(in: range, with: string) as NSString
-                
-                return character.isSuperset(of: set) && newstring.length <= maxlenght
-            }
+           
+        }
+        if textField.tag == 1{
+            let character = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890'")
+            let set = CharacterSet(charactersIn: string)
+            return character.isSuperset(of: set)
         }
         
+        else if textField.tag == 3 {
+            let character = CharacterSet(charactersIn: "1234567890")
+            let set = CharacterSet(charactersIn: string)
+            
+            let maxlenght = 2
+            let currentString:NSString = (textField.text ?? "") as NSString
+            let newstring:NSString = currentString.replacingCharacters(in: range, with: string) as NSString
+            
+            return true && character.isSuperset(of: set) && newstring.length <= maxlenght
+        }
+        else if textField.tag == 4{
+            let character = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890'")
+            let set = CharacterSet(charactersIn: string)
+            return character.isSuperset(of: set)
+        }
         
         return true
     }

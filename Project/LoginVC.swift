@@ -17,38 +17,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     @IBOutlet var passwordTextField: UITextField!
     @IBOutlet var submitButton: UIButton!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        emailTextField.keyboardType = .asciiCapable    //disable the emoji
-        passwordTextField.keyboardType = .asciiCapable
-        
-        emailTextField.text = "mobileteam"
-        passwordTextField.text = "Humworld@1"
-        
-        emailTextField.delegate = self
-        passwordTextField.delegate = self
-        
-        emailTextField.clearButtonMode = .whileEditing
-        passwordTextField.clearButtonMode = .whileEditing
-        
-        
-        // Add overlay view
-        view.addSubview(overlayView)
-        overlayView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        overlayView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        overlayView.widthAnchor.constraint(equalToConstant: loaderSize).isActive = true
-        overlayView.heightAnchor.constraint(equalToConstant: loaderSize).isActive = true
-        overlayView.layer.cornerRadius = 10
-        
-        // Add activity indicator
-        overlayView.addSubview(activityIndicator)
-        activityIndicator.centerXAnchor.constraint(equalTo: overlayView.centerXAnchor).isActive = true
-        activityIndicator.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor).isActive = true
-        
-        
-    }
-    
     /// a loader overView on top of the view,(1)assinged instance uiview,(2)createdView ,which is actual overlay view.(3)setting autocontraint to false,(4)settign bacgroundcolor to back opacity 20(5)view is Initially hidden
     let overlayView: UIView = {
         let view = UIView()
@@ -81,6 +49,38 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         return indicator
     }()
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+        emailTextField.keyboardType = .asciiCapable    //disable the emoji
+        passwordTextField.keyboardType = .asciiCapable
+        
+        emailTextField.text = "mobileteam"
+        passwordTextField.text = "Humworld@1"
+        
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        
+        emailTextField.clearButtonMode = .whileEditing
+        passwordTextField.clearButtonMode = .whileEditing
+        
+        
+        // Add overlay view
+        view.addSubview(overlayView)
+        overlayView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        overlayView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        overlayView.widthAnchor.constraint(equalToConstant: loaderSize).isActive = true
+        overlayView.heightAnchor.constraint(equalToConstant: loaderSize).isActive = true
+        overlayView.layer.cornerRadius = 10
+        
+        // Add activity indicator
+        overlayView.addSubview(activityIndicator)
+        activityIndicator.centerXAnchor.constraint(equalTo: overlayView.centerXAnchor).isActive = true
+        activityIndicator.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor).isActive = true
+        
+        
+    }
+
     
     func showLoader() {
         DispatchQueue.main.async {
@@ -88,15 +88,14 @@ class LoginVC: UIViewController, UITextFieldDelegate {
             self.activityIndicator.startAnimating()
         }
     }
+    
     func hideLoader() {
         DispatchQueue.main.async {
             self.overlayView.isHidden = true
             self.activityIndicator.stopAnimating()
         }
     }
-    
-    
-    
+
     /// KeyBoard disappers when we click the Return button
     /// - Parameter textField: email and password field
     /// - Returns: true
@@ -106,8 +105,15 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         return true
     }
     
+    /// Showing alert when the textField(username or password) is empty
+    /// - Parameter message: What message to show to the user
+    func alert(message:String){
+        let alert = UIAlertController(title: "Alert!", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        self.present(alert, animated: true)
+    }
     
-    @IBAction func submitButtonPressed(_ sender: UIButton)  {
+    @IBAction func submitButtonPressed(_ sender: UIButton){
         let username = emailTextField.text!
         let password = passwordTextField.text!
         let trimmedUserName = username.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -118,13 +124,8 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         //        print(username)
         //        print(trimmedUserName)
         
-        /// Showing alert when the textField(username or password) is empty
-        /// - Parameter message: What message to show to the user
-        func alert(message:String){
-            let alert = UIAlertController(title: "Alert!", message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
-            self.present(alert, animated: true)
-        }
+        
+       
         if trimmedUserName.isEmpty {
             alert(message: "UserName is Empty.")
         }else if trimmedUserName.count < 8 {
