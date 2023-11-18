@@ -81,6 +81,7 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
     @IBOutlet var tableView: UITableView!
     @IBOutlet var addBarButton: UIBarButtonItem!
     @IBOutlet var hideView: UIView!
+    @IBOutlet var messageLable: UILabel!
     
     
     override func viewDidLoad() {
@@ -146,6 +147,15 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
                 }
                 catch{
                     print("Error decoding listMedication API response: \(error.localizedDescription)")
+                    DispatchQueue.main.async {
+                        let alert = UIAlertController(title: "Alert", message: "Try after sometimes", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .default))
+                        self.present(alert, animated: true)
+                        
+                        self.messageLable.text = "Response Error, Try after sometimes"
+                    }
+                    
+                    
                 }
             case .failure(let error):
                 print("MedicationListAPI request failed: \(error)")

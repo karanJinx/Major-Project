@@ -686,6 +686,7 @@
                     <connections>
                         <outlet property="addBarButton" destination="hIQ-eu-aaZ" id="LYs-CS-YsS"/>
                         <outlet property="hideView" destination="e0h-5a-6ZS" id="mMc-Gn-pBV"/>
+                        <outlet property="messageLable" destination="6Sx-6O-Wzb" id="xaX-kw-Fag"/>
                         <outlet property="tableView" destination="MeU-Jf-5CG" id="67R-fY-rIc"/>
                     </connections>
                 </viewController>
