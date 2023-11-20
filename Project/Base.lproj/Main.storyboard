@@ -974,7 +974,7 @@
         <scene sceneID="lqz-la-97B">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="kvR-at-HA6" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Medication" image="aa medication" id="pY2-xt-cnd"/>
+                    <tabBarItem key="tabBarItem" title="Medication" image="aa Medications" id="pY2-xt-cnd"/>
                     <toolbarItems/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="y8E-Ht-XyB">
@@ -1650,8 +1650,8 @@
     <resources>
         <image name="Blood_glucose-re" width="200" height="200"/>
         <image name="Weight scale re" width="450" height="450"/>
+        <image name="aa Medications" width="26" height="26"/>
         <image name="aa home" width="26" height="26"/>
-        <image name="aa medication" width="26" height="26"/>
         <image name="bloodPressure-re" width="200" height="200"/>
         <image name="ecg-image" width="175" height="175"/>
         <image name="gearshape.fill" catalog="system" width="128" height="123"/>

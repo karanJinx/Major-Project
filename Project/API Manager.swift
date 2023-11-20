@@ -39,7 +39,7 @@ class APIManager{
     func APIHelper(url: String,params: [String:Any], method: HTTPMethod , headers: [String:String]?, requestBody: Data?, completion: @escaping (Result<Data, Error>) -> Void){
         
         //        This line initializes an empty array called queryItems to store URL query items. Query items are key-value pairs that are used to pass parameters in the URL.
-        var queryItems : [URLQueryItem] = []
+        var queryItems: [URLQueryItem] = []
         
         // dict from the apihelper method (param) is converted into the urlqueryitem and appended into the queryitems
         for parameter in params{
