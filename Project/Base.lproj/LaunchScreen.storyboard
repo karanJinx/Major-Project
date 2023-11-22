@@ -12,7 +12,7 @@
         <scene sceneID="EHf-IW-A2E">
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
+                    <view key="view" contentMode="scaleToFill" ambiguous="YES" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -27,9 +27,11 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="Cyg-ox-3xV" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="5uQ-N8-898"/>
                             <constraint firstItem="Cyg-ox-3xV" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="79" id="RUB-ta-nfX"/>
                             <constraint firstItem="Cyg-ox-3xV" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="316" id="fQ4-Ue-9yo"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="Cyg-ox-3xV" secondAttribute="bottom" constant="341" id="nuO-A3-G2R"/>
+                            <constraint firstItem="Cyg-ox-3xV" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="xDs-DQ-mIy"/>
                         </constraints>
                     </view>
                 </viewController>

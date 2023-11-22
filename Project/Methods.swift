@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
     struct Method {
-        static func showConfirmationAlertToGoBackTo(from presentingViewController: UIViewController, targetViewController: UIViewController) {
+        static func showConfirmationAlertToGoBackTo(from presentingViewController: UIViewController) {
             let alertController = UIAlertController(title: "Confirmation Alert", message: "Are you sure about navigating out of this screen?", preferredStyle: .alert)
 
             let okAction = UIAlertAction(title: "OK", style: .default) { (_) in

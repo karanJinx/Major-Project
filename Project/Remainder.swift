@@ -12,7 +12,7 @@ import UserNotifications
 class LocalNotificationManager{
     static func requestPermission(){
         let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert,.badge,.sound]) { granted, error in
+        center.requestAuthorization(options: [.sound,.alert,.badge]) { granted, error in
             if granted{
                 print("The notification permission granter")
             }
@@ -24,8 +24,7 @@ class LocalNotificationManager{
     
     
     //schedule notification
-    static func scheduleMedicationRemainder(medicationName: String,frequency: String,quantity: String,date: String,medicationId: String){
-        //let medic:[MedicationData] = []
+    static func scheduleMedicationRemainder(medicationName: String,frequency: String,quantity: String,date: String){
         let center = UNUserNotificationCenter.current()
         //Content of the notification
         let content = UNMutableNotificationContent()
@@ -40,13 +39,13 @@ class LocalNotificationManager{
         case "Every 3 months":
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3 * 30 * 24 * 60 * 60, repeats: true)
         case "Every 8 hours":
-            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 8 * 60 * 60, repeats: true)
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 8 * 60 * 60, repeats: true)//300   5 min
         case "Every 4 hours":
-            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 4 * 60 * 60, repeats: true)
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 4 * 60 * 60, repeats: true)// 180  3 min
         case "Every 6 months":
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: 6 * 30 * 24 * 60 * 60, repeats: true)
         case "Every 2 hours":
-            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2 * 60 * 60, repeats: true)
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2 * 60 * 60, repeats: true)// 120  2 min
         case "Once a week":
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: 7 * 24 * 60 * 60, repeats: true)
         case "Once a month":
@@ -58,18 +57,20 @@ class LocalNotificationManager{
         case "Twice a day":
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: 16 * 60 * 60, repeats: true)
         default:
-            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 24 * 60 * 60, repeats: true)
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 24 * 60 * 60, repeats: false)
         }
         
         
         //Create a request
-        let medicationId = medicationId
+        //let medicationIdToRequest = medicationId
         
-        let request = UNNotificationRequest(identifier: medicationId , content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: UUID().uuidString , content: content, trigger: trigger)
         
         //Register a request
         center.add(request) { error in
-            print("Error in the Local Notification: \(error)")
+            if let error = error{
+                print("Error in the Local Notification: \(error)")
+            }
         }
         
     }

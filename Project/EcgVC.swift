@@ -50,7 +50,7 @@ class EcgVC: UIViewController{
     }
     
     @IBAction func backButtonPressedECG(_ sender: Any) {
-        Method.showConfirmationAlertToGoBackTo(from: self, targetViewController: HomeVC())
+        Method.showConfirmationAlertToGoBackTo(from: self)
     }
     
     

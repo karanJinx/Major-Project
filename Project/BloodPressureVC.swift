@@ -78,7 +78,7 @@ class BloodPressureVC: UIViewController{
         
     }
     @IBAction func backButtonPressedBP(_ sender: Any) {
-        Method.showConfirmationAlertToGoBackTo(from: self, targetViewController: HomeVC())
+        Method.showConfirmationAlertToGoBackTo(from: self)
     }
 
     
@@ -173,8 +173,6 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                 peripheral.setNotifyValue(true, for: characteristic)
                 print("\(characteristic.uuid) contains the notify property")
             }
-            
-            
         }
     }
     
@@ -182,8 +180,7 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
    
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        switch characteristic.uuid {
-        case bloodPressureCharacteristicUUID1:
+
             if let data = characteristic.value {
                 
                 let byteArray = [UInt8](data)
@@ -272,9 +269,7 @@ extension BloodPressureVC: CBCentralManagerDelegate,CBPeripheralDelegate{
             else {
                 print("No value received for Blood Pressure characteristic")
             }
-        default:
-            print("Unhandled Characteristic UUID: \(characteristic.uuid)")
-        }
+
     }
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         if let error = error {

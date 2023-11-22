@@ -49,7 +49,7 @@ class WeighingScaleVC: UIViewController{
 
 
     @IBAction func BackButtonPressedWeightScale(_ sender: Any) {
-        Method.showConfirmationAlertToGoBackTo(from: self, targetViewController: HomeVC())
+        Method.showConfirmationAlertToGoBackTo(from: self)
 
     }
     

@@ -182,6 +182,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         
         // Set the status bar color to match the navigation bar
         navigationController?.navigationBar.barStyle = .black
+        
         //getting authorization from the user
         LocalNotificationManager.requestPermission()
         
@@ -398,17 +399,14 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                         Token.logId = String(saveDecoded.logId!)
                         print("The logId:\(saveDecoded.logId!)")
                         if saveDecoded.status == "success"{
-                            
-                            DispatchQueue.main.async {
-                                LocalNotificationManager.scheduleMedicationRemainder(medicationName: self.medicationNameTextField.text!, frequency: self.frequencyTextField.text!, quantity: self.quantityTextField.text!, date: self.effectiveDateTextField.text!, medicationId:medicationIdString)
-                            }
 
+                            
                             DispatchQueue.main.async {
                                 self.delegate?.didUserEnterInformation()
                                 self.navigationController?.popViewController(animated: true)
-                            }
                             
-                           
+                                LocalNotificationManager.scheduleMedicationRemainder(medicationName: self.medicationNameTextField.text!, frequency: self.frequencyTextField.text!, quantity: self.quantityTextField.text!, date: self.effectiveDateTextField.text!)
+                            }
                         }
                     }
                     catch{

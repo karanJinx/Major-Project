@@ -56,7 +56,7 @@ class BloodGlucoseVC:UIViewController{
     }
 
     @IBAction func backButtonPressedBG(_ sender: Any) {
-        Method.showConfirmationAlertToGoBackTo(from: self, targetViewController: HomeVC())
+        Method.showConfirmationAlertToGoBackTo(from: self)
     }
 }
 extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
@@ -219,28 +219,28 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
             }
         }
     }
-    func showPopupWithFinalReading(finalReading: String) {
-        let alert = UIAlertController(title: "Final Reading", message: "Your final reading is \(finalReading)", preferredStyle: .alert)
-
-        // Create an "OK" action
-        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-            // Navigate to the Home screen
-            self?.navigateToHomeScreen()
-        }
-
-        alert.addAction(okAction)
-
-        // Present the alert
-        present(alert, animated: true, completion: nil)
-    }
-    
-    func navigateToHomeScreen() {
-        // Replace this with your navigation code to go to the Home screen
-        // For example, if you're using a UINavigationController:
-        if let navigationController = self.navigationController {
-            navigationController.popToRootViewController(animated: true)
-        }
-    }
+//    func showPopupWithFinalReading(finalReading: String) {
+//        let alert = UIAlertController(title: "Final Reading", message: "Your final reading is \(finalReading)", preferredStyle: .alert)
+//
+//        // Create an "OK" action
+//        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
+//            // Navigate to the Home screen
+//            self?.navigateToHomeScreen()
+//        }
+//
+//        alert.addAction(okAction)
+//
+//        // Present the alert
+//        present(alert, animated: true, completion: nil)
+//    }
+//
+//    func navigateToHomeScreen() {
+//        // Replace this with your navigation code to go to the Home screen
+//        // For example, if you're using a UINavigationController:
+//        if let navigationController = self.navigationController {
+//            navigationController.popToRootViewController(animated: true)
+//        }
+//    }
 
     
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
