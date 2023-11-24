@@ -24,7 +24,7 @@ class LocalNotificationManager{
     
     
     //schedule notification
-    static func scheduleMedicationRemainder(medicationName: String,frequency: String,quantity: String,date: String){
+    static func scheduleMedicationRemainder(medicationName: String,frequency: String,quantity: String,date: String,medicationId: String){
         let center = UNUserNotificationCenter.current()
         //Content of the notification
         let content = UNMutableNotificationContent()
@@ -39,13 +39,13 @@ class LocalNotificationManager{
         case "Every 3 months":
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3 * 30 * 24 * 60 * 60, repeats: true)
         case "Every 8 hours":
-            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 8 * 60 * 60, repeats: true)//300   5 min
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 360, repeats: true)//8 * 60 * 60   6 min
         case "Every 4 hours":
-            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 4 * 60 * 60, repeats: true)// 180  3 min
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 240, repeats: true)// 4 * 60 * 60  4 min
         case "Every 6 months":
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: 6 * 30 * 24 * 60 * 60, repeats: true)
         case "Every 2 hours":
-            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2 * 60 * 60, repeats: true)// 120  2 min
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 120, repeats: true)// 2 * 60 * 60  2 min
         case "Once a week":
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: 7 * 24 * 60 * 60, repeats: true)
         case "Once a month":
@@ -62,9 +62,9 @@ class LocalNotificationManager{
         
         
         //Create a request
-        //let medicationIdToRequest = medicationId
-        
-        let request = UNNotificationRequest(identifier: UUID().uuidString , content: content, trigger: trigger)
+        let medicationIdToRequest = medicationId
+        let uuid = UUID().uuidString
+        let request = UNNotificationRequest(identifier: medicationIdToRequest, content: content, trigger: trigger)
         
         //Register a request
         center.add(request) { error in
@@ -80,5 +80,6 @@ class LocalNotificationManager{
     static func removeLocalNotification(identifier: String){
         let center = UNUserNotificationCenter.current()
         center.removePendingNotificationRequests(withIdentifiers: [identifier])
+        
     }
 }

@@ -94,6 +94,9 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
         
         tableView.reloadData()
         
+        //getting authorization from the user
+        LocalNotificationManager.requestPermission()
+        
         
         let navigationBarAppearance = UINavigationBarAppearance()
         navigationBarAppearance.backgroundColor = .systemGray6 
@@ -213,6 +216,8 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
                             }
                             
                             LocalNotificationManager.removeLocalNotification(identifier: String(currentMedicationId!))
+//                            LocalNotificationManager.removeLocalNotification(identifier: UUID().uuidString)
+
                         }
                     }
                     catch{
@@ -302,6 +307,13 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
         editViewController.navigationItem.title = "Edit Medication"
         editViewController.isNewMedication = true
         
+        if let medicationId = itemToEdit.medicationId {
+            let medicationIdToRemove = String(medicationId)
+            LocalNotificationManager.removeLocalNotification(identifier: medicationIdToRemove)
+        }
+//        let uuid = UUID().uuidString
+//        LocalNotificationManager.removeLocalNotification(identifier: )
+
         navigationController?.pushViewController(editViewController, animated: true)
         
     }
@@ -310,6 +322,7 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let editAction = UIContextualAction(style: .normal, title: "Edit") { [weak self] (_, _, completionHandler) in
             self?.handlerEditAction(at: indexPath)
+            
             completionHandler(true)
 
         }

@@ -184,7 +184,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         navigationController?.navigationBar.barStyle = .black
         
         //getting authorization from the user
-        LocalNotificationManager.requestPermission()
+        //LocalNotificationManager.requestPermission()
         
         
         if let quantity = medicationData?.quantity{
@@ -344,6 +344,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
             print("the medica id:\(medicId)")
             let medicationIdStr = String(medicId)
             medicationIdString = medicationIdStr
+            print("The medicationIdString:\(medicationIdString)")
             Token.medicationId = medicationIdString
         }
         print("The medicationIdString:\(medicationIdString)")
@@ -388,24 +389,43 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                         print("The serializedata : \(serializeData!)")
                         
                         let saveDecoded = try JSONDecoder().decode(ResponseData.self, from: data)
+                        print("The decoded:\(saveDecoded)")
                         if let saveMedicationId = saveDecoded.data{
                             for medicaId in saveMedicationId.list{
-                                print("the medicationIdfirstfound:\(medicaId)")
+                                print("the medicationIdfirstfound:\(medicaId.medicationId!)")
                             }
                         }
-                        
-                        
-                        
                         Token.logId = String(saveDecoded.logId!)
                         print("The logId:\(saveDecoded.logId!)")
                         if saveDecoded.status == "success"{
-
-                            
                             DispatchQueue.main.async {
                                 self.delegate?.didUserEnterInformation()
                                 self.navigationController?.popViewController(animated: true)
-                            
-                                LocalNotificationManager.scheduleMedicationRemainder(medicationName: self.medicationNameTextField.text!, frequency: self.frequencyTextField.text!, quantity: self.quantityTextField.text!, date: self.effectiveDateTextField.text!)
+                                if let medicationIdForRemainder = saveDecoded.id{
+                                    DispatchQueue.main.async {
+                                        LocalNotificationManager.scheduleMedicationRemainder(medicationName: self.medicationNameTextField.text!, frequency: self.frequencyTextField.text!, quantity: self.quantityTextField.text!, date: self.effectiveDateTextField.text!, medicationId: String(medicationIdForRemainder) )
+                                                                    }
+                                }
+                                
+                            }
+                            DispatchQueue.main.async {
+                                if self.isNewMedication == true {
+                                                       // Medication is new, show "Medication saved successfully" alert
+                                                       let alert = UIAlertController(title: nil, message: "Medication updated successfully", preferredStyle: .alert)
+                                                       self.present(alert, animated: true)
+                                                       // Dismiss the alert after the specified duration
+                                                       DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                                           alert.dismiss(animated: true, completion: nil)
+                                                       }
+                                                   } else {
+                                                       // Medication is not new, show "Medication updated successfully" alert
+                                                       let alert = UIAlertController(title: nil, message: "Medication saved successfully", preferredStyle: .alert)
+                                                       self.present(alert, animated: true)
+                                                       // Dismiss the alert after the specified duration
+                                                       DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                                           alert.dismiss(animated: true, completion: nil)
+                                                       }
+                                                   }
                             }
                         }
                     }
@@ -493,26 +513,11 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                     print("the validation data string: \(dataString!)")
                     if dataString == "true"{
                         DispatchQueue.main.async {
-                            if self.isNewMedication == true {
-                                                   // Medication is new, show "Medication saved successfully" alert
-                                                   let alert = UIAlertController(title: nil, message: "Medication updated successfully", preferredStyle: .alert)
-                                                   self.present(alert, animated: true)
-                                                   // Dismiss the alert after the specified duration
-                                                   DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                                       alert.dismiss(animated: true, completion: nil)
-                                                   }
-                                               } else {
-                                                   // Medication is not new, show "Medication updated successfully" alert
-                                                   let alert = UIAlertController(title: nil, message: "Medication saved successfully", preferredStyle: .alert)
-                                                   self.present(alert, animated: true)
-                                                   // Dismiss the alert after the specified duration
-                                                   DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                                       alert.dismiss(animated: true, completion: nil)
-                                                   }
-                                               }
+                            // Call the save API after successful validation
+                            self.saveAPI()
+                            
 
-                                               // Call the save API after successful validation
-                                               self.saveAPI()
+                                              
                                            }
                         
                         
