@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="2Q5-ex-yKS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22155" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="2Q5-ex-yKS">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22131"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -552,9 +553,12 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="tickmarkIos" translatesAutoresizingMaskIntoConstraints="NO" id="sT1-PR-M4c">
-                                        <rect key="frame" x="5" y="6" width="39" height="39"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tickmarkIos" translatesAutoresizingMaskIntoConstraints="NO" id="sT1-PR-M4c">
+                                        <rect key="frame" x="5" y="6" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="72g-7k-GBN"/>
+                                            <constraint firstAttribute="width" constant="40" id="CUv-AK-WFW"/>
+                                        </constraints>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -573,10 +577,13 @@
                                     <constraint firstAttribute="bottom" secondItem="Rzc-ur-jRg" secondAttribute="bottom" constant="30" id="STy-3P-Z3u"/>
                                     <constraint firstAttribute="trailing" secondItem="2HW-ip-EWX" secondAttribute="trailing" constant="5" id="T00-Yh-IEI"/>
                                     <constraint firstItem="c6O-OI-Wum" firstAttribute="top" secondItem="iMS-6P-xqq" secondAttribute="bottom" constant="50" id="TpE-XT-mjC"/>
+                                    <constraint firstAttribute="trailing" secondItem="sT1-PR-M4c" secondAttribute="trailing" constant="238" id="YQ8-rQ-foL"/>
                                     <constraint firstAttribute="trailing" secondItem="uSn-pB-3Rs" secondAttribute="trailing" constant="238" id="cLW-4X-FWx"/>
                                     <constraint firstItem="2HW-ip-EWX" firstAttribute="top" secondItem="gHR-Am-Fy4" secondAttribute="top" constant="5" id="eT8-xD-iC1"/>
+                                    <constraint firstItem="sT1-PR-M4c" firstAttribute="leading" secondItem="gHR-Am-Fy4" secondAttribute="leading" constant="5" id="i3p-ux-iMr"/>
                                     <constraint firstAttribute="trailing" secondItem="iMS-6P-xqq" secondAttribute="trailing" constant="10" id="xBZ-OD-9Xn"/>
                                     <constraint firstItem="uSn-pB-3Rs" firstAttribute="top" secondItem="gHR-Am-Fy4" secondAttribute="top" constant="15" id="xkH-IK-dmw"/>
+                                    <constraint firstItem="sT1-PR-M4c" firstAttribute="top" secondItem="gHR-Am-Fy4" secondAttribute="top" constant="6" id="zHh-Bf-bkh"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -1213,20 +1220,26 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="tickmarkIos" translatesAutoresizingMaskIntoConstraints="NO" id="4Gg-xj-kEn">
-                                        <rect key="frame" x="5" y="5" width="34" height="40"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tickmarkIos" translatesAutoresizingMaskIntoConstraints="NO" id="4Gg-xj-kEn">
+                                        <rect key="frame" x="5" y="5" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="40" id="76Z-bL-joT"/>
+                                            <constraint firstAttribute="height" constant="40" id="Ywx-up-4YG"/>
+                                        </constraints>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="378" id="1XR-Bk-v8Z"/>
+                                    <constraint firstItem="4Gg-xj-kEn" firstAttribute="leading" secondItem="siJ-Kj-jN7" secondAttribute="leading" constant="5" id="2IA-LI-x9X"/>
                                     <constraint firstAttribute="bottom" secondItem="Ibi-e8-nyQ" secondAttribute="bottom" constant="30" id="7f5-jT-Krh"/>
                                     <constraint firstAttribute="trailing" secondItem="Ibi-e8-nyQ" secondAttribute="trailing" constant="70" id="Ca0-Dt-Hda"/>
+                                    <constraint firstItem="4Gg-xj-kEn" firstAttribute="top" secondItem="siJ-Kj-jN7" secondAttribute="top" constant="5" id="GBU-oU-bj0"/>
                                     <constraint firstItem="Ibi-e8-nyQ" firstAttribute="leading" secondItem="siJ-Kj-jN7" secondAttribute="leading" constant="70" id="Gjv-WE-DdP"/>
                                     <constraint firstItem="Kgk-vR-bOw" firstAttribute="leading" secondItem="siJ-Kj-jN7" secondAttribute="leading" constant="5" id="H9K-po-109"/>
                                     <constraint firstItem="yWK-lM-TPd" firstAttribute="leading" secondItem="siJ-Kj-jN7" secondAttribute="leading" constant="50" id="Hk0-QF-14f"/>
                                     <constraint firstItem="nrt-lw-6Qu" firstAttribute="leading" secondItem="siJ-Kj-jN7" secondAttribute="leading" constant="5" id="Kn8-WB-IKA"/>
+                                    <constraint firstAttribute="trailing" secondItem="4Gg-xj-kEn" secondAttribute="trailing" constant="239" id="VGq-ml-QFl"/>
                                     <constraint firstItem="Kgk-vR-bOw" firstAttribute="top" secondItem="siJ-Kj-jN7" secondAttribute="top" constant="5" id="WR1-NZ-dHW"/>
                                     <constraint firstItem="etB-Gp-OEq" firstAttribute="leading" secondItem="siJ-Kj-jN7" secondAttribute="leading" constant="60" id="Zqn-AR-AyC"/>
                                     <constraint firstAttribute="trailing" secondItem="nrt-lw-6Qu" secondAttribute="trailing" constant="5" id="aKP-gN-fhB"/>
@@ -1625,14 +1638,18 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="tickmarkIos" translatesAutoresizingMaskIntoConstraints="NO" id="hlN-KY-dzJ">
-                                        <rect key="frame" x="5" y="5" width="36" height="40"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tickmarkIos" translatesAutoresizingMaskIntoConstraints="NO" id="hlN-KY-dzJ">
+                                        <rect key="frame" x="5" y="5" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="6gs-nx-AxM"/>
+                                            <constraint firstAttribute="width" constant="40" id="hHu-08-9MX"/>
+                                        </constraints>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="Po9-dr-oqh" secondAttribute="trailing" constant="70" id="1Rr-nd-yQf"/>
+                                    <constraint firstAttribute="trailing" secondItem="hlN-KY-dzJ" secondAttribute="trailing" constant="239" id="1YN-SE-jGt"/>
                                     <constraint firstItem="0IM-ch-6kn" firstAttribute="top" secondItem="kR4-hg-BtY" secondAttribute="top" constant="5" id="1w1-YO-Dpo"/>
                                     <constraint firstAttribute="bottom" secondItem="Po9-dr-oqh" secondAttribute="bottom" constant="30" id="8ba-eN-4RF"/>
                                     <constraint firstAttribute="trailing" secondItem="wHo-CK-M7P" secondAttribute="trailing" constant="60" id="B2C-xr-rDa"/>
@@ -1661,6 +1678,8 @@
                                     <constraint firstAttribute="trailing" secondItem="Yp1-XI-AI8" secondAttribute="trailing" constant="125" id="nVJ-DX-43s"/>
                                     <constraint firstAttribute="trailing" secondItem="9na-MJ-bod" secondAttribute="trailing" constant="110" id="qZ3-gQ-cv8"/>
                                     <constraint firstItem="9na-MJ-bod" firstAttribute="leading" secondItem="kR4-hg-BtY" secondAttribute="leading" constant="112" id="saK-Ff-M7f"/>
+                                    <constraint firstItem="hlN-KY-dzJ" firstAttribute="top" secondItem="kR4-hg-BtY" secondAttribute="top" constant="5" id="vpU-LO-xLB"/>
+                                    <constraint firstItem="hlN-KY-dzJ" firstAttribute="leading" secondItem="kR4-hg-BtY" secondAttribute="leading" constant="5" id="xZ3-8J-M0n"/>
                                     <constraint firstAttribute="trailing" secondItem="0IM-ch-6kn" secondAttribute="trailing" constant="5" id="ydV-JJ-Zy1"/>
                                 </constraints>
                             </view>

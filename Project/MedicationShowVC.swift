@@ -19,7 +19,7 @@ class MedicationShowVC: UIViewController{
     @IBOutlet var lastEffectiveDateLable: UILabel!
     
     
-    var medication1 = MedicationData()
+    var medicationToShow = MedicationData()
     
     
     override func viewDidLoad() {
@@ -47,11 +47,11 @@ class MedicationShowVC: UIViewController{
         customs(viewName: frequencyView)
         customs(viewName: dateView)
         
-        nameLable.text = medication1.name
-        frequencyLable.text = medication1.frequency
-        quantityLable.text = String(medication1.quantity!)
-        effectiveDateLable.text = medication1.effectiveDate
-        lastEffectiveDateLable.text = medication1.lastEffectiveDate ?? " - "
+        nameLable.text = medicationToShow.name
+        frequencyLable.text = medicationToShow.frequency
+        quantityLable.text = String(medicationToShow.quantity!)
+        effectiveDateLable.text = medicationToShow.effectiveDate
+        lastEffectiveDateLable.text = medicationToShow.lastEffectiveDate ?? " - "
         
         
         

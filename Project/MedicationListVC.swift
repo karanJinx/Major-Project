@@ -111,8 +111,8 @@ class MedicationListVC: UIViewController,DataEnterDelegate{
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "AddMedicationVC") as! AddMedicationVC
         vc.navigationItem.title = "Add Medication"
-        vc.isNewMedication = false
-        vc.delegate = self
+        vc.medicationData = nil
+        vc.dataEnterDelegate = self
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -290,7 +290,7 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyBoard.instantiateViewController(withIdentifier: "MedicationShowVC") as! MedicationShowVC
-        vc.medication1 = medication[indexPath.row]
+        vc.medicationToShow = medication[indexPath.row]
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
         
@@ -302,10 +302,10 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
         print("The item To edit :\(itemToEdit)")
         let editViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "AddMedicationVC") as! AddMedicationVC
         editViewController.hidesBottomBarWhenPushed = true
-        editViewController.delegate = self
+        editViewController.dataEnterDelegate = self
         editViewController.medicationData = itemToEdit
         editViewController.navigationItem.title = "Edit Medication"
-        editViewController.isNewMedication = true
+        editViewController.medicationData != nil
         
         if let medicationId = itemToEdit.medicationId {
             let medicationIdToRemove = String(medicationId)
@@ -320,7 +320,7 @@ extension MedicationListVC:UITableViewDelegate,UITableViewDataSource{
     
 
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let editAction = UIContextualAction(style: .normal, title: "Edit") { [weak self] (_, _, completionHandler) in
+        let editAction = UIContextualAction(style: .normal, title: "Edit") { [weak self] (_,_, completionHandler) in
             self?.handlerEditAction(at: indexPath)
             
             completionHandler(true)

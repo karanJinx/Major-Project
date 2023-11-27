@@ -8,11 +8,17 @@
 import UIKit
 import UserNotifications
 
-protocol DataEnterDelegate{
+protocol DataEnterDelegate {
     func didUserEnterInformation()
-    
 }
 
+enum AddMedicationFieldsTags: Int {
+    case medicationName = 1
+    case frequency = 2
+    case quantity = 3
+    case notes = 4
+    case effectiveEndDate = 5
+}
 
 //Medication Frequency
 struct MedicationFrequencyResponse: Codable {
@@ -40,6 +46,7 @@ struct ResponseData: Codable {
     let carePlanDate: String?
     let logId: Int?
 }
+
 struct DataInfo: Codable {
     let timestamp: String?
     let carePlanDate: String?
@@ -48,6 +55,7 @@ struct DataInfo: Codable {
     let list: [MedicationInfo]
     let diagnosisId: String?
 }
+
 struct MedicationInfo: Codable {
     let medicationId: Int?
     let name: String?
@@ -63,9 +71,7 @@ struct MedicationInfo: Codable {
     let invalidFlag: String?
 }
 
-
 //medication search
-
 struct MedicationSearch: Codable{
     var status: String?
     var data: MedicationDetails?
@@ -73,9 +79,8 @@ struct MedicationSearch: Codable{
 
 struct MedicationDetails : Codable{
     var others : [OtherMedication]?
-    
-    
 }
+
 struct OtherMedication : Codable{
     var mediProId: String?
     var favMediId: String?
@@ -94,11 +99,10 @@ struct OtherMedication : Codable{
     var frequency: String?
     var frequencyCode: String?
     var customFrequency: String?
-    
 }
 
 //Edit Medication
-struct medicationEditResponse: Codable{
+struct medicationEditResponse: Codable {
     var id: Int?
     var preventativeMeasureGoalCode: String?
     var status: String?
@@ -107,6 +111,7 @@ struct medicationEditResponse: Codable{
     var carePlanDate: String?
     var logId: Int?
 }
+
 struct EditedData: Codable{
     var timestamp: String?
     var carPlanDate: String?
@@ -114,6 +119,7 @@ struct EditedData: Codable{
     var list: [EditedListMedication]?
     var diagnosisId: String?
 }
+
 struct EditedListMedication:Codable{
     var medicationId: Int?
     var name: String?
@@ -129,11 +135,8 @@ struct EditedListMedication:Codable{
     var invalidFlag: String?
 }
 
-class AddMedicationVC: UIViewController,UITextViewDelegate {
-    
-    
-    
-    
+class AddMedicationVC: UIViewController {
+
     @IBOutlet var medicationNameTextField: UITextField!
     @IBOutlet var frequencyTextField: UITextField!
     @IBOutlet var quantityTextField: UITextField!
@@ -142,10 +145,9 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
     @IBOutlet var notesTextfield: UITextField!
     @IBOutlet var searchTableview: UITableView!
         
-    var medicationData: MedicationData!
+    var medicationData: MedicationData?
     
-    
-    var delegate: DataEnterDelegate? = nil
+    var dataEnterDelegate: DataEnterDelegate? = nil
     
     let datePicker = UIDatePicker()
     let datePickerEndDate = UIDatePicker()
@@ -160,20 +162,15 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
     
     let rowHeight: CGFloat = 40.0
     
-    var isNewMedication: Bool = true // Default to adding a new medication
+    //var isNewMedication: Bool = true // Default to adding a new medication
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
 
         //To update the barbutton in add screen from save to update
-        if isNewMedication{
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Update", style: .plain, target: self, action: #selector(saveButtonPressed))
-            
-        }else{
-            navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveButtonPressed))
-            
-        }
+        navigationItem.rightBarButtonItem = (medicationData != nil) ? UIBarButtonItem(title: "Update", style: .plain, target: self, action: #selector(saveButtonPressed)): UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveButtonPressed))
+       
         
         let navigationBarAppearance = UINavigationBarAppearance()
         navigationBarAppearance.backgroundColor = .systemGray6 
@@ -186,23 +183,25 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         //getting authorization from the user
         //LocalNotificationManager.requestPermission()
         
-        
-        if let quantity = medicationData?.quantity{
-            let stringQuantity = String(quantity)
-            quantityTextField.text = stringQuantity
+        if medicationData != nil{
+            if let quantity = medicationData?.quantity{
+                let stringQuantity = String(quantity)
+                quantityTextField.text = stringQuantity
+            }
+            medicationNameTextField.text = medicationData?.name
+            frequencyTextField.text = medicationData?.frequency
+            
+            notesTextfield.text = medicationData?.notes
+            effectiveDateTextField.text = medicationData?.effectiveDate
+            effectiveEndDateTimeTextField.text = medicationData?.lastEffectiveDate
         }
-        medicationNameTextField.text = medicationData?.name
-        frequencyTextField.text = medicationData?.frequency
         
-        notesTextfield.text = medicationData?.notes
-        effectiveDateTextField.text = medicationData?.effectiveDate
-        effectiveEndDateTimeTextField.text = medicationData?.lastEffectiveDate
         
-        medicationNameTextField.tag = 1
-        frequencyTextField.tag = 2
-        quantityTextField.tag = 3
-        notesTextfield.tag = 4
-        effectiveDateTextField.tag = 5
+        medicationNameTextField.tag = AddMedicationFieldsTags.medicationName.rawValue
+        frequencyTextField.tag = AddMedicationFieldsTags.frequency.rawValue
+        quantityTextField.tag = AddMedicationFieldsTags.quantity.rawValue
+        notesTextfield.tag = AddMedicationFieldsTags.notes.rawValue
+        effectiveDateTextField.tag = AddMedicationFieldsTags.effectiveEndDate.rawValue
         
         medicationNameTextField.delegate = self
         quantityTextField.delegate = self
@@ -313,18 +312,14 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
         frequencyTextField.resignFirstResponder()
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        medicationNameTextField.resignFirstResponder()
-        quantityTextField.resignFirstResponder()
-        frequencyTextField.resignFirstResponder()
-        effectiveDateTextField.resignFirstResponder()
-        notesTextfield.resignFirstResponder()
+        textField.resignFirstResponder()
         return true
     }
   
     //MARK: - API
     func saveAPI(){
         let saveApi = APIHelper.share.baseURLWeb + "medications"
-        let headers = ["X-Auth-Token": Token.token!,"Content-Type": "application/json"]
+        let headers = ["X-Auth-Token": Token.token!, "Content-Type": "application/json"]
         
         let filteredFrequency = frequenciesFromApi.filter { name in
             if frequencyTextField.text == name.description{
@@ -399,7 +394,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                         print("The logId:\(saveDecoded.logId!)")
                         if saveDecoded.status == "success"{
                             DispatchQueue.main.async {
-                                self.delegate?.didUserEnterInformation()
+                                self.dataEnterDelegate?.didUserEnterInformation()
                                 self.navigationController?.popViewController(animated: true)
                                 if let medicationIdForRemainder = saveDecoded.id{
                                     DispatchQueue.main.async {
@@ -409,7 +404,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                                 
                             }
                             DispatchQueue.main.async {
-                                if self.isNewMedication == true {
+                                if self.medicationData != nil {
                                                        // Medication is new, show "Medication saved successfully" alert
                                                        let alert = UIAlertController(title: nil, message: "Medication updated successfully", preferredStyle: .alert)
                                                        self.present(alert, animated: true)
@@ -565,7 +560,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
                                 for medName in values{
                                     let mediPropName = medName.mediProprietaryName ?? ""
                                     let mediNonPropName = medName.mediNonProprietaryName ?? ""
-                                    self.filteredSuggestion.append(mediPropName + mediNonPropName )
+                                    self.filteredSuggestion.append(mediPropName + mediNonPropName)
                                 }
                             }
                             DispatchQueue.main.async {
@@ -588,7 +583,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
     }
     
     
-    func saveButtonAlert(message:String){
+    func saveButtonAlert(message:String) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel))
         self.present(alert, animated: true)
@@ -653,7 +648,7 @@ class AddMedicationVC: UIViewController,UITextViewDelegate {
     
 }
 
-extension AddMedicationVC:UITextFieldDelegate{
+extension AddMedicationVC: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let textFieldText = medicationNameTextField.text as NSString?
         if range.location + range.length <= textFieldText?.length ?? 0 {
