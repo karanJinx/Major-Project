@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Token {
+struct Details {
     static var token : String? = ""
     static var patientId : String? = "53266"
     static var careplanId : Int? = 34533
