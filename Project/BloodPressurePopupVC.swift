@@ -10,9 +10,12 @@ import UIKit
 
 class BloodPressurePopupVC: UIViewController{
     
+    //MARK: Properties
     var systolicFinalreading: String?
     var diastolicFinalreading: String?
     var pulseFinalreading: String?
+    
+    //MARK: - IBOutlets
     @IBOutlet var popupView: UIView!
     @IBOutlet var titleLableBP: UILabel!
     @IBOutlet var systolicLable: UILabel!
@@ -22,29 +25,38 @@ class BloodPressurePopupVC: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        let desiredCornerRadius: CGFloat = 5
-        titleLableBP.layer.cornerRadius = desiredCornerRadius
-        titleLableBP.layer.masksToBounds = true
-        
-        
-        OKButton.layer.cornerRadius = 7
-        popupView.layer.cornerRadius = 10
         
         systolicLable.text = systolicFinalreading
         diastolicLable.text = diastolicFinalreading
         pulseLable.text = pulseFinalreading
+        
+//        titleLableBP.layer.cornerRadius = 7
+//        titleLableBP.layer.masksToBounds = true
+//        OKButton.layer.cornerRadius = 7
+//        popupView.layer.cornerRadius = 7
+        setUpView(view: titleLableBP, radius: 7, maskToBound: true)
+        setUpView(view: OKButton, radius: 7, maskToBound: true)
+        setUpView(view: popupView, radius: 7, maskToBound: true)
     }
+    
+    //MARK: - setUpView
+    func setUpView(view: UIView, radius: CGFloat, maskToBound: Bool){
+        view.layer.cornerRadius = radius
+        view.layer.masksToBounds = maskToBound
+    }
+    
+    //MARK: - IBAction
     @IBAction func ButtonPressedToNavigateToHomescreen(_ sender: Any) {
        navigateToHome()
     }
     
+    //MARK: - NavigationBackToHomeScreen
     func navigateToHome(){
         let tabbar = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabBar") as! UITabBarController
-        tabbar.modalPresentationStyle = .overCurrentContext
-//        present(tabbar, animated: true)
+        //tabbar.modalPresentationStyle = .overCurrentContext
+        //present(tabbar, animated: true)
         let scene = view.window?.windowScene?.delegate as? SceneDelegate
         let window = scene?.window
         window?.rootViewController = tabbar
     }
-    
 }

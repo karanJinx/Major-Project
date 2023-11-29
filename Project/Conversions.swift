@@ -8,8 +8,8 @@
 import Foundation
 import CoreBluetooth
 
-struct Conversion{
-    
+struct Conversion {
+    //MARK: - convertByteArrayToHexString
     /// converting Byte Array to HexString Without seperation
     /// - Parameter byteArray: parameter is array of unsinged integer
     /// - Returns: returns the string of hexadecimal
@@ -17,6 +17,7 @@ struct Conversion{
         return byteArray.map { String(format: "%02X", $0) }.joined(separator: "")
     }
     
+    //MARK: - convertHexadecimalToDecimal
     /// Converting a hexadecimal to decimal
     /// - Parameter hexString: string of hexadecimal
     /// - Returns: returns the result in integer
@@ -27,6 +28,7 @@ struct Conversion{
         return Int(result)
     }
     
+    //MARK: - convertbyteArrayToHexString1
     /// Converting byte array to hexadecimal string
     /// - Parameter byteArray: byte array is the array of unsinged integer
     /// - Returns: returns the array of hexadecimal string in the format of "%02X"
@@ -34,6 +36,7 @@ struct Conversion{
         return byteArray.map { String(format: "%02X", $0) }
     }
     
+    //MARK: - convertgetPairsFromHexString
     /// getting pairs by converting the array of unsinged integer to array of paired hexstring ,from the hexadecimal string
     /// - Parameter data: array of unsinged Byte array
     /// - Returns: It retruns the paired hexadecimal string
@@ -52,7 +55,7 @@ struct Conversion{
         return pairs
     }
     
-    
+    //MARK: - convertbyteToHexadecimal
     /// converting the array of bytearrray to hexadecimal
     /// - Parameters:
     ///   - data: it is the array of byte arrays
@@ -71,12 +74,12 @@ struct Conversion{
         return hexString.trimmingCharacters(in: .whitespaces)
     }
     
+    //MARK: - ReverseHexaDecimal
     static func reverseHexaDecimal(_ hexString: String) -> [String] {
         var hexString = hexString
         if hexString.count % 2 != 0 {
             hexString = "0" + hexString // Add a leading zero if the length is odd
         }
-        
         let firstPartIndex = hexString.index(hexString.startIndex, offsetBy: hexString.count / 2)
         let firstPart = String(hexString[..<firstPartIndex])
         let secondPart = String(hexString[firstPartIndex...])
@@ -84,12 +87,12 @@ struct Conversion{
         return [firstPart, secondPart]
     }
     
+    //MARK: - FindCharacteristicToDisconnect
     /// Method to find the characteristic for the shutdown of ble device
     /// - Parameters:
     ///   - uuid: uuid is the characteristic for the shutdown(which is writeNoResponse)
     ///   - peripheral: which is the ble device
     /// - Returns: returns the characteristics
-    
     static func findCharacteristic(withUUID uuid: CBUUID, in peripheral: CBPeripheral) -> CBCharacteristic? {
         for service in peripheral.services ?? [] {
             if let characteristic = service.characteristics?.first(where: { $0.uuid == uuid }) {
@@ -99,5 +102,4 @@ struct Conversion{
         }
         return nil
     }
-    
 }

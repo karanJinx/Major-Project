@@ -8,16 +8,15 @@
 import Foundation
 import UIKit
 
-struct AlertAfterReading{
+struct AlertAfterReading {
+    //MARK: - AlertAfterTakingTheReading
     static func alertReadingHasTaken(title:String,message:String,viewController:UIViewController){
         let alertController = UIAlertController(title: title, message:message , preferredStyle: .alert)
-
         // Create an action for the alert
         let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
         alertController.addAction(okAction)
-
         // Present the alert
-            viewController.present(alertController, animated: true)
+        viewController.present(alertController, animated: true)
     }
    
 }

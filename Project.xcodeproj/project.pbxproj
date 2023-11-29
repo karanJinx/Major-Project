@@ -28,7 +28,7 @@
 		589DE0AD2AA5D8860025FAA4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 589DE0AB2AA5D8860025FAA4 /* Main.storyboard */; };
 		589DE0AF2AA5D8880025FAA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 589DE0AE2AA5D8880025FAA4 /* Assets.xcassets */; };
 		589DE0B22AA5D8880025FAA4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 589DE0B02AA5D8880025FAA4 /* LaunchScreen.storyboard */; };
-		58B07AE22AB0D9FA00F8A5C8 /* Global Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B07AE12AB0D9FA00F8A5C8 /* Global Token.swift */; };
+		58B07AE22AB0D9FA00F8A5C8 /* Global Details.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B07AE12AB0D9FA00F8A5C8 /* Global Details.swift */; };
 		58B64FE42AAF6FA600BF6282 /* API Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B64FE32AAF6FA600BF6282 /* API Helper.swift */; };
 		58B7CD092AAAFC3F00A065AB /* Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B7CD082AAAFC3F00A065AB /* Cell.swift */; };
 		58B7CD0B2AAB301400A065AB /* API Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B7CD0A2AAB301400A065AB /* API Manager.swift */; };
@@ -60,7 +60,7 @@
 		589DE0AE2AA5D8880025FAA4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		589DE0B12AA5D8880025FAA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		589DE0B32AA5D8880025FAA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		58B07AE12AB0D9FA00F8A5C8 /* Global Token.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Global Token.swift"; sourceTree = "<group>"; };
+		58B07AE12AB0D9FA00F8A5C8 /* Global Details.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Global Details.swift"; sourceTree = "<group>"; };
 		58B64FE32AAF6FA600BF6282 /* API Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "API Helper.swift"; sourceTree = "<group>"; };
 		58B7CD082AAAFC3F00A065AB /* Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cell.swift; sourceTree = "<group>"; };
 		58B7CD0A2AAB301400A065AB /* API Manager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "API Manager.swift"; sourceTree = "<group>"; };
@@ -84,7 +84,6 @@
 		589DE0992AA5D8860025FAA4 = {
 			isa = PBXGroup;
 			children = (
-				58B07AE12AB0D9FA00F8A5C8 /* Global Token.swift */,
 				589DE0A42AA5D8860025FAA4 /* Project */,
 				589DE0A32AA5D8860025FAA4 /* Products */,
 			);
@@ -103,6 +102,7 @@
 			children = (
 				589DE0A52AA5D8860025FAA4 /* AppDelegate.swift */,
 				589DE0A72AA5D8860025FAA4 /* SceneDelegate.swift */,
+				58B07AE12AB0D9FA00F8A5C8 /* Global Details.swift */,
 				589DE0A92AA5D8860025FAA4 /* LoginVC.swift */,
 				58B64FE32AAF6FA600BF6282 /* API Helper.swift */,
 				58B7CD0A2AAB301400A065AB /* API Manager.swift */,
@@ -227,7 +227,7 @@
 				583F9C732AEFA6390037D1FB /* Conversions.swift in Sources */,
 				589933E22AA9CFAA007BBAF4 /* MedicationListVC.swift in Sources */,
 				58C298202AC7EA4400568682 /* Remainder.swift in Sources */,
-				58B07AE22AB0D9FA00F8A5C8 /* Global Token.swift in Sources */,
+				58B07AE22AB0D9FA00F8A5C8 /* Global Details.swift in Sources */,
 				580369922AB2111F00C6B098 /* AddMedicationVC.swift in Sources */,
 				5810509F2AF3F7610042AF11 /* AfterReadingAlert.swift in Sources */,
 			);

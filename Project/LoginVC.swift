@@ -7,11 +7,50 @@
 
 import UIKit
 
-class LoginVC: UIViewController, UITextFieldDelegate {
+struct LoginResponseModal: Decodable {
+    var status: String?
+    var data: LoginResponseDataModal?
+    var message: String?
+}
+struct LoginResponseDataModal: Decodable {
+    var token: String?
+    var isNewUser: String?
+    var userId: Int?
+    var firstTimeLogin: String?
+    var userRole: String?
+    var fullName: String?
+    var adminFlag: String?
+    var supervisorFlag: String?
+    var clinicianId: Int?
+    var physicianId: Int?
+    var userTimeZone: String?
+    var screenNavigation: String?
+    var rpmEnrolled: String?
+    var timeoutValue: Double?
+    var patientCommuntionFlag: String?
+    var isShowPhysicianContactFlag: String?
+    var isShowClinicianContactFlag: String?
+    var isAllowManualVital: String?
+    var patientEnrolledDate: String?
+    var defaultProduct: String?
+    var enrolledProducts : [EnrolledProductsModal]?
+}
+struct EnrolledProductsModal: Decodable {
+    var productCode : String?
+    var productDescription : String?
+    var productEnrolledDate : String?
+}
 
-    
-    
-    
+//struct LoginWebResponseModal: Codable {
+//    var userRole : String?
+//    var screenNavigation : String?
+//    var token : String?
+//    var firstTimeLogin : String?
+//    var isNewUser : String?
+//    var status : String?
+//}
+
+class LoginVC: UIViewController, UITextFieldDelegate {
     //MARK: - IBOUTLET
     @IBOutlet var emailTextField: UITextField!
     @IBOutlet var passwordTextField: UITextField!
@@ -40,7 +79,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     
     //used to set the height and width of the overlay view
     let loaderSize:CGFloat = 100.0
-    
     let activityIndicator: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .large)
         indicator.translatesAutoresizingMaskIntoConstraints = false
@@ -52,18 +90,11 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        emailTextField.keyboardType = .asciiCapable    //disable the emoji
-        passwordTextField.keyboardType = .asciiCapable
+        setPropertiesForTextField(textField: emailTextField)
+        setPropertiesForTextField(textField: passwordTextField)
         
         emailTextField.text = "mobileteam"
         passwordTextField.text = "Humworld@1"
-        
-        emailTextField.delegate = self
-        passwordTextField.delegate = self
-        
-        emailTextField.clearButtonMode = .whileEditing
-        passwordTextField.clearButtonMode = .whileEditing
-        
         
         // Add overlay view
         view.addSubview(overlayView)
@@ -77,31 +108,35 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         overlayView.addSubview(activityIndicator)
         activityIndicator.centerXAnchor.constraint(equalTo: overlayView.centerXAnchor).isActive = true
         activityIndicator.centerYAnchor.constraint(equalTo: overlayView.centerYAnchor).isActive = true
-        
-        
     }
-
+    //MARK: - setPropertiesForTextField
+    func setPropertiesForTextField(textField: UITextField, keyBoardType: UIKeyboardType = .asciiCapable) {
+        textField.delegate = self
+        textField.clearButtonMode = .whileEditing
+        textField.keyboardType = keyBoardType
+    }
     
+    //MARK: - ShowLoader
     func showLoader() {
         DispatchQueue.main.async {
             self.overlayView.isHidden = false
             self.activityIndicator.startAnimating()
         }
     }
-    
+    //MARK: - HideLoader
     func hideLoader() {
         DispatchQueue.main.async {
             self.overlayView.isHidden = true
             self.activityIndicator.stopAnimating()
         }
     }
-
+    
+    //MARK: - TextfieldShould|Return
     /// KeyBoard disappers when we click the Return button
     /// - Parameter textField: email and password field
     /// - Returns: true
     func textFieldShouldReturn(_ textField: UITextField) -> Bool  {
-        emailTextField.resignFirstResponder()
-        passwordTextField.resignFirstResponder()
+        textField.resignFirstResponder()
         return true
     }
     
@@ -119,13 +154,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         let trimmedUserName = username.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedPassword = password.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        
-        
-        //        print(username)
-        //        print(trimmedUserName)
-        
-        
-       
         if trimmedUserName.isEmpty {
             alert(message: "UserName is Empty.")
         }else if trimmedUserName.count < 8 {
@@ -140,6 +168,11 @@ class LoginVC: UIViewController, UITextFieldDelegate {
             alert(message: "Password Cannot be Greater than 20 Characters")
         }
         else{
+            loginServiceCall()
+        }
+        
+        //MARK: - LoginServiceCall
+        func loginServiceCall(){
             showLoader()
             let loginURL = APIHelper.share.baseURL + "login"
             let loginParam = ["username" : trimmedUserName, "password" : trimmedPassword]
@@ -148,28 +181,19 @@ class LoginVC: UIViewController, UITextFieldDelegate {
             APIManager.shared.APIHelper(url: loginURL, params: loginParam, method: .post , headers: nil, requestBody: nil, completion: { result in
                 self.hideLoader()
                 switch result {
-                    
                 case .success(let data):
-                    
                     do{
                         //If the network request is successful (i.e., .success), you proceed to decode the data received from the server.
                         let decoded = try JSONDecoder().decode(LoginResponseModal.self, from: data)
-                        
                         //You're using JSONDecoder to decode the received data into an instance of a LoginResponseModal object. This is typically done to parse and work with the response data in a structured format.
-                        
                         if decoded.status == "success"{
                             print("the data is \(data)")
                             print("the token is \(decoded.data?.token ?? "")")
-                            Token.token = decoded.data?.token
-                            
-                            //                            print("the token is \(decoded.token ?? "")")
-                            //                            Token.token = decoded.token
-                            
+                            Details.token = decoded.data?.token
                             DispatchQueue.main.async {
                                 let myTabBar = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabBar") as! UITabBarController
                                 myTabBar.modalPresentationStyle = .overCurrentContext
                                 self.present(myTabBar, animated: true)
-                                
                             }
                         }
                         else if decoded.status == "failure"{
@@ -198,7 +222,6 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                             alert.addAction(UIAlertAction(title: "OK", style: .default))
                             self.present(alert, animated: true)
                         }
-                        
                     }
                 case .failure(let error):
                     print("Error \(error)")
@@ -206,54 +229,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
             }
             )
         }
-
     }
-    
-    
-}
-
-struct LoginResponseModal: Decodable{
-    var status: String?
-    var data: LoginResponseDataModal?
-    var message: String?
 }
 
 
-struct LoginResponseDataModal: Decodable{
-    var token: String?
-    var isNewUser: String?
-    var userId: Int?
-    var firstTimeLogin: String?
-    var userRole: String?
-    var fullName: String?
-    var adminFlag: String?
-    var supervisorFlag: String?
-    var clinicianId: Int?
-    var physicianId: Int?
-    var userTimeZone: String?
-    var screenNavigation: String?
-    var rpmEnrolled: String?
-    var timeoutValue: Double?
-    var patientCommuntionFlag: String?
-    var isShowPhysicianContactFlag: String?
-    var isShowClinicianContactFlag: String?
-    var isAllowManualVital: String?
-    var patientEnrolledDate: String?
-    var defaultProduct: String?
-    var enrolledProducts : [EnrolledProductsModal]?
-}
-struct EnrolledProductsModal: Decodable{
-    var productCode : String?
-    var productDescription : String?
-    var productEnrolledDate : String?
-
-}
-
-//struct LoginWebResponseModal: Codable{
-//    var userRole : String?
-//    var screenNavigation : String?
-//    var token : String?
-//    var firstTimeLogin : String?
-//    var isNewUser : String?
-//    var status : String?
-//}
