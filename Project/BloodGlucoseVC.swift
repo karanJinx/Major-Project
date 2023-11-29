@@ -81,21 +81,21 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
     }
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         print(peripheral)
-        let pname = peripheral.name
-        if pname == "Vivaguard"{
+        let pname = peripheral.name ?? ""
+        if pname.contains("Viva"){
             central.stopScan()
             self.myPeripheral = peripheral
             self.myPeripheral.delegate = self
             self.centralManager.connect(peripheral,options: nil)
             print("Connecting to the periphral")
         }
-        else if pname == "VivaGuard"{
-            central.stopScan()
-            self.myPeripheral = peripheral
-            self.myPeripheral.delegate = self
-            self.centralManager.connect(peripheral,options: nil)
-            print("Connecting to the periphral")
-        }
+//        else if pname == "VivaGuard"{
+//            central.stopScan()
+//            self.myPeripheral = peripheral
+//            self.myPeripheral.delegate = self
+//            self.centralManager.connect(peripheral,options: nil)
+//            print("Connecting to the periphral")
+//        }
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {

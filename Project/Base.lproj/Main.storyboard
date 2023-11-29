@@ -1499,7 +1499,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="effectiveDateTextField" destination="ZvG-9X-1Kn" id="oLf-8Y-POW"/>
-                        <outlet property="effectiveEndDateTimeTextField" destination="cNI-Iz-YLJ" id="Dpv-YL-CF0"/>
+                        <outlet property="effectiveEndDateTextField" destination="cNI-Iz-YLJ" id="Dpv-YL-CF0"/>
                         <outlet property="frequencyTextField" destination="tFU-mM-RBP" id="Eat-G6-egC"/>
                         <outlet property="medicationNameTextField" destination="dCs-Sw-8eh" id="xhI-fz-NTY"/>
                         <outlet property="notesTextfield" destination="pw4-hT-e2c" id="bxU-tm-uqU"/>

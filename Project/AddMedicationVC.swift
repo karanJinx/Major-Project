@@ -35,7 +35,6 @@ struct MedicationFrequency: Codable {
     let sortOrder: Int?
 }
 
-
 // medication validity
 struct ResponseData: Codable {
     let id: Int?
@@ -72,16 +71,16 @@ struct MedicationInfo: Codable {
 }
 
 //medication search
-struct MedicationSearch: Codable{
+struct MedicationSearch: Codable {
     var status: String?
     var data: MedicationDetails?
 }
 
-struct MedicationDetails : Codable{
+struct MedicationDetails : Codable {
     var others : [OtherMedication]?
 }
 
-struct OtherMedication : Codable{
+struct OtherMedication : Codable {
     var mediProId: String?
     var favMediId: String?
     var mediName: String?
@@ -112,7 +111,7 @@ struct medicationEditResponse: Codable {
     var logId: Int?
 }
 
-struct EditedData: Codable{
+struct EditedData: Codable {
     var timestamp: String?
     var carPlanDate: String?
     var activeDiseases: String?
@@ -120,7 +119,7 @@ struct EditedData: Codable{
     var diagnosisId: String?
 }
 
-struct EditedListMedication:Codable{
+struct EditedListMedication: Codable {
     var medicationId: Int?
     var name: String?
     var code: String?
@@ -136,249 +135,215 @@ struct EditedListMedication:Codable{
 }
 
 class AddMedicationVC: UIViewController {
-
+    //MARK: - IBOutlets
     @IBOutlet var medicationNameTextField: UITextField!
     @IBOutlet var frequencyTextField: UITextField!
     @IBOutlet var quantityTextField: UITextField!
     @IBOutlet var effectiveDateTextField: UITextField!
-    @IBOutlet var effectiveEndDateTimeTextField: UITextField!
+    @IBOutlet var effectiveEndDateTextField: UITextField!
     @IBOutlet var notesTextfield: UITextField!
     @IBOutlet var searchTableview: UITableView!
-        
+    
+    //MARK: - Properties
     var medicationData: MedicationData?
+    var medication = MedicationData()
     
     var dataEnterDelegate: DataEnterDelegate? = nil
     
     let datePicker = UIDatePicker()
-    let datePickerEndDate = UIDatePicker()
+    var activeTextfield: UITextField?
     
     let pickerView = UIPickerView()
     
-    var frequenciesFromApi:[MedicationFrequency] = []
+    var frequenciesList: [MedicationFrequency] = []
     
-    var meidcineNameFromApi: [String] = []
     
-    var filteredSuggestion: [String] = []
+    var medicationNameList: [String] = []
     
     let rowHeight: CGFloat = 40.0
     
-    //var isNewMedication: Bool = true // Default to adding a new medication
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-
+        setUpNavigationBar()
+        setUpTextFields()
+        assignMedicationDetailsToFields()
+        setUpPickerView()
+        setUpDatePicker()
+        setUpToolBar()
+        setUpSearchTableView()
+        cancelButtonForPickerView()
+        frequencyServiceCall()
+    }
+    
+    /// To set up the Navigation Bar and setting the navigationBarButton title when saving and editing
+    func setUpNavigationBar() {
         //To update the barbutton in add screen from save to update
-        navigationItem.rightBarButtonItem = (medicationData != nil) ? UIBarButtonItem(title: "Update", style: .plain, target: self, action: #selector(saveButtonPressed)): UIBarButtonItem(title: "Save", style: .plain, target: self, action: #selector(saveButtonPressed))
-       
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: (medicationData != nil) ? "Update" : "Save", style: .plain, target: self, action: #selector(saveButtonPressed))
         
         let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.backgroundColor = .systemGray6 
+        navigationBarAppearance.backgroundColor = .systemGray6
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
-        
         // Set the status bar color to match the navigation bar
         navigationController?.navigationBar.barStyle = .black
+    }
+    
+    /// setting the textfield delegate,clearButton,input view for datepicker and keyboard type for the textfield
+    func setUpTextFields() {
+//        let textFields = [medicationNameTextField, frequencyTextField, quantityTextField, notesTextfield, effectiveDateTextField, effectiveEndDateTimeTextField]
+//        for textField in textFields {
+//            textField?.delegate = self
+//            textField?.clearButtonMode = .always
+//        }
+//        
+//        medicationNameTextField.tag = AddMedicationFieldsTags.medicationName.rawValue
+//        frequencyTextField.tag = AddMedicationFieldsTags.frequency.rawValue
+//        quantityTextField.tag = AddMedicationFieldsTags.quantity.rawValue
+//        notesTextfield.tag = AddMedicationFieldsTags.notes.rawValue
+//        effectiveDateTextField.tag = AddMedicationFieldsTags.effectiveEndDate.rawValue
         
-        //getting authorization from the user
-        //LocalNotificationManager.requestPermission()
+        frequencyTextField.inputView = pickerView
+        effectiveDateTextField.inputView = datePicker
+        effectiveEndDateTextField.inputView = datePicker
         
-        if medicationData != nil{
-            if let quantity = medicationData?.quantity{
+//        medicationNameTextField.keyboardType = .asciiCapable
+//        quantityTextField.keyboardType = .numbersAndPunctuation
+//        notesTextfield.keyboardType = .asciiCapable
+        
+        setPropertiesForTextField(textField: medicationNameTextField, tag: AddMedicationFieldsTags.medicationName.rawValue)
+        setPropertiesForTextField(textField: frequencyTextField, tag: AddMedicationFieldsTags.frequency.rawValue)
+        setPropertiesForTextField(textField: quantityTextField, tag: AddMedicationFieldsTags.quantity.rawValue, keyboardType: .numbersAndPunctuation)
+        setPropertiesForTextField(textField: notesTextfield, tag: AddMedicationFieldsTags.notes.rawValue)
+        setPropertiesForTextField(textField: effectiveDateTextField, tag: AddMedicationFieldsTags.effectiveEndDate.rawValue)
+        
+    }
+    
+    func setPropertiesForTextField(textField: UITextField, tag: Int, keyboardType: UIKeyboardType = .asciiCapable) {
+        textField.delegate = self
+        textField.tag = tag
+        textField.clearButtonMode = .always
+        textField.keyboardType = keyboardType
+    }
+    
+    /// This method is used to set the medication details in the text field which we get from the previous list screen
+    func assignMedicationDetailsToFields() {
+        if medicationData != nil {
+            if let quantity = medicationData?.quantity {
                 let stringQuantity = String(quantity)
                 quantityTextField.text = stringQuantity
             }
+            
             medicationNameTextField.text = medicationData?.name
             frequencyTextField.text = medicationData?.frequency
             
             notesTextfield.text = medicationData?.notes
             effectiveDateTextField.text = medicationData?.effectiveDate
-            effectiveEndDateTimeTextField.text = medicationData?.lastEffectiveDate
+            effectiveEndDateTextField.text = medicationData?.lastEffectiveDate
         }
-        
-        
-        medicationNameTextField.tag = AddMedicationFieldsTags.medicationName.rawValue
-        frequencyTextField.tag = AddMedicationFieldsTags.frequency.rawValue
-        quantityTextField.tag = AddMedicationFieldsTags.quantity.rawValue
-        notesTextfield.tag = AddMedicationFieldsTags.notes.rawValue
-        effectiveDateTextField.tag = AddMedicationFieldsTags.effectiveEndDate.rawValue
-        
-        medicationNameTextField.delegate = self
-        quantityTextField.delegate = self
-        frequencyTextField.delegate = self
-        effectiveDateTextField.delegate = self
-        effectiveEndDateTimeTextField.delegate = self
-        notesTextfield.delegate = self
-        
+    }
+    
+    /// setting delegates to the pickerview
+    func setUpPickerView() {
         pickerView.delegate = self
         pickerView.dataSource = self
-        frequencyTextField.inputView = pickerView
+    }
+    
+    /// datePicker properties like maximumDate,datepickerMode,prefferedDatePickerStyle,addTarget
+    func setUpDatePicker() {
+        datePicker.maximumDate = Date()
+        datePicker.datePickerMode = .dateAndTime
+        datePicker.preferredDatePickerStyle = .wheels
+        datePicker.addTarget(self, action: #selector(datepickerValueChanged), for: .valueChanged)
+    }
+    
+    /// Setting the toolbar for the donebutton and cancelbutton
+    func setUpToolBar() {
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
         
-        medicationNameTextField.keyboardType = .asciiCapable
-        quantityTextField.keyboardType = .numbersAndPunctuation
-        notesTextfield.keyboardType = .asciiCapable
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneButtonTapped))
+        let space = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let cancelButton = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action: #selector(cancelButtonTapped))
         
-        //adding clear button in textfield and setting it active always
-        medicationNameTextField.clearButtonMode = .always
-        frequencyTextField.clearButtonMode = .always
-        quantityTextField.clearButtonMode = .always
-        notesTextfield.clearButtonMode = .always
-        effectiveDateTextField.clearButtonMode = .always
-        effectiveEndDateTimeTextField.clearButtonMode = .always
+        toolbar.setItems([cancelButton, space, doneButton], animated: false)
         
-        
+        // Set the toolbar as the input accessory view for both text fields
+        effectiveDateTextField.inputAccessoryView = toolbar
+        effectiveEndDateTextField.inputAccessoryView = toolbar
+    }
+    
+    /// setting delegate for the searchTableView
+    func setUpSearchTableView() {
         searchTableview.delegate = self
         searchTableview.dataSource = self
         searchTableview.isHidden = true
-        
-        datePicker.maximumDate = Date()
-        datePickerEndDate.maximumDate = Date()
-        
-        DatePicker()
-        DatePicker2()
-        cancelpickerView()
-        
-        //                let currentDate = Date()
-        //                let dateformat = DateFormatter()
-        //                dateformat.dateFormat = "MM-dd-yyyy hh:mm a"
-        //
-        //
-        //                effectiveDateTextField.text = dateformat.string(from: currentDate)
-        
-        // Do any additional setup after loading the view.
-        
-        frequencyApi()
     }
     
-
+    /// function is an action that gets triggered when the value of a UIDatePicker changes
+    /// - Parameter sender: The sender is the date picker that triggered the action.
+    @objc func datepickerValueChanged(sender: UIDatePicker) {
+        let dateformatter = DateFormatter()
+        dateformatter.dateFormat = "MM-dd-yyyy hh:mm a"
+        activeTextfield?.text = dateformatter.string(from: sender.date)
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        activeTextfield = textField
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        activeTextfield = nil
+    }
+    
+    // Called when the "Done" button on the toolbar is tapped
+    @objc func doneButtonTapped() {
+        activeTextfield?.resignFirstResponder()
+    }
+    
+    // Called when the "Cancel" button on the toolbar is tapped
+    @objc func cancelButtonTapped() {
+        activeTextfield?.text = nil
+        activeTextfield?.resignFirstResponder()
+    }
+    
     /// this function is used to update the table view when we enter the medicaiton name in the text field
     /// - Parameter suggestion: as per the text in the textfield , it shows medication name
-    func updateTableView(with suggestion :[String]){
-        filteredSuggestion = suggestion
+    func updateTableView(with suggestion :[String]) {
+        medicationNameList = suggestion
         searchTableview.reloadData()
         searchTableview.isHidden = suggestion.isEmpty
     }
     
-    func DatePicker(){
-        let toolBar = UIToolbar()
-        toolBar.sizeToFit()
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTappedForEffectiveDate))
-        let canceleButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonTappedForEffectiveDate))
-        toolBar.setItems([doneButton,canceleButton], animated: true)
-        effectiveDateTextField.inputView = datePicker
-        effectiveDateTextField.inputAccessoryView = toolBar
-        datePicker.preferredDatePickerStyle = .wheels
-    }
-    @objc func doneButtonTappedForEffectiveDate(_ button: UIBarButtonItem){
-        self.datePicker.maximumDate = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM-dd-yyyy hh:mm a"
-        effectiveDateTextField.text = formatter.string(from: datePicker.date)
-        effectiveDateTextField.resignFirstResponder()
-        
-    }
-    @objc func cancelButtonTappedForEffectiveDate(_ button: UIBarButtonItem){
-        effectiveDateTextField.resignFirstResponder()
-    }
-    func DatePicker2(){
-        let toolBar = UIToolbar()
-        toolBar.sizeToFit()
-        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(doneButtonTappedForLastEffectiveDate))
-        let canceleButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonTappedLastEffectiveDate))
-        toolBar.setItems([doneButton,canceleButton], animated: true)
-        effectiveEndDateTimeTextField.inputView = datePickerEndDate
-        effectiveEndDateTimeTextField.inputAccessoryView = toolBar
-        datePickerEndDate.preferredDatePickerStyle = .wheels
-    }
-    @objc func doneButtonTappedForLastEffectiveDate(_ button: UIBarButtonItem){
-        self.datePickerEndDate.maximumDate = Date()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM-dd-yyyy hh:mm a"
-        effectiveEndDateTimeTextField.text = formatter.string(from: datePickerEndDate.date)
-        effectiveEndDateTimeTextField.resignFirstResponder()
-        
-    }
-    @objc func cancelButtonTappedLastEffectiveDate(_ button: UIBarButtonItem){
-        effectiveEndDateTimeTextField.resignFirstResponder()
-    }
-    func cancelpickerView(){
+    
+    func cancelButtonForPickerView() {
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
         let canceleButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelButtonTappedFrequency))
         toolBar.setItems([canceleButton], animated: true)
         frequencyTextField.inputAccessoryView = toolBar
     }
-    @objc func cancelButtonTappedFrequency(_ button: UIBarButtonItem){
+    @objc func cancelButtonTappedFrequency(_ button: UIBarButtonItem) {
         frequencyTextField.resignFirstResponder()
     }
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
-  
-    //MARK: - API
-    func saveAPI(){
-        let saveApi = APIHelper.share.baseURLWeb + "medications"
+    
+    //MARK: - SaveMedicationServiceCall
+    func saveMedicationServiceCall() {
+        let serviceUrl = APIHelper.share.baseURLWeb + "medications"
         let headers = ["X-Auth-Token": Token.token!, "Content-Type": "application/json"]
         
-        let filteredFrequency = frequenciesFromApi.filter { name in
-            if frequencyTextField.text == name.description{
-                return true
-            }
-            return false
-        }
-        //print("The filtered Frequency: \(filteredFrequency)")
-        var frequencyString = ""
-        if let firstElement = filteredFrequency.first{
-            frequencyString = firstElement.code ?? ""
-        }
-        print("The frequencyString: \(frequencyString)")
-        
-        var medicationIdString = ""
-        if let medicId = medicationData?.medicationId{
-            print("the medica id:\(medicId)")
-            let medicationIdStr = String(medicId)
-            medicationIdString = medicationIdStr
-            print("The medicationIdString:\(medicationIdString)")
-            Token.medicationId = medicationIdString
-        }
-        print("The medicationIdString:\(medicationIdString)")
-        
-        let saveJson:[String:Any] = [
-            "patientId": Token.patientId!,
-            "careplanId": Token.careplanId!,
-            "medicationId": medicationIdString,
-            "code": "",
-            "name": medicationNameTextField.text ?? "" ,
-            "notes": notesTextfield.text ?? "",
-            "effectiveDate": effectiveDateTextField.text ?? "",
-            "lastEffectiveDate": effectiveEndDateTimeTextField.text ?? "",
-            "frequency": frequencyString ,
-            "customFrequency": "",
-            "quantity": quantityTextField.text ?? 0,
-            "activeFlag": "Y",
-            "productCode": "ccm",
-            "visitId": "",
-            "isFavoriteFlag": "N",
-            "logId": Token.logId ?? "",
-            "careplanLogMessageUserInput": "A new medication '\(medicationNameTextField.text ?? "")' has been added.",
-            "careplanLogMessage": "A new medication '\(medicationNameTextField.text ?? "")' has been added In a quantity of '\(quantityTextField.text ?? "")'."
-        ]
-        print("The save Json: \(saveJson)")
-        
-        
         do{
-            
-            let saveDataJson = try JSONSerialization.data(withJSONObject: saveJson,options: [])
+            let saveDataJson = try JSONSerialization.data(withJSONObject: requestParameterForSaveMedication(),options: [])
             let dataString = String(data: saveDataJson, encoding: .utf8)
             print("The save data aa:\(dataString!)")
-            APIManager.shared.APIHelper(url: saveApi, params: [:], method: .post, headers: headers, requestBody: saveDataJson) { result in
-                
+            APIManager.shared.APIHelper(url: serviceUrl, params: [:], method: .post, headers: headers, requestBody: saveDataJson) { result in
                 switch result {
-                    
                 case .success(let data):
-                    
-                    
                     do{
                         let serializeData = try JSONSerialization.jsonObject(with: data) as? [String:Any]
                         print("The serializedata : \(serializeData!)")
@@ -390,8 +355,8 @@ class AddMedicationVC: UIViewController {
                                 print("the medicationIdfirstfound:\(medicaId.medicationId!)")
                             }
                         }
-                        Token.logId = String(saveDecoded.logId!)
-                        print("The logId:\(saveDecoded.logId!)")
+                        //Token.logId = String(saveDecoded.logId!)
+                        //print("The logId:\(saveDecoded.logId!)")
                         if saveDecoded.status == "success"{
                             DispatchQueue.main.async {
                                 self.dataEnterDelegate?.didUserEnterInformation()
@@ -399,28 +364,27 @@ class AddMedicationVC: UIViewController {
                                 if let medicationIdForRemainder = saveDecoded.id{
                                     DispatchQueue.main.async {
                                         LocalNotificationManager.scheduleMedicationRemainder(medicationName: self.medicationNameTextField.text!, frequency: self.frequencyTextField.text!, quantity: self.quantityTextField.text!, date: self.effectiveDateTextField.text!, medicationId: String(medicationIdForRemainder) )
-                                                                    }
+                                    }
                                 }
-                                
                             }
                             DispatchQueue.main.async {
                                 if self.medicationData != nil {
-                                                       // Medication is new, show "Medication saved successfully" alert
-                                                       let alert = UIAlertController(title: nil, message: "Medication updated successfully", preferredStyle: .alert)
-                                                       self.present(alert, animated: true)
-                                                       // Dismiss the alert after the specified duration
-                                                       DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                                           alert.dismiss(animated: true, completion: nil)
-                                                       }
-                                                   } else {
-                                                       // Medication is not new, show "Medication updated successfully" alert
-                                                       let alert = UIAlertController(title: nil, message: "Medication saved successfully", preferredStyle: .alert)
-                                                       self.present(alert, animated: true)
-                                                       // Dismiss the alert after the specified duration
-                                                       DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                                                           alert.dismiss(animated: true, completion: nil)
-                                                       }
-                                                   }
+                                    // Medication is not new, show "Medication updated successfully" alert
+                                    let alert = UIAlertController(title: nil, message: "Medication updated successfully", preferredStyle: .alert)
+                                    self.present(alert, animated: true)
+                                    // Dismiss the alert after the specified duration
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                        alert.dismiss(animated: true, completion: nil)
+                                    }
+                                } else {
+                                    // Medication is  new, show "Medication saved successfully" alert
+                                    let alert = UIAlertController(title: nil, message: "Medication saved successfully", preferredStyle: .alert)
+                                    self.present(alert, animated: true)
+                                    // Dismiss the alert after the specified duration
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                                        alert.dismiss(animated: true, completion: nil)
+                                    }
+                                }
                             }
                         }
                     }
@@ -438,29 +402,64 @@ class AddMedicationVC: UIViewController {
         }
         
     }
-    
-    func frequencyApi(){
-        let frequencyApi = APIHelper.share.baseURLWeb + "hum-codes/CPLN-MEDI-FREQ"
-        let frequencyParam = ["id": 33689]
+    func requestParameterForSaveMedication() -> [String: Any]{
+        let filteredFrequency = frequenciesList.filter { name in
+            if frequencyTextField.text == name.description{
+                return true
+            }
+        return false
+        }
+        
+        var medicationFrequency = ""
+        if let first = filteredFrequency.first {
+        print("The first :\(first)")
+        medicationFrequency = first.code ?? ""
+        }
+        
+        return [
+            "patientId": Token.patientId!,
+            "careplanId": Token.careplanId!,
+            "medicationId": medicationData?.medicationId != nil ? (medicationData?.medicationId)! : "",
+            "code": "",
+            "name": medicationNameTextField.text ?? "" ,
+            "notes": notesTextfield.text ?? "",
+            "effectiveDate": effectiveDateTextField.text ?? "",
+            "lastEffectiveDate": effectiveEndDateTextField.text ?? "",
+            "frequency": medicationFrequency ,
+            "customFrequency": "",
+            "quantity": quantityTextField.text ?? 0,
+            "activeFlag": "Y",
+            "productCode": "ccm",
+            "visitId": "",
+            "isFavoriteFlag": "N",
+            "logId": Token.logId ?? "",
+            "careplanLogMessageUserInput": "A new medication '\(medicationNameTextField.text ?? "")' has been added.",
+            "careplanLogMessage": "A new medication '\(medicationNameTextField.text ?? "")' has been added In a quantity of '\(quantityTextField.text ?? "")'."
+        ]
+    }
+    //MARK: - FrequencyServiceCall
+    func frequencyServiceCall() {
+        let frequencyServiceUrl = APIHelper.share.baseURLWeb + "hum-codes/CPLN-MEDI-FREQ"
+        let frequencyParameter = ["id": 33689]
         let headers = ["X-Auth-Token":Token.token!]
-        APIManager.shared.APIHelper(url: frequencyApi, params: frequencyParam, method: .get, headers: headers, requestBody: nil) { result in
+        APIManager.shared.APIHelper(url: frequencyServiceUrl, params: frequencyParameter, method: .get, headers: headers, requestBody: nil) { result in
             switch result {
                 
             case .success(let data):
                 do{
-                    let freqDecoded = try JSONDecoder().decode(MedicationFrequencyResponse.self, from: data)
+                    let frequencyDecoded = try JSONDecoder().decode(MedicationFrequencyResponse.self, from: data)
                     
-                    if freqDecoded.status == "success"{
+                    if frequencyDecoded.status == "success"{
                         
-                        let datalist = freqDecoded.data
-                        //print(datalist)
+                        let datalist = frequencyDecoded.data
+                        //print("The dataList: \(datalist)")
                         var datalistkeys = datalist?.keys
                         //print(datalistkeys!)
                         var datalistValues = datalist?.values
                         //print("The frequency datas:\(datalistValues!)")
                         if case let values? = datalistValues{
-                            self.frequenciesFromApi.append(contentsOf: values)
-                            
+                            self.frequenciesList.append(contentsOf: values)
+                            print("The frequency list:\(self.frequenciesList)")
                         }
                         //print("The dataValues:\(datalistValues!)")
                         
@@ -476,30 +475,16 @@ class AddMedicationVC: UIViewController {
             }
         }
     }
-    
-    func medicationvalidation(){
+    //MARK: - MedicationValidationServiceCall
+    func medicationValidationServiceCall() {
         let validationUrl = APIHelper.share.baseURLWeb + "medications/validation"
         let headers = ["X-Auth-Token": Token.token!,"Content-Type": "application/json"]
         
-        var medicationIdString2 = ""
-        if let medicId2 = medicationData?.medicationId{
-            print("the medica id:\(medicId2)")
-            let medicationIdStr2 = String(medicId2)
-            medicationIdString2 = medicationIdStr2
-            //            Token.medicationId = medicationIdString
-        }
-        let jsonDict: [String: Any] = [
-            "patientId": Token.patientId!,
-            "careplanId": Token.careplanId!,
-            "medicationId":medicationIdString2,
-            "name": medicationNameTextField.text ?? "",
-            "effectiveDate": effectiveDateTextField.text ?? "",
-            "lastEffectiveDate": effectiveEndDateTimeTextField.text ?? ""
-        ]
-        print("The validation request :\(jsonDict)")
+        
         do{
-            let jsonData = try JSONSerialization.data(withJSONObject: jsonDict,options: [])
-            
+            let jsonData = try JSONSerialization.data(withJSONObject: requestParameterForMedicationValidation(),options: [])
+            let jsonDataResponse = String(data: jsonData, encoding: .utf8)
+            //print("The jsondata:\(jsonDataResponse)")
             APIManager.shared.APIHelper(url: validationUrl, params: [:], method: .post, headers: headers, requestBody: jsonData) { result in
                 switch result {
                 case .success(let data):
@@ -509,17 +494,10 @@ class AddMedicationVC: UIViewController {
                     if dataString == "true"{
                         DispatchQueue.main.async {
                             // Call the save API after successful validation
-                            self.saveAPI()
-                            
-
-                                              
-                                           }
-                        
-                        
-                        
+                            self.saveMedicationServiceCall()
+                        }
                         //print("true successful")
-                        
-                    }else{
+                    }else {
                         DispatchQueue.main.async {
                             let alert = UIAlertController(title: "Alert!", message: dataString, preferredStyle: .alert)
                             alert.addAction(UIAlertAction(title: "OK", style: .cancel))
@@ -527,10 +505,8 @@ class AddMedicationVC: UIViewController {
                         }
                         print("False successful")
                     }
-                    
                     //print("Received data:\(dataString)")
                 case .failure(let error):
-                    
                     // Handle failure: error contains the error information
                     print("Error:: \(error.localizedDescription)")
                 }
@@ -540,16 +516,26 @@ class AddMedicationVC: UIViewController {
             print("JSON Serialization Error: \(error)")
         }
     }
-    func SearchApi(){
-        if medicationNameTextField.text!.count == 4 {
-            let medicationApi = APIHelper.share.baseURLWeb + "medications/names"
-            let medicationParam = ["medName" : medicationNameTextField.text!,"isCarePlan" : "Y"] as [String : Any]
+    func requestParameterForMedicationValidation() -> [String: Any] {
+        return [
+            "patientId": Token.patientId!,
+            "careplanId": Token.careplanId!,
+            "medicationId": medicationData?.medicationId ?? "",
+            "name": medicationNameTextField.text ?? "",
+            "effectiveDate": effectiveDateTextField.text ?? "",
+            "lastEffectiveDate": effectiveEndDateTextField.text ?? ""
+        ]
+    }
+    //MARK: - SearchMedicationServiceCall
+    func searchMedicationServiceCall() {
+        if medicationNameTextField.text!.count >= 4 {
+            let searchUrl = APIHelper.share.baseURLWeb + "medications/names"
+            let medicationParameter = ["medName" : medicationNameTextField.text!,"isCarePlan" : "Y"] as [String : Any]
             let headers = ["X-Auth-Token":Token.token!]
-            APIManager.shared.APIHelper(url: medicationApi, params: medicationParam, method: .post, headers: headers, requestBody: nil) { result in
+            APIManager.shared.APIHelper(url: searchUrl, params: medicationParameter, method: .post, headers: headers, requestBody: nil) { result in
                 switch result{
                     
                 case .success(let medications):
-                    
                     do{
                         let medicationDecoded = try JSONDecoder().decode(MedicationSearch.self, from: medications)
                         if medicationDecoded.status == "success"{
@@ -560,7 +546,7 @@ class AddMedicationVC: UIViewController {
                                 for medName in values{
                                     let mediPropName = medName.mediProprietaryName ?? ""
                                     let mediNonPropName = medName.mediNonProprietaryName ?? ""
-                                    self.filteredSuggestion.append(mediPropName + mediNonPropName)
+                                    self.medicationNameList.append(mediPropName + mediNonPropName)
                                 }
                             }
                             DispatchQueue.main.async {
@@ -568,7 +554,6 @@ class AddMedicationVC: UIViewController {
                                 self.searchTableview.isHidden = false
                                 
                             }
-                            
                         }
                     }
                     catch{
@@ -582,7 +567,6 @@ class AddMedicationVC: UIViewController {
         }
     }
     
-    
     func saveButtonAlert(message:String) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel))
@@ -590,15 +574,14 @@ class AddMedicationVC: UIViewController {
     }
     
     @IBAction func saveButtonPressed(_ sender: UIBarButtonItem) {
-
-
+        
         let medicineField = medicationNameTextField.text!
         let frequencyField = frequencyTextField.text!
         let quantityField = quantityTextField.text!
         let notesField = notesTextfield.text!
         let effectiveDateField = effectiveDateTextField.text!
         
-        if medicineField.isEmpty{
+        if medicineField.isEmpty {
             saveButtonAlert(message: "Medicine name should not be empty")
         }else if frequencyField.isEmpty{
             saveButtonAlert(message: "Frequency should not be empty")
@@ -610,18 +593,15 @@ class AddMedicationVC: UIViewController {
             saveButtonAlert(message: "Effective date should not be empty")
         }
         else {
-            self.medicationvalidation()
+            self.medicationValidationServiceCall()
             
         }
-        
-        
-        
         print("Medicine Name :\(medicationNameTextField.text ?? "")")
         print("Frequency :\(frequencyTextField.text!)")
         print("Quantity :\(quantityTextField.text!)")
         print("Notes :\(notesTextfield.text!)")
         print("Effective Date:\(effectiveDateTextField.text!)")
-        print("Effective end date:\(effectiveEndDateTimeTextField.text!)")
+        print("Effective end date:\(effectiveEndDateTextField.text!)")
     }
     
     
@@ -632,12 +612,10 @@ class AddMedicationVC: UIViewController {
             message: "Are you sure you want go back?",
             preferredStyle: .alert
         )
-        
         let discardAction = UIAlertAction(title: "OK", style: .default) { _ in
             // Handle discarding changes (e.g., pop the view controller)
             self.navigationController?.popViewController(animated: true)
         }
-        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
         
         alertController.addAction(discardAction)
@@ -649,25 +627,25 @@ class AddMedicationVC: UIViewController {
 }
 
 extension AddMedicationVC: UITextFieldDelegate {
+    //MARK: UITextViewDelegate
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let textFieldText = medicationNameTextField.text as NSString?
-        if range.location + range.length <= textFieldText?.length ?? 0 {
-            let newText = textFieldText?.replacingCharacters(in: range, with: string) ?? ""
-            let filteredSuggessions = filteredSuggestion.filter { $0.lowercased().contains(newText.localizedUppercase) }
-            
+        
+        if textField.tag == AddMedicationFieldsTags.medicationName.rawValue {
+            let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? ""
+            self.searchMedicationServiceCall()
+            let filteredSuggessions = medicationNameList.filter { $0.lowercased().contains(newText.localizedUppercase) }
             updateTableView(with: filteredSuggessions)
             
-            self.SearchApi()
-            
-           
-        }
-        if textField.tag == 1{
             let character = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890'")
             let set = CharacterSet(charactersIn: string)
             return character.isSuperset(of: set)
         }
         
-        else if textField.tag == 3 {
+        else if textField.tag == AddMedicationFieldsTags.medicationName.rawValue {
+            
+            
+        }
+        else if textField.tag == AddMedicationFieldsTags.quantity.rawValue {
             let character = CharacterSet(charactersIn: "1234567890")
             let set = CharacterSet(charactersIn: string)
             
@@ -677,7 +655,7 @@ extension AddMedicationVC: UITextFieldDelegate {
             
             return true && character.isSuperset(of: set) && newstring.length <= maxlenght
         }
-        else if textField.tag == 4{
+        else if textField.tag == AddMedicationFieldsTags.notes.rawValue {
             let character = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890'")
             let set = CharacterSet(charactersIn: string)
             return character.isSuperset(of: set)
@@ -686,48 +664,52 @@ extension AddMedicationVC: UITextFieldDelegate {
         return true
     }
 }
-extension AddMedicationVC: UIPickerViewDelegate,UIPickerViewDataSource{
+extension AddMedicationVC: UIPickerViewDelegate, UIPickerViewDataSource {
+    //MARK: UIPickerViewDatasource
+    
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return frequenciesFromApi.count
+        return frequenciesList.count
         
     }
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         //print("frequency:\(frequenciesFromApi[row])")
-        let frequency = frequenciesFromApi[row]
+        let frequency = frequenciesList[row]
         return frequency.description
-        
     }
+    
+    //MARK: UIPickerViewDelegate
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
         return rowHeight
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let nameFrequency = frequenciesFromApi[row]
+        let nameFrequency = frequenciesList[row]
         frequencyTextField.text = nameFrequency.description
+        
         frequencyTextField.resignFirstResponder()
     }
-    
 }
 
-extension AddMedicationVC: UITableViewDelegate,UITableViewDataSource{
-    
+extension AddMedicationVC: UITableViewDelegate, UITableViewDataSource {
+    //MARK: tableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        filteredSuggestion.count
+        medicationNameList.count
     }
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = searchTableview.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = filteredSuggestion[indexPath.row]
+        cell.textLabel?.text = medicationNameList[indexPath.row]
         return cell
     }
+    
+    //MARK: tableViewDataDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedSuggestion = filteredSuggestion[indexPath.row]
+        let selectedSuggestion = medicationNameList[indexPath.row]
         medicationNameTextField.text = selectedSuggestion
-        filteredSuggestion.removeAll()
+        medicationNameList.removeAll()
         searchTableview.reloadData()
         searchTableview.isHidden = true
     }

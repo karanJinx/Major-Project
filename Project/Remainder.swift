@@ -39,13 +39,13 @@ class LocalNotificationManager{
         case "Every 3 months":
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: 3 * 30 * 24 * 60 * 60, repeats: true)
         case "Every 8 hours":
-            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 8 * 60 * 60, repeats: true)//360   6 min
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 8 * 60 * 60, repeats: true)// 360   6 min
         case "Every 4 hours":
-            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 4 * 60 * 60, repeats: true)// 240  4 min
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 4 * 60 * 60, repeats: true)// 240   4 min
         case "Every 6 months":
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: 6 * 30 * 24 * 60 * 60, repeats: true)
         case "Every 2 hours":
-            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 2 * 60 * 60, repeats: true)//120  2 min
+            trigger = UNTimeIntervalNotificationTrigger(timeInterval: 120, repeats: true)// 2 * 60 * 60   2 min
         case "Once a week":
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: 7 * 24 * 60 * 60, repeats: true)
         case "Once a month":
@@ -63,7 +63,6 @@ class LocalNotificationManager{
         
         //Create a request
         let medicationIdToRequest = medicationId
-        let uuid = UUID().uuidString
         let request = UNNotificationRequest(identifier: medicationIdToRequest, content: content, trigger: trigger)
         
         //Register a request
