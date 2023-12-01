@@ -22,11 +22,6 @@ class WeightScalePopupVC: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         readingsLable.text = finalReading
-//        popupview.layer.cornerRadius = 7
-//        buttonLable.layer.cornerRadius = 7
-//        
-//        titleLable.layer.cornerRadius = 7
-//        titleLable.layer.masksToBounds = true
         setUpView(view: popupview, radius: 7, maskToBound: true)
         setUpView(view: buttonLable, radius: 7, maskToBound: true)
         setUpView(view: titleLable, radius: 7, maskToBound: true)

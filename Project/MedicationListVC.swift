@@ -111,7 +111,7 @@ class MedicationListVC: UIViewController, DataEnterDelegate {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "AddMedicationVC") as! AddMedicationVC
         vc.navigationItem.title = "Add Medication"
-        vc.medicationData = nil
+        //vc.medicationData = nil
         vc.dataEnterDelegate = self
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)

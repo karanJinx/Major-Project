@@ -142,13 +142,13 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     
     /// Showing alert when the textField(username or password) is empty
     /// - Parameter message: What message to show to the user
-    func alert(message:String){
+    func alert(message: String) {
         let alert = UIAlertController(title: "Alert!", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         self.present(alert, animated: true)
     }
     
-    @IBAction func submitButtonPressed(_ sender: UIButton){
+    @IBAction func submitButtonPressed(_ sender: UIButton) {
         let username = emailTextField.text!
         let password = passwordTextField.text!
         let trimmedUserName = username.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -214,7 +214,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
                             }
                         }
                     }
-                    catch{
+                    catch {
                         print("Error: try \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             //Build (503 error)

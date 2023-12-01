@@ -139,7 +139,7 @@ class AddMedicationVC: UIViewController {
     
     //MARK: - Properties
     var dataEnterDelegate: DataEnterDelegate? = nil
-    var medicationData: MedicationData?
+    var medicationData = MedicationData()
     let pickerView = UIPickerView()
     let datePicker = UIDatePicker()
     var activeTextfield: UITextField?
@@ -202,17 +202,17 @@ class AddMedicationVC: UIViewController {
     //MARK: - AssignDetailsToFields
     /// This method is used to set the medication details in the text field which we get from the previous list screen
     func assignMedicationDetailsToFields() {
-        if medicationData != nil {
-            if let quantity = medicationData?.quantity {
+        if medicationData.medicationId != nil {
+            if let quantity = medicationData.quantity {
                 let stringQuantity = String(quantity)
                 quantityTextField.text = stringQuantity
             }
-            medicationNameTextField.text = medicationData?.name
-            frequencyTextField.text = medicationData?.frequency
+            medicationNameTextField.text = medicationData.name ?? ""
+            frequencyTextField.text = medicationData.frequency ?? ""
             
-            notesTextField.text = medicationData?.notes
-            effectiveDateTextField.text = medicationData?.effectiveDate
-            effectiveEndDateTextField.text = medicationData?.lastEffectiveDate
+            notesTextField.text = medicationData.notes ?? ""
+            effectiveDateTextField.text = medicationData.effectiveDate ?? ""
+            effectiveEndDateTextField.text = medicationData.lastEffectiveDate ?? ""
         }
     }
     
@@ -379,29 +379,18 @@ class AddMedicationVC: UIViewController {
         }
         
     }
-    func requestParameterForSaveMedication() -> [String: Any]{
-        let filteredFrequency = frequenciesList.filter { name in
-            if frequencyTextField.text == name.description{
-                return true
-            }
-            return false
-        }
-        
-        var medicationFrequency = ""
-        if let first = filteredFrequency.first {
-            print("The first :\(first)")
-            medicationFrequency = first.code ?? ""
-        }
+    func requestParameterForSaveMedication() -> [String: Any] {
+
         return [
             "patientId": Details.patientId!,
             "careplanId": Details.careplanId!,
-            "medicationId": medicationData?.medicationId != nil ? (medicationData?.medicationId)! : "",
+            "medicationId": medicationData.medicationId != nil ? (medicationData.medicationId)! : "",
             "code": "",
             "name": medicationNameTextField.text ?? "" ,
             "notes": notesTextField.text ?? "",
             "effectiveDate": effectiveDateTextField.text ?? "",
             "lastEffectiveDate": effectiveEndDateTextField.text ?? "",
-            "frequency": medicationFrequency ,
+            "frequency": medicationData.frequencyCode ?? "" ,
             "customFrequency": "",
             "quantity": quantityTextField.text ?? 0,
             "activeFlag": "Y",
@@ -494,7 +483,7 @@ class AddMedicationVC: UIViewController {
         return [
             "patientId": Details.patientId!,
             "careplanId": Details.careplanId!,
-            "medicationId": medicationData?.medicationId ?? "",
+            "medicationId": medicationData.medicationId ?? "",
             "name": medicationNameTextField.text ?? "",
             "effectiveDate": effectiveDateTextField.text ?? "",
             "lastEffectiveDate": effectiveEndDateTextField.text ?? ""
@@ -600,10 +589,15 @@ class AddMedicationVC: UIViewController {
 extension AddMedicationVC: UITextFieldDelegate {
     //MARK: UITextViewDelegate
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
+        print("Textfield",textField)
+        print("Range",range)
+        print("String",string)
         if textField.tag == AddMedicationFieldsTags.medicationName.rawValue {
             let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? ""
             self.searchMedicationServiceCall()
+            if [textField.text] != medicationNameList{
+                searchTableview.isHidden = true
+            }
             let filteredSuggessions = medicationNameList.filter { $0.lowercased().contains(newText.localizedUppercase) }
             updateTableView(with: filteredSuggessions)
             
@@ -651,6 +645,7 @@ extension AddMedicationVC: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let nameFrequency = frequenciesList[row]
+        medicationData.frequencyCode = nameFrequency.code
         frequencyTextField.text = nameFrequency.description
         frequencyTextField.resignFirstResponder()
     }

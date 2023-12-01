@@ -1039,7 +1039,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" systemColor="systemGray6Color"/>
-                        <color key="selectedImageTintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="selectedImageTintColor" systemColor="systemBlueColor"/>
                     </tabBar>
                     <connections>
                         <segue destination="3Lz-re-jy7" kind="relationship" relationship="viewControllers" id="2iA-rn-iMN"/>
@@ -1429,6 +1429,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="363" height="43.666667938232422"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -1500,10 +1501,10 @@
                     </navigationItem>
                     <connections>
                         <outlet property="effectiveDateTextField" destination="ZvG-9X-1Kn" id="oLf-8Y-POW"/>
-                        <outlet property="effectiveEndDateTimeTextField" destination="cNI-Iz-YLJ" id="Dpv-YL-CF0"/>
+                        <outlet property="effectiveEndDateTextField" destination="cNI-Iz-YLJ" id="xqg-Gd-FMx"/>
                         <outlet property="frequencyTextField" destination="tFU-mM-RBP" id="Eat-G6-egC"/>
                         <outlet property="medicationNameTextField" destination="dCs-Sw-8eh" id="xhI-fz-NTY"/>
-                        <outlet property="notesTextfield" destination="pw4-hT-e2c" id="bxU-tm-uqU"/>
+                        <outlet property="notesTextField" destination="pw4-hT-e2c" id="21X-ka-B26"/>
                         <outlet property="quantityTextField" destination="bzq-sJ-o0m" id="6xu-6h-1em"/>
                         <outlet property="searchTableview" destination="Dkz-Zf-q0N" id="o9t-IS-zfi"/>
                     </connections>
@@ -1800,6 +1801,9 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray5Color">
             <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
