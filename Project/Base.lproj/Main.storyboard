@@ -1418,7 +1418,7 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Dkz-Zf-q0N">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Dkz-Zf-q0N">
                                 <rect key="frame" x="15" y="194" width="363" height="200"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
@@ -1433,6 +1433,28 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="g4u-V7-7o1">
+                                <rect key="frame" x="16" y="194" width="361" height="200"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="No Data" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vzi-dj-z5k">
+                                        <rect key="frame" x="139" y="90" width="83" height="25.333333333333329"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="83" id="9ZY-q0-siC"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemGray5Color"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="Vzi-dj-z5k" secondAttribute="trailing" constant="139" id="2PA-8C-k6d"/>
+                                    <constraint firstAttribute="width" constant="361" id="9FZ-iF-HmK"/>
+                                    <constraint firstItem="Vzi-dj-z5k" firstAttribute="leading" secondItem="g4u-V7-7o1" secondAttribute="leading" constant="139" id="QuM-po-lEa"/>
+                                    <constraint firstAttribute="height" constant="200" id="bal-Zf-5hR"/>
+                                    <constraint firstItem="Vzi-dj-z5k" firstAttribute="top" secondItem="g4u-V7-7o1" secondAttribute="top" constant="90" id="coB-Mh-0da"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Ik4-BO-fYP"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -1476,8 +1498,11 @@
                             <constraint firstItem="Y6c-vq-zfx" firstAttribute="leading" secondItem="pw4-hT-e2c" secondAttribute="leading" id="iEU-zz-Pnh"/>
                             <constraint firstItem="iaz-v8-Mmb" firstAttribute="top" secondItem="dCs-Sw-8eh" secondAttribute="bottom" constant="20" id="ivg-5b-BUa"/>
                             <constraint firstItem="r0u-Gd-UBL" firstAttribute="leading" secondItem="tFU-mM-RBP" secondAttribute="leading" id="k65-Sh-wA6"/>
+                            <constraint firstItem="g4u-V7-7o1" firstAttribute="leading" secondItem="Ik4-BO-fYP" secondAttribute="leading" constant="16" id="koV-fI-NH2"/>
                             <constraint firstItem="CDP-C7-lwb" firstAttribute="leading" secondItem="ZvG-9X-1Kn" secondAttribute="leading" id="mdY-IV-VBa"/>
+                            <constraint firstItem="Ik4-BO-fYP" firstAttribute="trailing" secondItem="g4u-V7-7o1" secondAttribute="trailing" constant="16" id="mpz-re-Jsa"/>
                             <constraint firstItem="pw4-hT-e2c" firstAttribute="leading" secondItem="CDP-C7-lwb" secondAttribute="leading" id="ndE-GF-Xlf"/>
+                            <constraint firstItem="g4u-V7-7o1" firstAttribute="top" secondItem="dCs-Sw-8eh" secondAttribute="bottom" id="nft-8o-Faz"/>
                             <constraint firstItem="Dkz-Zf-q0N" firstAttribute="top" secondItem="dCs-Sw-8eh" secondAttribute="bottom" id="pYe-uy-OGh"/>
                             <constraint firstItem="CDP-C7-lwb" firstAttribute="trailing" secondItem="r0u-Gd-UBL" secondAttribute="trailing" id="qCE-Do-8me"/>
                             <constraint firstItem="CDP-C7-lwb" firstAttribute="leading" secondItem="Y6c-vq-zfx" secondAttribute="leading" id="sjo-vd-6oS"/>
@@ -1503,6 +1528,7 @@
                         <outlet property="effectiveDateTextField" destination="ZvG-9X-1Kn" id="oLf-8Y-POW"/>
                         <outlet property="effectiveEndDateTextField" destination="cNI-Iz-YLJ" id="xqg-Gd-FMx"/>
                         <outlet property="frequencyTextField" destination="tFU-mM-RBP" id="Eat-G6-egC"/>
+                        <outlet property="hideViewForTableView" destination="g4u-V7-7o1" id="nGd-tQ-83m"/>
                         <outlet property="medicationNameTextField" destination="dCs-Sw-8eh" id="xhI-fz-NTY"/>
                         <outlet property="notesTextField" destination="pw4-hT-e2c" id="21X-ka-B26"/>
                         <outlet property="quantityTextField" destination="bzq-sJ-o0m" id="6xu-6h-1em"/>
@@ -1511,7 +1537,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Csj-a4-1C8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5648" y="536"/>
+            <point key="canvasLocation" x="5646.5648854961828" y="535.91549295774655"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="NU6-RL-old">

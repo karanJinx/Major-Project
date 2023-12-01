@@ -23,30 +23,28 @@ class MedicationShowVC: UIViewController {
     //MARK: - Properties
     var medicationToShow = MedicationData()
     
+    //MARK: - OverrideViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        initialSetUp()
+    }
+    
+    //MARK: InitialSetUp
+    func initialSetUp() {
         setUpNavigationBar()
-        
         customView(viewName: nameView)
         customView(viewName: frequencyView)
         customView(viewName: dateView)
-        
-        setPropertiesForLable(lable: nameLable)
-        setPropertiesForLable(lable: frequencyLable)
-        setPropertiesForLable(lable: quantityLable)
-        setPropertiesForLable(lable: effectiveDateLable)
-        setPropertiesForLable(lable: lastEffectiveDateLable)
-        setPropertiesForLable(lable: nameLable)
-        
+        setTextForLable(nameLabel: nameLable, frequencyLable: frequencyLable, quantityLable: quantityLable, effectiveDate: effectiveDateLable, lastEffectivDate: lastEffectiveDateLable)
     }
+    
     //MARK: - SetValuesToLable
-    func setPropertiesForLable(lable: UILabel) {
-        lable.text = medicationToShow.name
-        lable.text = medicationToShow.frequency
-        lable.text = String(medicationToShow.quantity!)
-        lable.text = medicationToShow.effectiveDate
-        lable.text = medicationToShow.lastEffectiveDate ?? " - "
+    func setTextForLable(nameLabel: UILabel, frequencyLable: UILabel, quantityLable: UILabel, effectiveDate: UILabel, lastEffectivDate: UILabel){
+        nameLabel.text = medicationToShow.name
+        frequencyLable.text = medicationToShow.frequency
+        quantityLable.text = String(medicationToShow.quantity!)
+        effectiveDate.text = medicationToShow.effectiveDate
+        lastEffectivDate.text = medicationToShow.lastEffectiveDate ?? " - "
     }
     
     //MARK: - SetupNavigationBar

@@ -16,6 +16,7 @@ enum WeightBLEReadingoptions: String {
 
 class WeighingScaleVC: UIViewController {
     
+    //MARK: Properties
     var centralManager: CBCentralManager!
     
     //MARK: IBOutlets
@@ -23,16 +24,20 @@ class WeighingScaleVC: UIViewController {
     @IBOutlet var scanLable: UILabel!
     @IBOutlet var weightMeasureLable: UILabel!
     
+    //MARK: OverrideViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        initialSetup()
+    }
+    
+    func initialSetup() {
         centralManager = CBCentralManager(delegate: self, queue: nil)
         setUpVavigationBar()
-        weightLable.isHidden = true
-        weightMeasureLable.isHidden = false
         configureLable(lableName: weightLable)
-        view.addSubview(weightLable)
+        configureLable(lableName: weightLable, bool: true)
+        weightMeasureLable.isHidden = false
     }
+    
     //MARK: - SetUpVavigationBar
     func setUpVavigationBar() {
         let navigationBarAppearance = UINavigationBarAppearance()
@@ -42,24 +47,28 @@ class WeighingScaleVC: UIViewController {
         // Set the status bar color to match the navigation bar
         navigationController?.navigationBar.barStyle = .black
     }
+    
     //MARK: - configureWeightLable
-    func configureLable(lableName: UILabel) {
+    func configureLable(lableName: UILabel, bool: Bool = true) {
         lableName.layer.cornerRadius = 20
         lableName.layer.masksToBounds = true
         lableName.layer.shadowColor = UIColor.gray.cgColor // Shadow color
         lableName.layer.shadowOffset = CGSize(width: 4, height: 5) // Shadow offset (adjust as needed)
         lableName.layer.shadowOpacity = 0.7 // Shadow opacity (adjust as needed)
         lableName.layer.shadowRadius = 4.0 // Shadow radius (adjust as needed)
+        lableName.isHidden = bool
+        lableName.isHidden = bool
     }
-
+    
     //MARK: - IBAction
     @IBAction func BackButtonPressedWeightScale(_ sender: Any) {
         Method.showConfirmationAlertToGoBackTo(from: self)
-
     }
-    
 }
+
+//MARK: - Extension
 extension WeighingScaleVC: CBCentralManagerDelegate {
+    //MARK: - centralMangerDidUpdateState
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state {
         case .unknown:
@@ -81,6 +90,7 @@ extension WeighingScaleVC: CBCentralManagerDelegate {
         }
     }
     
+    //MARK: - didDiscoverPeripheral
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         //print(peripheral)
         //print(advertisementData)

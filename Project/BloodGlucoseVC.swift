@@ -9,20 +9,11 @@ import Foundation
 import UIKit
 import CoreBluetooth
 
-class BloodGlucoseVC:UIViewController{
+class BloodGlucoseVC: UIViewController {
     @IBOutlet var statusLable: UILabel!
     @IBOutlet var finalReadingsLable: UILabel!
     
-    
-    var service1UUID = CBUUID(string: "0x0003CDD0-0000-1000-8000-00805F9B0131")
-    var service1_Characteristic_1 = CBUUID(string: "0x0003CDD1-0000-1000-8000-00805F9B0131") // notify -> giving the byte when the central is disconnected from the peripheral
-    var service1_Characteristic_2 = CBUUID(string: "0x0003CDD2-0000-1000-8000-00805F9B0131") // writeWithoutResponse
-    
-    var bloodGlucoMeterServiceUUID = CBUUID(string: "0xFEE7")//Device Information,FEE7,0003CDD0-0000-1000-8000-00805F9B0131
-    var bloodGlucoMeterCharacteristicUUID1 = CBUUID(string: "0xFEC7") //write
-    var bloodGlucoMeterCharacteristicUUID2 = CBUUID(string: "0xFEC8")
-    var bloodGlucoMeterCharacteristicUUID3 = CBUUID(string: "0xFEC9") //read
-    
+    //MARK: Properties
     var centralManager : CBCentralManager!
     var myPeripheral: CBPeripheral!
     
@@ -32,34 +23,60 @@ class BloodGlucoseVC:UIViewController{
     var characteristic_writeWithoutResponse : CBCharacteristic!
     var characteristic_WriteWithResponse : CBCharacteristic!
     
+    var service1UUID = CBUUID(string: "0x0003CDD0-0000-1000-8000-00805F9B0131")
+    var service1_Characteristic_1 = CBUUID(string: "0x0003CDD1-0000-1000-8000-00805F9B0131") // notify -> giving the byte when the central is disconnected from the peripheral
+    var service1_Characteristic_2 = CBUUID(string: "0x0003CDD2-0000-1000-8000-00805F9B0131") // writeWithoutResponse
+    var bloodGlucoMeterServiceUUID = CBUUID(string: "0xFEE7")//Device Information,FEE7,0003CDD0-0000-1000-8000-00805F9B0131
+    var bloodGlucoMeterCharacteristicUUID1 = CBUUID(string: "0xFEC7") //write
+    var bloodGlucoMeterCharacteristicUUID2 = CBUUID(string: "0xFEC8")
+    var bloodGlucoMeterCharacteristicUUID3 = CBUUID(string: "0xFEC9") //read
+    
+    //MARK: OverrideViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        initialSetUp()
+    }
+    
+    //MARK: InitialSetUp
+    func initialSetUp() {
+        centralManager = CBCentralManager(delegate: self, queue: nil)
+        setUpNavigationBar()
+        configureLable(lableName: finalReadingsLable)
+        finalReadingsLable.isHidden = true
+        finalReadingsLable.layer.masksToBounds = true
+    }
+    //MARK: - setUpNavigationBar
+    func setUpNavigationBar() {
         let navigationBarAppearance = UINavigationBarAppearance()
-        navigationBarAppearance.backgroundColor = .systemGray6 
+        navigationBarAppearance.backgroundColor = .systemGray6
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navigationBarAppearance
-
         // Set the status bar color to match the navigation bar
         navigationController?.navigationBar.barStyle = .black
-        
-        finalReadingsLable.isHidden = true
-        finalReadingsLable.layer.cornerRadius = 20
-        finalReadingsLable.layer.masksToBounds = true
-        finalReadingsLable.layer.shadowColor = UIColor.gray.cgColor // Shadow color
-        finalReadingsLable.layer.shadowOffset = CGSize(width: 4, height: 5) // Shadow offset (adjust as needed)
-        finalReadingsLable.layer.shadowOpacity = 0.7 // Shadow opacity (adjust as needed)
-        finalReadingsLable.layer.shadowRadius = 4.0 // Shadow radius (adjust as needed)
-        centralManager = CBCentralManager(delegate: self, queue: nil)
-        view.addSubview(finalReadingsLable)
-        
     }
-
+    
+    //MARK: - Configurelable
+    func configureLable(lableName: UILabel, bool: Bool = true) {
+        lableName.layer.cornerRadius = 20
+        lableName.layer.masksToBounds = true
+        lableName.layer.shadowColor = UIColor.gray.cgColor // Shadow color
+        lableName.layer.shadowOffset = CGSize(width: 4, height: 5) // Shadow offset (adjust as needed)
+        lableName.layer.shadowOpacity = 0.7 // Shadow opacity (adjust as needed)
+        lableName.layer.shadowRadius = 4.0 // Shadow radius (adjust as needed)
+        lableName.isHidden = bool
+        lableName.isHidden = bool
+    }
+    
+    //MARK: - IBAction
     @IBAction func backButtonPressedBG(_ sender: Any) {
         Method.showConfirmationAlertToGoBackTo(from: self)
     }
 }
-extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
+
+//MARK: - Extension
+extension BloodGlucoseVC: CBCentralManagerDelegate, CBPeripheralDelegate {
+    
+    //MARK: - CentralManagerDidUpdateState
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         switch central.state{
         case .unknown:
@@ -79,6 +96,8 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
             print("Something wrong with the central")
         }
     }
+    
+    //MARK: - DidDiscoverPeripheral
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
         print(peripheral)
         let pname = peripheral.name ?? ""
@@ -89,20 +108,23 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
             self.centralManager.connect(peripheral,options: nil)
             print("Connecting to the periphral")
         }
-//        else if pname == "VivaGuard"{
-//            central.stopScan()
-//            self.myPeripheral = peripheral
-//            self.myPeripheral.delegate = self
-//            self.centralManager.connect(peripheral,options: nil)
-//            print("Connecting to the periphral")
-//        }
+        //        else if pname == "VivaGuard"{
+        //            central.stopScan()
+        //            self.myPeripheral = peripheral
+        //            self.myPeripheral.delegate = self
+        //            self.centralManager.connect(peripheral,options: nil)
+        //            print("Connecting to the periphral")
+        //        }
     }
     
+    //MARK: - DidConnectPeripheral
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         statusLable.text = "Connected Successfully"
         print("Connected")
         peripheral.discoverServices(nil)
     }
+    
+    //MARK: - DidDiscoverServices
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if let services = peripheral.services{
             for service in services {
@@ -112,21 +134,19 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
             }
         }
     }
+    
+    //MARK: - DidDiscoverCharacteristics
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if let characteristics = service.characteristics{
             for characteristic in characteristics {
                 print(characteristic)
-                //                if characteristic.uuid == bloodGlucoMeterCharacteristicUUID3{
-                //                    characteristic_read = characteristic
-                //                    peripheral.readValue(for: characteristic_read)
-                //                }
                 
-                if characteristic.uuid == service1_Characteristic_1{
+                if characteristic.uuid == service1_Characteristic_1 {
                     characteristic_notify = characteristic
                     peripheral.setNotifyValue(true, for: characteristic_notify)
                 }
                 
-                if (characteristic.uuid == service1_Characteristic_2){
+                if (characteristic.uuid == service1_Characteristic_2) {
                     characteristic_writeWithoutResponse = characteristic
                     //let commandBytes: [UInt8] = [0x7B,0x01,0x10,0x01,0x20,0x77,0x55,0x00,0x00,0x01,0x0B,0x0B,0x04,0x7D] // SerialNumber
                     // let commandAA: [UInt8] = [0x7B, 0x01, 0x10, 0x01, 0x20, 0xAA, 0x55, 0x00, 0x00, 0x02 ,0x01, 0x0D, 0x08, 0x7D] // Unit AA
@@ -146,8 +166,7 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
                 //                    peripheral.writeValue(commandSend, for: characteristic_writeWithoutResponse, type: .withoutResponse)
                 //                }
                 
-                if characteristic.uuid == service1_Characteristic_2{
-                    
+                if characteristic.uuid == service1_Characteristic_2 {
                     characteristic_writeWithoutResponse = characteristic
                     
                     let calendar = Calendar.current
@@ -219,30 +238,8 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
             }
         }
     }
-//    func showPopupWithFinalReading(finalReading: String) {
-//        let alert = UIAlertController(title: "Final Reading", message: "Your final reading is \(finalReading)", preferredStyle: .alert)
-//
-//        // Create an "OK" action
-//        let okAction = UIAlertAction(title: "OK", style: .default) { [weak self] _ in
-//            // Navigate to the Home screen
-//            self?.navigateToHomeScreen()
-//        }
-//
-//        alert.addAction(okAction)
-//
-//        // Present the alert
-//        present(alert, animated: true, completion: nil)
-//    }
-//
-//    func navigateToHomeScreen() {
-//        // Replace this with your navigation code to go to the Home screen
-//        // For example, if you're using a UINavigationController:
-//        if let navigationController = self.navigationController {
-//            navigationController.popToRootViewController(animated: true)
-//        }
-//    }
-
     
+    //MARK: - didUpdateValueFor
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         if let value = characteristic.value {
             //let byteArray = [UInt8](value)
@@ -313,6 +310,8 @@ extension BloodGlucoseVC: CBCentralManagerDelegate,CBPeripheralDelegate{
             //print("The value :\(getPairsFromHexString(data: byteArray)!)")
         }
     }
+    
+    //MARK: - didWriteValueFor
     func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         if let error = error {
             // Handle the error

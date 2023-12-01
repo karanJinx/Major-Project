@@ -23,22 +23,22 @@ class BloodPressurePopupVC: UIViewController{
     @IBOutlet var pulseLable: UILabel!
     @IBOutlet var OKButton: UIButton!
     
+    //MARK: OverrideViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        initialSetUp()
+    }
+    
+    //MARK: - InitialSetup
+    func initialSetUp() {
         systolicLable.text = systolicFinalreading
         diastolicLable.text = diastolicFinalreading
         pulseLable.text = pulseFinalreading
-        
-//        titleLableBP.layer.cornerRadius = 7
-//        titleLableBP.layer.masksToBounds = true
-//        OKButton.layer.cornerRadius = 7
-//        popupView.layer.cornerRadius = 7
+
         setUpView(view: titleLableBP, radius: 7, maskToBound: true)
         setUpView(view: OKButton, radius: 7, maskToBound: true)
         setUpView(view: popupView, radius: 7, maskToBound: true)
     }
-    
     //MARK: - setUpView
     func setUpView(view: UIView, radius: CGFloat, maskToBound: Bool){
         view.layer.cornerRadius = radius

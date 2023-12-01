@@ -56,6 +56,8 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     @IBOutlet var passwordTextField: UITextField!
     @IBOutlet var submitButton: UIButton!
     
+    //MARK: - Properties
+    let apiManager = APIManager.shared
     /// a loader overView on top of the view,(1)assinged instance uiview,(2)createdView ,which is actual overlay view.(3)setting autocontraint to false,(4)settign bacgroundcolor to back opacity 20(5)view is Initially hidden
     let overlayView: UIView = {
         let view = UIView()
@@ -87,9 +89,15 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         return indicator
     }()
     
+    //MARK: - OverrideViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        initialSetup()
+    }
+    
+    //MARK: - InitialSetUp
+    func initialSetup(){
         setPropertiesForTextField(textField: emailTextField)
         setPropertiesForTextField(textField: passwordTextField)
         
@@ -135,11 +143,12 @@ class LoginVC: UIViewController, UITextFieldDelegate {
     /// KeyBoard disappers when we click the Return button
     /// - Parameter textField: email and password field
     /// - Returns: true
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool  {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
     
+    //MARK: - ShowAlertToValidateTextFields
     /// Showing alert when the textField(username or password) is empty
     /// - Parameter message: What message to show to the user
     func alert(message: String) {
@@ -148,6 +157,7 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         self.present(alert, animated: true)
     }
     
+    //MARK: - IBAction
     @IBAction func submitButtonPressed(_ sender: UIButton) {
         let username = emailTextField.text!
         let password = passwordTextField.text!
@@ -172,62 +182,68 @@ class LoginVC: UIViewController, UITextFieldDelegate {
         }
         
         //MARK: - LoginServiceCall
-        func loginServiceCall(){
+        func loginServiceCall() {
             showLoader()
             let loginURL = APIHelper.share.baseURL + "login"
             let loginParam = ["username" : trimmedUserName, "password" : trimmedPassword]
             
             //result is of type Result<Data, Error>, where Data represents the data received from the network request, and Error represents any potential errors.
-            APIManager.shared.APIHelper(url: loginURL, params: loginParam, method: .post , headers: nil, requestBody: nil, completion: { result in
+            apiManager.APIHelper(url: loginURL, params: loginParam, method: .post , headers: nil, requestBody: nil, completion: { result in
                 self.hideLoader()
                 switch result {
                 case .success(let data):
-                    do{
-                        //If the network request is successful (i.e., .success), you proceed to decode the data received from the server.
-                        let decoded = try JSONDecoder().decode(LoginResponseModal.self, from: data)
-                        //You're using JSONDecoder to decode the received data into an instance of a LoginResponseModal object. This is typically done to parse and work with the response data in a structured format.
-                        if decoded.status == "success"{
-                            print("the data is \(data)")
-                            print("the token is \(decoded.data?.token ?? "")")
-                            Details.token = decoded.data?.token
-                            DispatchQueue.main.async {
-                                let myTabBar = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabBar") as! UITabBarController
-                                myTabBar.modalPresentationStyle = .overCurrentContext
-                                self.present(myTabBar, animated: true)
-                            }
-                        }
-                        else if decoded.status == "failure"{
-                            let alert = UIAlertController(title: "Alert", message: "server is Busy", preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: "Ok", style: .default))
-                            self.present(alert, animated: true)
-                        }
-                        else {
-                            DispatchQueue.main.async {
-                                let message = decoded.message
-                                let alert = UIAlertController(title: "Alert", message: (message), preferredStyle: .alert)
-                                alert.addAction(UIAlertAction(title: "OK", style: .cancel))
-                                self.present(alert, animated: true)
-                                //                                let message = decoded.status
-                                //                                let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
-                                //                                alert.addAction(UIAlertAction(title: "OK", style: .cancel))
-                                //                                self.present(alert, animated: true)
-                            }
-                        }
-                    }
-                    catch {
-                        print("Error: try \(error.localizedDescription)")
-                        DispatchQueue.main.async {
-                            //Build (503 error)
-                            let alert = UIAlertController(title: "Alert", message: "Please try again after sometime.", preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: "OK", style: .default))
-                            self.present(alert, animated: true)
-                        }
-                    }
+                    loginSuccessHandling(data: data)
+                    
                 case .failure(let error):
                     print("Error \(error)")
                 }
             }
             )
+        }
+        
+        //MARK: - LoginSuccessHandling
+        func loginSuccessHandling(data: Data) {
+            do {
+                //If the network request is successful (i.e., .success), you proceed to decode the data received from the server.
+                let decoded = try JSONDecoder().decode(LoginResponseModal.self, from: data)
+                //You're using JSONDecoder to decode the received data into an instance of a LoginResponseModal object. This is typically done to parse and work with the response data in a structured format.
+                if decoded.status == "success" {
+                    print("the data is \(data)")
+                    print("the token is \(decoded.data?.token ?? "")")
+                    Details.token = decoded.data?.token
+                    DispatchQueue.main.async {
+                        let myTabBar = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "tabBar") as! UITabBarController
+                        myTabBar.modalPresentationStyle = .overCurrentContext
+                        self.present(myTabBar, animated: true)
+                    }
+                }
+                else if decoded.status == "failure" {
+                    let alert = UIAlertController(title: "Alert", message: "server is Busy", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .default))
+                    self.present(alert, animated: true)
+                }
+                else {
+                    DispatchQueue.main.async {
+                        let message = decoded.message
+                        let alert = UIAlertController(title: "Alert", message: (message), preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+                        self.present(alert, animated: true)
+                        //                                let message = decoded.status
+                        //                                let alert = UIAlertController(title: "Alert", message: message, preferredStyle: .alert)
+                        //                                alert.addAction(UIAlertAction(title: "OK", style: .cancel))
+                        //                                self.present(alert, animated: true)
+                    }
+                }
+            }
+            catch {
+                print("Error: try \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    //Build (503 error)
+                    let alert = UIAlertController(title: "Alert", message: "Please try again after sometime.", preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(alert, animated: true)
+                }
+            }
         }
     }
 }

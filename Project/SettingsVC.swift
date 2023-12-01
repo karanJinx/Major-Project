@@ -9,9 +9,9 @@ import UIKit
 
 class SettingVC: UIViewController {
     
+    //MARK: - OverrideViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         setUpNavigationBar()
     }
     

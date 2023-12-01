@@ -16,16 +16,21 @@ class HomeVC: UIViewController {
     @IBOutlet var bloodGlucoseView: UIView!
     @IBOutlet var ecgView: UIView!
     
+    //MARK: - OverrideViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        initialSetup()
+    }
+    
+    //MARK: - InitialSetup
+    func initialSetup() {
+        setUpNavigationBar()
         configurationToView(viewname: weightscaleView)
         configurationToView(viewname: bloodGlucoseView)
         configurationToView(viewname: BloodPressureView)
         configurationToView(viewname: ecgView)
-        setUpNavigationBar()
-        
     }
+    
     //MARK: - SetUpNavigation
     func setUpNavigationBar() {
         let navigationBarAppearance = UINavigationBarAppearance()
@@ -39,7 +44,7 @@ class HomeVC: UIViewController {
     //MARK: - ConfigurationToView
     /// setting the cornerRadius and the shadow  for the buttons
     /// - Parameter viewname: It is the view
-    func configurationToView(viewname:UIView) {
+    func configurationToView(viewname: UIView) {
         viewname.layer.cornerRadius = 20
         viewname.layer.shadowColor = UIColor.black.cgColor
         viewname.layer.shadowOpacity = 0.7

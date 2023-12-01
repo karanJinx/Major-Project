@@ -7,7 +7,7 @@
 
 import Foundation
 
-class APIHelper{
+class APIHelper {
     static let share = APIHelper()
     private init() {}
     

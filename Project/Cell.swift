@@ -9,7 +9,7 @@ import UIKit
 
 class Cell: UITableViewCell {
 
-    
+    //MARK: - IBOutlets
     @IBOutlet var baseView: Cell!
     @IBOutlet var medicationLable: UILabel!
     @IBOutlet var frequencyLable: UILabel!
@@ -21,11 +21,4 @@ class Cell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-
-//    override func setSelected(_ selected: Bool, animated: Bool) {
-//        super.setSelected(selected, animated: animated)
-//
-//        // Configure the view for the selected state
-//    }
-
 }

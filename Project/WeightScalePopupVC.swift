@@ -19,14 +19,18 @@ class WeightScalePopupVC: UIViewController{
     @IBOutlet var popupview: UIView!
     @IBOutlet var buttonLable: UIButton!
     
+    //MARK: OverrideViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
+        initialSetUp()
+    }
+    //MARK: - Initialsetup
+    func initialSetUp() {
         readingsLable.text = finalReading
         setUpView(view: popupview, radius: 7, maskToBound: true)
         setUpView(view: buttonLable, radius: 7, maskToBound: true)
         setUpView(view: titleLable, radius: 7, maskToBound: true)
     }
-    
     //MARK: - setUpView
     func setUpView(view: UIView, radius: CGFloat, maskToBound: Bool){
         view.layer.cornerRadius = radius

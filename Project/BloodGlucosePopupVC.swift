@@ -19,15 +19,15 @@ class BloodGlucosePopupVC:UIViewController{
     @IBOutlet var readingsLable: UILabel!
     @IBOutlet var button: UIButton!
     
+    //MARK: - OverrideViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        initialSetup()
+    }
+    
+    //MARK: - InitialSetUp
+    func initialSetup() {
         readingsLable.text = finalReadings
-        
-//        popupView.layer.cornerRadius = 7
-//        button.layer.cornerRadius = 7
-//        titleBGLable.layer.cornerRadius = 7
-//        titleBGLable.layer.masksToBounds = true
         setUpView(view: popupView, radius: 7, maskToBound: true)
         setUpView(view: button, radius: 7, maskToBound: true)
         setUpView(view: titleBGLable, radius: 7, maskToBound: true)

@@ -10,7 +10,9 @@ import UIKit
 import UserNotifications
 
 class LocalNotificationManager{
-    static func requestPermission(){
+    
+    //MARK: - RequestPermission
+    static func requestPermission() {
         let center = UNUserNotificationCenter.current()
         center.requestAuthorization(options: [.sound,.alert,.badge]) { granted, error in
             if granted{
@@ -22,9 +24,9 @@ class LocalNotificationManager{
         }
     }
     
-    
+    //MARK: ScheduleRemainder
     //schedule notification
-    static func scheduleMedicationRemainder(medicationName: String,frequency: String,quantity: String,date: String,medicationId: String){
+    static func scheduleMedicationRemainder(medicationName: String,frequency: String,quantity: String,date: String,medicationId: String) {
         let center = UNUserNotificationCenter.current()
         //Content of the notification
         let content = UNMutableNotificationContent()
@@ -60,11 +62,12 @@ class LocalNotificationManager{
             trigger = UNTimeIntervalNotificationTrigger(timeInterval: 24 * 60 * 60, repeats: false)
         }
         
-        
+        //MARK: - CreateRequest
         //Create a request
         let medicationIdToRequest = medicationId
         let request = UNNotificationRequest(identifier: medicationIdToRequest, content: content, trigger: trigger)
         
+        //MARK: - RegisterRequest
         //Register a request
         center.add(request) { error in
             if let error = error{
@@ -73,10 +76,9 @@ class LocalNotificationManager{
         }
         
     }
-    
-    
+    //MARK: - CancelTheRemainder
     //cancel the local notification
-    static func removeLocalNotification(identifier: String){
+    static func removeLocalNotification(identifier: String) {
         let center = UNUserNotificationCenter.current()
         center.removePendingNotificationRequests(withIdentifiers: [identifier])
         

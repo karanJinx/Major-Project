@@ -136,6 +136,7 @@ class AddMedicationVC: UIViewController {
     @IBOutlet var effectiveEndDateTextField: UITextField!
     @IBOutlet var notesTextField: UITextField!
     @IBOutlet var searchTableview: UITableView!
+    @IBOutlet var hideViewForTableView: UIView!
     
     //MARK: - Properties
     var dataEnterDelegate: DataEnterDelegate? = nil
@@ -144,8 +145,9 @@ class AddMedicationVC: UIViewController {
     let datePicker = UIDatePicker()
     var activeTextfield: UITextField?
     var frequenciesList: [MedicationFrequency] = []
-    var medicationNameList: [String] = []
+    var medicationNameList = [OtherMedication]()
     let rowHeight: CGFloat = 40.0
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -163,13 +165,14 @@ class AddMedicationVC: UIViewController {
         setUpSearchTableView()
         cancelButtonForPickerView()
         frequencyServiceCall()
+        hideViewForTableView.isHidden = true
     }
     
     //MARK: - SetUpNavigationBar
     /// To set up the Navigation Bar and setting the navigationBarButton title when saving and editing
     func setUpNavigationBar() {
         //To update the barbutton in add screen from save to update
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: (medicationData != nil) ? "Update" : "Save", style: .plain, target: self, action: #selector(saveButtonPressed))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: (medicationData.medicationId == nil) ? "Save" : "Update", style: .plain, target: self, action: #selector(saveButtonPressed))
         
         let navigationBarAppearance = UINavigationBarAppearance()
         navigationBarAppearance.backgroundColor = .systemGray6
@@ -286,7 +289,7 @@ class AddMedicationVC: UIViewController {
     //MARK: - UpdateTableView
     /// this function is used to update the table view when we enter the medicaiton name in the text field
     /// - Parameter suggestion: as per the text in the textfield , it shows medication name
-    func updateTableView(with suggestion :[String]) {
+    func updateTableView(with suggestion :[OtherMedication]) {
         medicationNameList = suggestion
         searchTableview.reloadData()
         searchTableview.isHidden = suggestion.isEmpty
@@ -345,9 +348,10 @@ class AddMedicationVC: UIViewController {
                                 }
                             }
                             DispatchQueue.main.async {
-                                if self.medicationData != nil {
+                                print("The medicationData",self.medicationData)
+                                if self.medicationData.medicationId == nil {
                                     // Medication is not new, show "Medication updated successfully" alert
-                                    let alert = UIAlertController(title: nil, message: "Medication updated successfully", preferredStyle: .alert)
+                                    let alert = UIAlertController(title: nil, message: "Medication Saved successfully", preferredStyle: .alert)
                                     self.present(alert, animated: true)
                                     // Dismiss the alert after the specified duration
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -355,7 +359,7 @@ class AddMedicationVC: UIViewController {
                                     }
                                 } else {
                                     // Medication is  new, show "Medication saved successfully" alert
-                                    let alert = UIAlertController(title: nil, message: "Medication saved successfully", preferredStyle: .alert)
+                                    let alert = UIAlertController(title: nil, message: "Medication Updated successfully", preferredStyle: .alert)
                                     self.present(alert, animated: true)
                                     // Dismiss the alert after the specified duration
                                     DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
@@ -380,7 +384,6 @@ class AddMedicationVC: UIViewController {
         
     }
     func requestParameterForSaveMedication() -> [String: Any] {
-
         return [
             "patientId": Details.patientId!,
             "careplanId": Details.careplanId!,
@@ -405,9 +408,9 @@ class AddMedicationVC: UIViewController {
     //MARK: - FrequencyServiceCall
     func frequencyServiceCall() {
         let frequencyServiceUrl = APIHelper.share.baseURLWeb + "hum-codes/CPLN-MEDI-FREQ"
-        let frequencyParameter = ["id": 33689]
+        //let frequencyParameter = ["id": 33689]
         let headers = ["X-Auth-Token":Details.token!]
-        APIManager.shared.APIHelper(url: frequencyServiceUrl, params: frequencyParameter, method: .get, headers: headers, requestBody: nil) { result in
+        APIManager.shared.APIHelper(url: frequencyServiceUrl, params: nil, method: .get, headers: headers, requestBody: nil) { result in
             switch result {
                 
             case .success(let data):
@@ -492,7 +495,6 @@ class AddMedicationVC: UIViewController {
     //MARK: - SearchMedicationServiceCall
     func searchMedicationServiceCall() {
         
-        if medicationNameTextField.text!.count >= 4 {
             let searchUrl = APIHelper.share.baseURLWeb + "medications/names"
             let medicationParameter = ["medName" : medicationNameTextField.text!,"isCarePlan" : "Y"] as [String : Any]
             let headers = ["X-Auth-Token":Details.token!]
@@ -503,15 +505,8 @@ class AddMedicationVC: UIViewController {
                         let medicationDecoded = try JSONDecoder().decode(MedicationSearch.self, from: medications)
                         if medicationDecoded.status == "success"{
                             let dataMedication = medicationDecoded.data
-                            let dataOthers = dataMedication?.others
-                            //print("The dataOther:\(dataOthers)")
-                            if case let values? = dataOthers{
-                                for medName in values{
-                                    let mediPropName = medName.mediProprietaryName ?? ""
-                                    let mediNonPropName = medName.mediNonProprietaryName ?? ""
-                                    self.medicationNameList.append(mediPropName + mediNonPropName)
-                                }
-                            }
+                            self.medicationNameList = dataMedication?.others ?? []
+                            //print("The dataOther:\(dataOthers)"
                             DispatchQueue.main.async {
                                 self.searchTableview.reloadData()
                                 self.searchTableview.isHidden = false
@@ -526,7 +521,7 @@ class AddMedicationVC: UIViewController {
                     print("EError: \(error)")
                 }
             }
-        }
+        
     }
     
     func saveButtonAlert(message:String) {
@@ -593,13 +588,24 @@ extension AddMedicationVC: UITextFieldDelegate {
         print("Range",range)
         print("String",string)
         if textField.tag == AddMedicationFieldsTags.medicationName.rawValue {
-            let newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? ""
-            self.searchMedicationServiceCall()
-            if [textField.text] != medicationNameList{
-                searchTableview.isHidden = true
+            
+            var newText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? ""
+            newText = newText.trimmingCharacters(in: .whitespaces)
+            
+//            let filteredSuggessions = medicationNameList.filter{
+//                let medication = ($0.mediProprietaryName?.lowercased() ?? "") + ($0.mediNonProprietaryName?.lowercased() ?? "")
+//                if contains(newText.localizedUppercase as! UIFocusEnvironment) {
+//                  return true
+//                }
+//                return true
+//            }
+//            updateTableView(with: filteredSuggessions)
+            
+            
+            if newText.count >= 5 {
+                self.searchMedicationServiceCall()
             }
-            let filteredSuggessions = medicationNameList.filter { $0.lowercased().contains(newText.localizedUppercase) }
-            updateTableView(with: filteredSuggessions)
+
             
             let character = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890'")
             let set = CharacterSet(charactersIn: string)
@@ -654,17 +660,27 @@ extension AddMedicationVC: UIPickerViewDelegate, UIPickerViewDataSource {
 extension AddMedicationVC: UITableViewDelegate, UITableViewDataSource {
     //MARK: tableViewDataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        medicationNameList.count
+        if medicationNameList.count > 0 {
+            self.hideViewForTableView.isHidden = true
+        }
+        else {
+            self.hideViewForTableView.isHidden = false
+        }
+        return medicationNameList.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = searchTableview.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = medicationNameList[indexPath.row]
+        let mediPropName = medicationNameList[indexPath.row].mediProprietaryName
+        let mediNonPropName = medicationNameList[indexPath.row].mediNonProprietaryName
+        cell.textLabel?.text = "\(mediPropName ?? "") \(mediNonPropName ?? "")"
         return cell
     }
     //MARK: tableViewDataDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedSuggestion = medicationNameList[indexPath.row]
-        medicationNameTextField.text = selectedSuggestion
+        let medPropName = selectedSuggestion.mediProprietaryName
+        let medNonPropName = selectedSuggestion.mediNonProprietaryName
+        medicationNameTextField.text = "\(medPropName ?? "") \(medNonPropName ?? "")"
         medicationNameList.removeAll()
         searchTableview.reloadData()
         searchTableview.isHidden = true

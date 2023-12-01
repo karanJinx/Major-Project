@@ -66,7 +66,7 @@ struct DeletionList: Codable{
 class MedicationListVC: UIViewController, DataEnterDelegate {
 
     //MARK: - Properties
-    var medication :[MedicationData] = []
+    var medication: [MedicationData] = []
     func didUserEnterInformation() {
         listMedicationServiceCall()
     }
@@ -78,7 +78,6 @@ class MedicationListVC: UIViewController, DataEnterDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         initialSetUp()
     }
     
@@ -90,6 +89,7 @@ class MedicationListVC: UIViewController, DataEnterDelegate {
         tableViewDelegate()
        listMedicationServiceCall()
     }
+    
     //MARK: - SetUpNavigationBar
     func setUpNavigationBar(){
         let navigationBarAppearance = UINavigationBarAppearance()
@@ -99,6 +99,7 @@ class MedicationListVC: UIViewController, DataEnterDelegate {
         // Set the status bar color to match the navigation bar
         navigationController?.navigationBar.barStyle = .black
     }
+    
     //MARK: - TableView
     func tableViewDelegate(){
         tableView.dataSource = self
@@ -111,7 +112,6 @@ class MedicationListVC: UIViewController, DataEnterDelegate {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: "AddMedicationVC") as! AddMedicationVC
         vc.navigationItem.title = "Add Medication"
-        //vc.medicationData = nil
         vc.dataEnterDelegate = self
         vc.hidesBottomBarWhenPushed = true
         navigationController?.pushViewController(vc, animated: true)
@@ -125,35 +125,40 @@ class MedicationListVC: UIViewController, DataEnterDelegate {
             switch result {
             case .success(let data):
                 print("Working")
-                do{
-                    //                    let meddicationJson = try JSONSerialization.jsonObject(with: data)
-                    //                    print("The meddicationjson:\(meddicationJson)")
-                    let medicationDecoded = try JSONDecoder().decode(MedicationListResponse.self, from: data)
-                    print("the medicationDecoded:\(medicationDecoded)")
-                    //                    let medicationDataArray = medicationDecoded.data
-                    //                    for medicationDatasingle in medicationDataArray{
-                    //                        let mdcId = medicationDatasingle.medicationId
-                    //                        print("The mdcId:\(mdcId)")
-                    //                    }
-                    //                    print("The decoded medication edited: \(medicationDecoded)")
-                    self.medication = medicationDecoded.data
-                    print("the medicaiton:\(self.medication)")
-                    DispatchQueue.main.async {
-                        // If you missed it will never display in the list screen.
-                        self.tableView.reloadData()
-                    }
-                }
-                catch{
-                    print("Error decoding listMedication API response: \(error.localizedDescription)")
-                    DispatchQueue.main.async {
-                        let alert = UIAlertController(title: "Alert", message: "Try after sometimes", preferredStyle: .alert)
-                        alert.addAction(UIAlertAction(title: "OK", style: .default))
-                        self.present(alert, animated: true)
-                        self.messageLable.text = "Response Error, Try after sometimes"
-                    }
-                }
+                self.medicationValidationSuccessHandling(data: data)
+                
             case .failure(let error):
                 print("MedicationListAPI request failed: \(error)")
+            }
+        }
+    }
+    
+    func medicationValidationSuccessHandling(data: Data) {
+        do{
+            //                    let meddicationJson = try JSONSerialization.jsonObject(with: data)
+            //                    print("The meddicationjson:\(meddicationJson)")
+            let medicationDecoded = try JSONDecoder().decode(MedicationListResponse.self, from: data)
+            print("the medicationDecoded:\(medicationDecoded)")
+            //                    let medicationDataArray = medicationDecoded.data
+            //                    for medicationDatasingle in medicationDataArray{
+            //                        let mdcId = medicationDatasingle.medicationId
+            //                        print("The mdcId:\(mdcId)")
+            //                    }
+            //                    print("The decoded medication edited: \(medicationDecoded)")
+            self.medication = medicationDecoded.data
+            print("the medicaiton:\(self.medication)")
+            DispatchQueue.main.async {
+                // If you missed it will never display in the list screen.
+                self.tableView.reloadData()
+            }
+        }
+        catch{
+            print("Error decoding listMedication API response: \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: "Alert", message: "Try after sometimes", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                self.present(alert, animated: true)
+                self.messageLable.text = "Response Error, Try after sometimes"
             }
         }
     }
@@ -219,6 +224,7 @@ class MedicationListVC: UIViewController, DataEnterDelegate {
     }
 }
 
+//MARK: Extension
 extension MedicationListVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if medication.count > 0{
@@ -258,6 +264,7 @@ extension MedicationListVC: UITableViewDelegate, UITableViewDataSource {
        
         return cell
     }
+    
     //MARK: - TableViewDelegateMethods
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 165
@@ -304,9 +311,7 @@ extension MedicationListVC: UITableViewDelegate, UITableViewDataSource {
         editViewController.dataEnterDelegate = self
         editViewController.medicationData = itemToEdit
         editViewController.navigationItem.title = "Edit Medication"
-        if editViewController.medicationData != nil {
             navigationController?.pushViewController(editViewController, animated: true)
-        }
         if let medicationId = itemToEdit.medicationId {
             let medicationIdToRemove = String(medicationId)
             LocalNotificationManager.removeLocalNotification(identifier: medicationIdToRemove)
