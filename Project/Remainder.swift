@@ -24,7 +24,7 @@ class LocalNotificationManager{
         }
     }
     
-    //MARK: ScheduleRemainder
+    //MARK: - ScheduleRemainder
     //schedule notification
     static func scheduleMedicationRemainder(medicationName: String,frequency: String,quantity: String,date: String,medicationId: String) {
         let center = UNUserNotificationCenter.current()

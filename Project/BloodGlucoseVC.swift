@@ -140,7 +140,6 @@ extension BloodGlucoseVC: CBCentralManagerDelegate, CBPeripheralDelegate {
         if let characteristics = service.characteristics{
             for characteristic in characteristics {
                 print(characteristic)
-                
                 if characteristic.uuid == service1_Characteristic_1 {
                     characteristic_notify = characteristic
                     peripheral.setNotifyValue(true, for: characteristic_notify)
@@ -156,7 +155,6 @@ extension BloodGlucoseVC: CBCentralManagerDelegate, CBPeripheralDelegate {
                     let command = Data(commandBytes_stripIn)
                     myPeripheral.writeValue(command, for: characteristic_writeWithoutResponse, type: .withoutResponse)
                 }
-                
                 
                 //static method to write date and time
                 //                if characteristic.uuid == service1_Characteristic_2{
@@ -230,11 +228,7 @@ extension BloodGlucoseVC: CBCentralManagerDelegate, CBPeripheralDelegate {
                     //                    print("My commandByte:\(commandBytes)")
                     //                    let command2 = byteArrayToHexString([UInt8](command))
                     //                    print("My commandByte2:\(command2)")
-                    
-                    
-                    
                 }
-                
             }
         }
     }
@@ -305,8 +299,6 @@ extension BloodGlucoseVC: CBCentralManagerDelegate, CBPeripheralDelegate {
             }else{
                 print("Other header and footer")
             }
-            
-            
             //print("The value :\(getPairsFromHexString(data: byteArray)!)")
         }
     }

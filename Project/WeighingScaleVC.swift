@@ -30,6 +30,7 @@ class WeighingScaleVC: UIViewController {
         initialSetup()
     }
     
+    //MARK: - InitialSetup
     func initialSetup() {
         centralManager = CBCentralManager(delegate: self, queue: nil)
         setUpVavigationBar()

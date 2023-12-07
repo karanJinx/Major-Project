@@ -9,10 +9,21 @@ import UIKit
 
 class SettingVC: UIViewController {
     
+    //MARK: - IBOutlet
+    @IBOutlet var logoutView: UIView!
+    @IBOutlet var patienIdLable: UILabel!
+    @IBOutlet var carePlanIdLable: UILabel!
+    
     //MARK: - OverrideViewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpNavigationBar()
+        
+        patienIdLable.text = Details.patientId
+        if let carePlanId = Details.careplanId {
+            carePlanIdLable.text = String(carePlanId)
+        }
+        logoutView.layer.cornerRadius = 10
     }
     
     //MARK: - SetupNavigationBar
@@ -46,7 +57,7 @@ class SettingVC: UIViewController {
     }
     
     //MARK: - IBAction
-    @IBAction func logOutButtontapped(_ sender: UIBarButtonItem) {
+    @IBAction func logOutButtontapped(_ sender: UIButton) {
         showAlert(title: "Alert!", message: "Are you sure want to logout")
     }
 }

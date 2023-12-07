@@ -39,6 +39,7 @@ class BloodPressurePopupVC: UIViewController{
         setUpView(view: OKButton, radius: 7, maskToBound: true)
         setUpView(view: popupView, radius: 7, maskToBound: true)
     }
+    
     //MARK: - setUpView
     func setUpView(view: UIView, radius: CGFloat, maskToBound: Bool){
         view.layer.cornerRadius = radius

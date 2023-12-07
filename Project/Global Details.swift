@@ -8,6 +8,8 @@
 import Foundation
 
 struct Details {
+    static var apiHelper = APIHelper.share
+    static var apiManager = APIManager.shared
     static var token : String? = ""
     static var patientId : String? = "53266"
     static var careplanId : Int? = 34533

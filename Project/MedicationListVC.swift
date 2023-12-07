@@ -48,7 +48,7 @@ struct DeletionData: Codable {
     var list:[DeletionList]?
     var diagnosisId: String?
 }
-struct DeletionList: Codable{
+struct DeletionList: Codable {
     var medicationId: Int?
     var name: String?
     var code: String?
@@ -64,9 +64,10 @@ struct DeletionList: Codable{
 }
 
 class MedicationListVC: UIViewController, DataEnterDelegate {
-
+    
     //MARK: - Properties
-    var medication: [MedicationData] = []
+    var medicationDetailList = [MedicationData]()
+    var medicationDetailWhenDeleting = [MedicationData]()
     func didUserEnterInformation() {
         listMedicationServiceCall()
     }
@@ -75,23 +76,23 @@ class MedicationListVC: UIViewController, DataEnterDelegate {
     @IBOutlet var addBarButton: UIBarButtonItem!
     @IBOutlet var hideView: UIView!
     @IBOutlet var messageLable: UILabel!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initialSetUp()
     }
     
     //MARK: - InitialSetUp
-    func initialSetUp(){
+    func initialSetUp() {
         //getting authorization from the user
         LocalNotificationManager.requestPermission()
         setUpNavigationBar()
         tableViewDelegate()
-       listMedicationServiceCall()
+        listMedicationServiceCall()
     }
     
     //MARK: - SetUpNavigationBar
-    func setUpNavigationBar(){
+    func setUpNavigationBar() {
         let navigationBarAppearance = UINavigationBarAppearance()
         navigationBarAppearance.backgroundColor = .systemGray6
         navigationController?.navigationBar.standardAppearance = navigationBarAppearance
@@ -101,7 +102,7 @@ class MedicationListVC: UIViewController, DataEnterDelegate {
     }
     
     //MARK: - TableView
-    func tableViewDelegate(){
+    func tableViewDelegate() {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.reloadData()
@@ -109,19 +110,21 @@ class MedicationListVC: UIViewController, DataEnterDelegate {
     
     //MARK: - IBAction
     @IBAction func addButtonTapped(_ sender: UIBarButtonItem) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(identifier: "AddMedicationVC") as! AddMedicationVC
-        vc.navigationItem.title = "Add Medication"
-        vc.dataEnterDelegate = self
-        vc.hidesBottomBarWhenPushed = true
-        navigationController?.pushViewController(vc, animated: true)
+        let medicationData = MedicationData()
+        print("the data when Adding",medicationData)
+//        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "AddMedicationVC") as! AddMedicationVC
+//        vc.navigationItem.title = "Add Medication"
+//        vc.dataEnterDelegate = self
+//        vc.hidesBottomBarWhenPushed = true
+//        navigationController?.pushViewController(vc, animated: true)
+        navigateToAddOrEditScreen(withTitle: "Add Medication", itemtoEdit: medicationData)
     }
     
     //MARK: - ListMedicationServiceCall
-    func listMedicationServiceCall(){
-        let listMedicationUrl = APIHelper.share.baseURLWeb + "medications/active/53266/34533"
+    func listMedicationServiceCall() {
+        let listMedicationUrl = Details.apiHelper.baseURLWeb + "medications/active/53266/34533"
         let headers = ["X-Auth-Token": Details.token!,"Content-Type": "application/json"]
-        APIManager.shared.APIHelper(url: listMedicationUrl, params: [:], method: .get, headers: headers, requestBody: nil) { result in
+        Details.apiManager.APIHelper(url: listMedicationUrl, params: [:], method: .get, headers: headers, requestBody: nil) { result in
             switch result {
             case .success(let data):
                 print("Working")
@@ -139,14 +142,16 @@ class MedicationListVC: UIViewController, DataEnterDelegate {
             //                    print("The meddicationjson:\(meddicationJson)")
             let medicationDecoded = try JSONDecoder().decode(MedicationListResponse.self, from: data)
             print("the medicationDecoded:\(medicationDecoded)")
+            medicationDetailWhenDeleting = medicationDecoded.data
+            print("THe medicationDetail: \(medicationDetailWhenDeleting)")
             //                    let medicationDataArray = medicationDecoded.data
             //                    for medicationDatasingle in medicationDataArray{
             //                        let mdcId = medicationDatasingle.medicationId
             //                        print("The mdcId:\(mdcId)")
             //                    }
             //                    print("The decoded medication edited: \(medicationDecoded)")
-            self.medication = medicationDecoded.data
-            print("the medicaiton:\(self.medication)")
+            self.medicationDetailList = medicationDecoded.data
+            print("the medicaiton:\(self.medicationDetailList)")
             DispatchQueue.main.async {
                 // If you missed it will never display in the list screen.
                 self.tableView.reloadData()
@@ -164,27 +169,27 @@ class MedicationListVC: UIViewController, DataEnterDelegate {
     }
     
     //MARK: DeleteMedicationServiceCall
-    func deleteMedicationServiceCall(at indexpath: IndexPath,medication:MedicationData){
+    func deleteMedicationServiceCall(using indexpath: IndexPath, medicationToDelete: MedicationData) {
         print("API call started")
-        let deleteMedicationUrl = APIHelper.share.baseURLWeb + "medications/invalid"
+        let deleteMedicationUrl = Details.apiHelper.baseURLWeb + "medications/invalid"
         let headers = ["X-Auth-Token": Details.token!,"Content-Type": "application/json"]
         let deleteDict: [String:Any] = ["patientId": Details.patientId!,
                                         "careplanId": Details.careplanId!,
-                                        "medicationId": medication.medicationId ?? "",
+                                        "medicationId": medicationToDelete.medicationId ?? "",
                                         "lastEffectiveDate": "",
                                         "activeFlag": "Y",
                                         "logId": "null",
-                                        "careplanLogMessageUserInput": "An existing medication \(medication.name!) has been deleted",
-                                        "careplanLogMessage": "An existing medication \(medication.name!) has been deleted"]
+                                        "careplanLogMessageUserInput": "An existing medication \(medicationToDelete.name ?? "") has been deleted",
+                                        "careplanLogMessage": "An existing medication \(medicationToDelete.name ?? "") has been deleted"]
         do{
             let deleteJson = try JSONSerialization.data(withJSONObject: deleteDict)
-            APIManager.shared.APIHelper(url: deleteMedicationUrl, params: [:], method: .post, headers: headers, requestBody: deleteJson) { result in
+            Details.apiManager.APIHelper(url: deleteMedicationUrl, params: [:], method: .post, headers: headers, requestBody: deleteJson) { result in
                 switch result{
                 case .success(let data):
-                    do{
+                    do {
                         let deleteDecoded = try JSONDecoder().decode(MedicationDeleteResponse.self, from: data)
                         print("The deleteDecoded :\(deleteDecoded)")
-                        print("The delete Log Id : \(deleteDecoded.logId!)")
+                        //print("The delete Log Id : \(deleteDecoded.logId!)")
                         // to see the medication Id
                         //                        if let deletionData = deleteDecoded.data,let deletionList = deletionData.list{
                         //                            for items in deletionList{
@@ -199,17 +204,17 @@ class MedicationListVC: UIViewController, DataEnterDelegate {
                         //                        }
                         print("the status:\(deleteDecoded.status!)")
                         if deleteDecoded.status == "success"{
-                            let currentMedicationId = medication.medicationId
+                            let currentMedicationId = medicationToDelete.medicationId
                             print("The medication idddd:\(currentMedicationId!)")
                             
-                            self.medication.remove(at: indexpath.row)
+                            self.medicationDetailList.remove(at: indexpath.row)
                             DispatchQueue.main.async {
                                 self.tableView.deleteRows(at: [indexpath], with: .fade)
                             }
                             LocalNotificationManager.removeLocalNotification(identifier: String(currentMedicationId!))
                         }
                     }
-                    catch{
+                    catch {
                         //let dataString = String(data: data, encoding: .utf8)
                         print("Error in the data:\(error.localizedDescription)")
                     }
@@ -218,42 +223,45 @@ class MedicationListVC: UIViewController, DataEnterDelegate {
                 }
             }
         }
-        catch{
+        catch {
             print("Error in serializing the deleteDict:\(error)")
         }
     }
 }
 
-//MARK: Extension
+//MARK: - Extension
 extension MedicationListVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if medication.count > 0{
+        if medicationDetailList.count > 0{
             DispatchQueue.main.asyncAfter(deadline: .now(), execute: {
                 self.hideView.isHidden = true
             })
-        }else{
+        }else {
             self.hideView.isHidden = false
         }
-        return medication.count
+        return medicationDetailList.count
     }
     
     //MARK: - TableViewDatasourceMethods
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell") as! Cell
-        let medicationItem = medication[indexPath.row]
+        let medicationItem = medicationDetailList[indexPath.row]
         print("The medicationItem:\(medicationItem)")
+        configureCell(cell: cell, medicationItem: medicationItem)
+        return cell
+    }
+    
+    //MARK: - ConfigureCell
+    func configureCell(cell: Cell, medicationItem: MedicationData) {
         if let quantity = medicationItem.quantity{
             let quantityStr = String(quantity)
             cell.quantityLable.text = quantityStr
         }
-        else{
+        else {
             print("Medication quantitiy is nil")
         }
         cell.medicationLable.text = medicationItem.name
-        //print("The medication name:\(medicationItem.name)")
         cell.frequencyLable.text = medicationItem.frequency
-        //let quantity = String(medicationItem.quantity!)
-        //cell.quantityLable.text = quantity
         cell.dateDayLable.text = medicationItem.effectiveDate
         cell.lastDayDateLable.text = medicationItem.lastEffectiveDate ?? "  -  "
         cell.baseView.layer.cornerRadius = 5
@@ -261,8 +269,6 @@ extension MedicationListVC: UITableViewDelegate, UITableViewDataSource {
         cell.baseView.layer.shadowOpacity = 0.4
         cell.baseView.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
         cell.baseView.layer.shadowRadius = 3.0
-       
-        return cell
     }
     
     //MARK: - TableViewDelegateMethods
@@ -273,7 +279,7 @@ extension MedicationListVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let storyBoard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyBoard.instantiateViewController(withIdentifier: "MedicationShowVC") as! MedicationShowVC
-        vc.medicationToShow = medication[indexPath.row]
+        vc.medicationToShow = medicationDetailList[indexPath.row]
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -286,15 +292,15 @@ extension MedicationListVC: UITableViewDelegate, UITableViewDataSource {
         editAction.backgroundColor = .systemGreen
         return UISwipeActionsConfiguration(actions: [editAction])
     }
-
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete{
-            let itemToDelete = medication[indexPath.row]
+        if editingStyle == .delete {
+            let itemToDelete = medicationDetailList[indexPath.row]
             print("Item to Delete:\(itemToDelete)")
             print("deleted medication id: \(itemToDelete.medicationId!)")
             let alert = UIAlertController(title: "Confirmation", message: "Are you sure about deleting the medication?", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default,handler: { _ in
-                self.deleteMedicationServiceCall(at: indexPath, medication: itemToDelete)
+                self.deleteMedicationServiceCall(using: indexPath, medicationToDelete: itemToDelete)
                 self.showToastAlert("Medication deleted successfully", duration: 1.5)
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
@@ -303,21 +309,30 @@ extension MedicationListVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     //MARK: - EditAction
-    func handlerEditAction(at indexPath: IndexPath){
-        let itemToEdit = medication[indexPath.row]
+    func handlerEditAction(at indexPath: IndexPath) {
+        let itemToEdit = medicationDetailList[indexPath.row]
         print("The item To edit :\(itemToEdit)")
-        let editViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "AddMedicationVC") as! AddMedicationVC
-        editViewController.hidesBottomBarWhenPushed = true
-        editViewController.dataEnterDelegate = self
-        editViewController.medicationData = itemToEdit
-        editViewController.navigationItem.title = "Edit Medication"
-            navigationController?.pushViewController(editViewController, animated: true)
+//        let editViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(identifier: "AddMedicationVC") as! AddMedicationVC
+//        editViewController.hidesBottomBarWhenPushed = true
+//        editViewController.dataEnterDelegate = self
+//        editViewController.medicationDatas = itemToEdit
+//        editViewController.navigationItem.title = "Edit Medication"
+//        navigationController?.pushViewController(editViewController, animated: true)
+        navigateToAddOrEditScreen(withTitle: "Edit medication", itemtoEdit: itemToEdit)
         if let medicationId = itemToEdit.medicationId {
             let medicationIdToRemove = String(medicationId)
             LocalNotificationManager.removeLocalNotification(identifier: medicationIdToRemove)
         }
     }
-    
+    //MARK: - NavigationToAddOrEditScreen
+    func navigateToAddOrEditScreen(withTitle: String, itemtoEdit: MedicationData){
+        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "AddMedicationVC") as! AddMedicationVC
+        vc.hidesBottomBarWhenPushed = true
+        vc.dataEnterDelegate = self
+        vc.medicationDatas = itemtoEdit
+        vc.navigationItem.title = title
+        navigationController?.pushViewController(vc, animated: true)
+    }
     //MARK: showToastAfterSaved
     func showToastAlert(_ message: String, duration: TimeInterval) {
         let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)

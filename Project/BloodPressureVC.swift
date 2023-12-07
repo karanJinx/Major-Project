@@ -107,8 +107,6 @@ extension BloodPressureVC: CBCentralManagerDelegate, CBPeripheralDelegate {
             scanningLable.text = "The Central Bluetooth is PoweredOff."
         case .poweredOn:
             print("The central is PoweredOn")
-            //scanningLable.text = "The central Bluetooth is PoweredOn."
-            //centralManager.scanForPeripherals(withServices: [bloodPressureServiceUUID])
             centralManager.scanForPeripherals(withServices: nil)
         default:
             print("Something wrong with the central")
@@ -125,7 +123,6 @@ extension BloodPressureVC: CBCentralManagerDelegate, CBPeripheralDelegate {
                 central.stopScan()
                 self.myPeripheral = peripheral
                 self.myPeripheral.delegate = self
-                
                 self.centralManager.connect(peripheral,options: nil)
                 print("Peripheral successfully connected to the central.....")
                 scanningLable.text = "Connecting"
@@ -174,8 +171,6 @@ extension BloodPressureVC: CBCentralManagerDelegate, CBPeripheralDelegate {
                 let commandSend = Data(commandBytes)
                 peripheral.writeValue(commandSend, for: self.characteristic_writeWithoutResponse, type: .withoutResponse)
             }
-            
-            
             //            if characteristic.properties.contains(.read){
             //                peripheral.readValue(for: characteristic)
             //                print("\(characteristic.uuid) contains the read property")
@@ -199,7 +194,7 @@ extension BloodPressureVC: CBCentralManagerDelegate, CBPeripheralDelegate {
             
             for item in hexString {
                 if item.count >= 6{
-                    if item.contains(bloodPressureReadingOptions.measuringReading.rawValue){
+                    if item.contains(bloodPressureReadingOptions.measuringReading.rawValue) {
                         scanningLable.text = "Measuring"
                         let diastolicreading = item[item.index(item.startIndex, offsetBy: 4)]
                         
@@ -277,7 +272,6 @@ extension BloodPressureVC: CBCentralManagerDelegate, CBPeripheralDelegate {
             print("Error writing value to characteristic \(characteristic.uuid): \(error.localizedDescription)")
         } else {
             print("Successfully wrote value to characteristic \(characteristic.uuid)")
-            // Check if there's any specific response or state change you should expect from the device.
         }
     }
 }
