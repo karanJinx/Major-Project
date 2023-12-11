@@ -115,11 +115,11 @@ extension BloodPressureVC: CBCentralManagerDelegate, CBPeripheralDelegate {
     
     //MARK: - DidDiscoverPeripheral
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        if let name = peripheral.name{
-            if name != "(null)"{
+        if let name = peripheral.name {
+            if name != "(null)" {
                 print("The available peripheral devices:\(peripheral)")
             }
-            if name == "Bluetooth BP"{
+            if name == "Bluetooth BP" {
                 central.stopScan()
                 self.myPeripheral = peripheral
                 self.myPeripheral.delegate = self

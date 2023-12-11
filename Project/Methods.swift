@@ -13,11 +13,9 @@ struct Method {
     //MARK: - ShowingConfirmationAlertToGoback
     static func showConfirmationAlertToGoBackTo(from presentingViewController: UIViewController) {
         let alertController = UIAlertController(title: "Confirmation Alert", message: "Are you sure about navigating out of this screen?", preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default) { navigationController in
+        let okAction = UIAlertAction(title: "OK", style: .default) { _ in
             if let navigationController = presentingViewController.navigationController {
-                if let homeVC = navigationController.viewControllers.first(where: { $0 is HomeVC }) {
-                    navigationController.popToViewController(homeVC, animated: true)
-                }
+                navigationController.popViewController(animated: true)
             }
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)

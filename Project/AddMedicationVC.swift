@@ -533,7 +533,7 @@ class AddMedicationVC: UIViewController {
             if medicationDecoded.status == "success"{
                 let dataMedication = medicationDecoded.data
                 self.medicationNameList = dataMedication?.others ?? []
-                //print("The dataOther:\(dataOthers)"
+                //print("The dataOther:\(medicationNameList)")
                 DispatchQueue.main.async {
                     self.searchTableview.reloadData()
                     self.searchTableview.isHidden = false
@@ -628,10 +628,11 @@ extension AddMedicationVC: UITextFieldDelegate {
             }
 
             updateTableView(with: filteredSuggessions)
-            if newText.count >= 5 {
+            if (3...5).contains(newText.count) {
                 self.searchMedicationServiceCall()
             }
-            let character = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890'")
+
+            let character = CharacterSet(charactersIn: "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
             let set = CharacterSet(charactersIn: string)
             return character.isSuperset(of: set)
         }
